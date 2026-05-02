@@ -1,9 +1,14 @@
 import styles from "./Home.module.css";
+import { PageTransition } from "../../components/PageTransition";
 
 export function Home() {
   return (
-    <section className={styles.hero}>
-      <h1>Game Collection</h1>
-    </section>
+    <PageTransition>
+      <section className={styles.hero}>
+        <div className="wrapper">
+          <h1>Game Collection</h1>
+        </div>
+      </section>
+    </PageTransition>
   );
 }
