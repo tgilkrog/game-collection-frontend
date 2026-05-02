@@ -1,36 +1,31 @@
-import { useEffect, useState } from "react";
-import { getPosts } from "./api/client";
-
-
-type Post = {
-  id: number;
-  title: string;
-};
+import { useState } from "react";
+import { BootScreen } from "./components/BootScreen/BootScreen";
+import { Routes, Route } from "react-router-dom";
+import { Home } from "./pages/Home/Home";
+import { About } from "./pages/About";
+import { Navbar } from "./components/Navbar/Navbar";
 
 function App() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [booted, setBooted] = useState(false);
 
-  useEffect(() => {
-    async function loadPosts() {
-      const data = await getPosts();
-      console.log(data);
-      setPosts(data);
-    }
+  if (!booted) {
+    return <BootScreen onFinish={() => setBooted(true)} />;
+  }
 
-    loadPosts();
-  }, []);
+  if (!booted) {
+    return <BootScreen onFinish={() => setBooted(true)} />;
+  }
 
   return (
-    <div>
-      <h1>Posts</h1>
+    <>
+      <Navbar />
 
-      {posts.map((post) => (
-        <div key={post.id}>
-          {post.title}
-          </div>
-      ))}
-    </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </>
   );
 }
 
-export default App
+export default App;
