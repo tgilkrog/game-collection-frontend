@@ -1,4 +1,3 @@
-// api/genres.ts
 import api from './axios';
 
 export interface Genre {

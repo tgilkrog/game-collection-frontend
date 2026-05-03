@@ -6,6 +6,8 @@ import { Genre } from "./pages/Genre/Genre";
 import { Navbar } from "./components/Navbar/Navbar";
 import { AnimatePresence } from "framer-motion";
 
+import { GameBase } from "./pages/GameBase/GameBase"
+
 function App() {
   const location = useLocation();
   const [booted, setBooted] = useState(false);
@@ -21,6 +23,7 @@ function App() {
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
           <Route path="/genre" element={<Genre />} />
+          <Route path="/gamebase" element={<GameBase />} />
         </Routes>
       </AnimatePresence>
     </>
