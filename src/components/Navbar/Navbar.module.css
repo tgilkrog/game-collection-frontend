@@ -1,32 +1,66 @@
 /* === TRIGGER BUTTON === */
-.menuButton {
-  position: absolute;
+.menuWrapper {
+  position: fixed;
   top: 20px;
   right: 20px;
   z-index: 1000;
+}
 
+.menuWrapper::before {
+  content: "";
+  position: absolute;
+  right: -8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    #00f0ff,
+    transparent
+  );
+
+  opacity: 0.6;
+}
+
+.menuButton {
+  width: 42px;
+  height: 32px;
   background: transparent;
-  border: 1px solid #00f6ff;
-  color: #00f6ff;
-
-  padding: 10px 14px;
-  font-size: 20px;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  position: relative;
   cursor: pointer;
+}
 
-  text-shadow: 0 0 10px #00f6ff;
-  box-shadow: 0 0 15px #00f6ff33;
+/* bars */
+.menuButton span {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: #00f0ff;
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
   transition: 0.2s;
 }
 
-.menuButton:hover {
-  color: #ff2bd6;
-  border-color: #ff2bd6;
-  box-shadow: 0 0 20px #ff2bd6;
+.menuButton span:nth-child(1) { top: 8px; }
+.menuButton span:nth-child(2) { top: 15px; }
+.menuButton span:nth-child(3) { top: 22px; }
+
+/* hover glitch effect */
+.menuButton:hover span:nth-child(1) {
+  transform: translateX(-2px);
+}
+
+.menuButton:hover span:nth-child(3) {
+  transform: translateX(2px);
 }
 
 /* === FULL SCREEN OVERLAY === */
 .overlay {
   position: fixed;
+  z-index: 9999;
   inset: 0;
   background: rgba(5, 5, 10, 0.92);
 

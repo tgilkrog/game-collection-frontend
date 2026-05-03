@@ -6,7 +6,10 @@
 html, body {
   color: #00f6ff;
   font-family: cyberpunk;
-  background-color: #0a0a0e;
+  background:
+  radial-gradient(circle at top left, rgba(0, 240, 255, 0.08), transparent 40%),
+  radial-gradient(circle at bottom right, rgba(255, 42, 109, 0.06), transparent 45%),
+  #0b0c10;
   padding: 0;
   margin: 0;
   height: 100vh;
@@ -19,145 +22,4 @@ html, body {
 
 .wrapper {
   padding: 20px;
-}
-
-
-
-/* PANEL CONTAINER */
-.panel {
-    width: 260px;
-    padding: 18px;
-    border-radius: 0px;
-    border-top-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    position: relative;
-    overflow: hidden;
-
-    background: rgba(10, 10, 30, 0.6);
-    backdrop-filter: blur(10px);
-
-    border: 1px solid rgba(255, 0, 255, 0.2);
-    box-shadow:
-        0 0 10px rgba(255, 0, 255, 0.15),
-        inset 0 0 20px rgba(0, 200, 255, 0.05);
-}
-
-/* NEON CORNER LINES */
-.panel::before,
-.panel::after {
-    content: "";
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    border: 2px solid #ff00ff;
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-/* move INSIDE instead of outside */
-.panel::before {
-    top: 0;
-    left: 0;
-    border-right: none;
-    border-bottom: none;
-}
-
-.panel::after {
-    bottom: 0;
-    right: 0;
-    border-left: none;
-    border-top: none;
-}
-
-/* HEADER */
-.panel-header {
-  font-size: 18px;
-  font-weight: bold;
-  letter-spacing: 2px;
-  margin-bottom: 15px;
-  color: #7df9ff;
-  text-transform: uppercase;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* ROWS */
-.panel-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 14px;
-  font-size: 14px;
-
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.panel-row:last-child {
-  border-bottom: none;
-}
-
-/* VALUE STYLE */
-.value {
-  color: #ff4df0;
-  text-shadow: 0 0 8px rgba(255, 0, 255, 0.6);
-}
-
-/* TOTAL ROW (highlighted) */
-.panel-row.total {
-  font-weight: bold;
-  font-size: 15px;
-  margin-bottom: 8px;
-
-  background: linear-gradient(
-    90deg,
-    rgba(255, 0, 255, 0.1),
-    rgba(0, 200, 255, 0.1)
-  );
-
-  padding: 10px;
-  border-radius: 6px;
-
-  box-shadow: inset 0 0 10px rgba(255, 0, 255, 0.2);
-}
-
-/* SCAN LINE (separate layer) */
-.panel .scan {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(0, 255, 255, 0.15),
-    transparent
-  );
-  opacity: 0;
-  animation: scan 5s linear infinite;
-  pointer-events: none;
-  border-radius: 12px; /* match panel */
-  overflow: hidden; /* clip scan ONLY */
-}
-
-@keyframes flicker {
-  0%, 18%, 22%, 25%, 53%, 57%, 100% {
-    opacity: 0.6;
-  }
-  20%, 24%, 55% {
-    opacity: 0.2;
-  }
-}
-
-/* SCAN SWEEP */
-@keyframes scan {
-  0% {
-    transform: translateX(-100%) skewX(-20deg);
-    opacity: 0;
-  }
-  30% {
-    opacity: 0.3;
-  }
-  100% {
-    transform: translateX(200%) skewX(-20deg);
-    opacity: 0;
-  }
 }

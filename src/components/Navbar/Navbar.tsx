@@ -8,9 +8,13 @@ export function Navbar() {
 
   return (
     <>
-      <button className={styles.menuButton} onClick={() => setOpen(true)}>
-        ≡
-      </button>
+      <div className={styles.menuWrapper} onClick={() => setOpen(true)}>
+        <button className={styles.menuButton}>
+          <span />
+          <span />
+          <span />
+        </button>
+      </div>
 
       <AnimatePresence>
         {open && (
