@@ -41,8 +41,8 @@ export function Navbar() {
                 HOME
               </Link>
 
-              <Link to="/about" className={styles.link} onClick={() => setOpen(false)}>
-                ABOUT
+              <Link to="/genre" className={styles.link} onClick={() => setOpen(false)}>
+                GENRE
               </Link>
 
               <Link to="/games" className={styles.link} onClick={() => setOpen(false)}>
