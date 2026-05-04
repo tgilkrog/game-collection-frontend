@@ -1,8 +1,11 @@
 import api from './axios';
-import type { Game } from '../types/Game';
+import type { Game } from '../types/game';
 
 export const getGames = () =>
-  api.get<{ data: Game[] }>('/game-base');
+  api.get<Game[]>('/game-base');
+
+export const getGame = (id: number) =>
+  api.get(`/game-base/${id}`);
 
 export const createGame = (data: FormData) =>
   api.post('/game-base', data, {

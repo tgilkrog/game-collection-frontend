@@ -1,0 +1,112 @@
+/* FORM CONTAINER */
+.ui-form {
+  padding: 16px;
+  background: rgba(16, 19, 26, 0.9);
+  border: 1px solid rgba(255, 0, 128, 0.15);
+  width: 400px;
+}
+
+/* FORM HEADER */
+.ui-form-header {
+  margin-bottom: 10px;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: #ffd000;
+}
+
+/* INPUT */
+.ui-input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+
+  background: #0b0c10;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  color: #e6e6e6;
+
+  outline: none;
+}
+
+.ui-input:focus {
+  border-color: #00f0ff;
+  box-shadow: 0 0 8px rgba(0,240,255,0.2);
+}
+
+/* BUTTON */
+.ui-button {
+  width: 100%;
+  padding: 10px;
+
+  background: linear-gradient(90deg, #ff2a6d, #00f0ff);
+  border: none;
+  color: black;
+
+  font-weight: bold;
+  letter-spacing: 2px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.ui-button:hover {
+  filter: brightness(1.2);
+}
+
+/* wrapper */
+.ui-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* hide native checkbox */
+.ui-checkbox input {
+  display: none;
+}
+
+/* custom box */
+.ui-checkbox-box {
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  background: #0b0c10;
+  position: relative;
+  transition: 0.2s;
+}
+
+/* hover effect */
+.ui-checkbox:hover .ui-checkbox-box {
+  border-color: #00f0ff;
+  box-shadow: 0 0 6px rgba(0,240,255,0.3);
+}
+
+/* checked state */
+.ui-checkbox input:checked + .ui-checkbox-box {
+  border-color: #ff2a6d;
+  box-shadow:
+    0 0 6px #ff2a6d,
+    inset 0 0 6px #ff2a6d;
+}
+
+/* inner "tick" (cyber style = square fill) */
+.ui-checkbox input:checked + .ui-checkbox-box::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: linear-gradient(90deg, #ff2a6d, #00f0ff);
+}
+
+/* label */
+.ui-checkbox-label {
+  color: #e6e6e6;
+  transition: 0.2s;
+}
+
+/* glow label when checked */
+.ui-checkbox input:checked ~ .ui-checkbox-label {
+  color: #00f0ff;
+  text-shadow: 0 0 6px rgba(0,240,255,0.6);
+}

@@ -5,7 +5,7 @@ import { getGenres } from '../../api/genres';
 import GameForm from './GameForm';
 import GameList from './GameList';
 
-import type { Game, Genre } from '../../types/Game';
+import type { Game, Genre } from '../../types/game';
 
 export function GameBase() {
   const [games, setGames] = useState<Game[]>([]);
@@ -16,9 +16,8 @@ export function GameBase() {
       getGames(),
       getGenres(),
     ]);
-
-    setGames(gamesRes.data.data);
-    setGenres(genresRes.data.data);
+    setGames(gamesRes.data);
+    setGenres(genresRes.data);
   };
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export function GameBase() {
   }, []);
 
   return (
-    <div>
+    <div className="wrapper">
       <h1>Games</h1>
 
       <GameForm genres={genres} onCreated={fetchData} />

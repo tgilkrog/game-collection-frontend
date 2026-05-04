@@ -25,24 +25,24 @@ export default function GenreForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <div className={styles.header}>NEW GENRE ENTRY</div>
+    <form onSubmit={handleSubmit} className="ui-form">
+      <div className="ui-form-header">NEW GENRE ENTRY</div>
 
       <input
-        className={styles.input}
+        className="ui-input"
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="NAME"
       />
 
       <input
-        className={styles.input}
+        className="ui-input"
         value={slug}
         onChange={(e) => setSlug(e.target.value)}
         placeholder="SLUG"
       />
 
-      <button className={styles.button} type="submit">
+      <button className="ui-button" type="submit">
         {loading ? "PROCESSING..." : "CREATE"}
       </button>
     </form>

@@ -1,16 +1,25 @@
 import { useEffect, useState } from 'react';
 import type { Genre } from '../../api/genres';
-import { getGenres } from '../../api/genres';
+import { getGenres, deleteGenre } from '../../api/genres';
 import styles from './Genre.module.css';
 
 import GenreForm from './GenreForm';
+
+//Icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export function Genre() {
   const [genres, setGenres] = useState<Genre[]>([]);
 
   const fetchGenres = async () => {
     const res = await getGenres();
-    setGenres(res.data.data);
+    setGenres(res.data);
+  };
+
+  const handleDelete = async (id: number) => {
+    await deleteGenre(id);
+    fetchGenres();
   };
 
   useEffect(() => {
@@ -26,6 +35,7 @@ export function Genre() {
           <div key={g.id} className={styles.card}>
             <div className={styles.cardTitle}>{g.name}</div>
             <div className={styles.cardSlug}>{g.slug}</div>
+            <FontAwesomeIcon className={styles.icon} icon={faTrash} onClick={() => handleDelete(g.id)} />
           </div>
         ))}
       </div>

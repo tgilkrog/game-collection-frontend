@@ -17,6 +17,7 @@
 
 /* CARD */
 .card {
+  position: relative;
   background: rgba(16, 19, 26, 0.85);
   border: 1px solid rgba(0, 240, 255, 0.15);
   padding: 12px;
@@ -37,57 +38,10 @@
   color: #8b93a7;
 }
 
-/* FORM */
-.form {
-  margin-top: 20px;
-  padding: 16px;
-  background: rgba(16, 19, 26, 0.9);
-  border: 1px solid rgba(255, 0, 128, 0.15);
-  width: 400px;
-  margin: 200px auto 0px auto;
-}
-
-.header {
-  margin-bottom: 10px;
-  font-size: 20px;
-  letter-spacing: 2px;
-  color: #ffd000;
-}
-
-/* INPUTS */
-.input {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-
-  background: #0b0c10;
-  border: 1px solid rgba(0, 240, 255, 0.2);
-  color: #e6e6e6;
-
-  outline: none;
-}
-
-.input:focus {
-  border-color: #00f0ff;
-  box-shadow: 0 0 8px rgba(0,240,255,0.2);
-}
-
-/* BUTTON */
-.button {
-  width: 100%;
-  padding: 10px;
-
-  background: linear-gradient(90deg, #ff2a6d, #00f0ff);
-  border: none;
-  color: black;
-
-  font-weight: bold;
-  letter-spacing: 2px;
+.icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 
   cursor: pointer;
-  transition: 0.2s;
-}
-
-.button:hover {
-  filter: brightness(1.2);
 }
