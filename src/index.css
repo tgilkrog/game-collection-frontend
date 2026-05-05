@@ -23,3 +23,106 @@ html, body {
 .wrapper {
   padding: 20px;
 }
+
+
+
+
+
+
+/* LAYOUT */
+.game-wrapper {
+  display: flex;
+  gap: 40px;
+  padding: 40px;
+
+  background: radial-gradient(circle at top, #0b0f1a, #05070c);
+  color: #e6f1ff;
+}
+
+/* IMAGE */
+.game-image img {
+  width: 320px;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+
+  box-shadow:
+    0 0 20px rgba(0, 240, 255, 0.2),
+    0 0 60px rgba(255, 0, 128, 0.1);
+}
+
+/* RIGHT SIDE */
+.game-info {
+  flex: 1;
+}
+
+/* TITLE */
+.title {
+  font-size: 32px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+
+  color: #00f0ff;
+
+  text-shadow:
+    0 0 10px rgba(0, 240, 255, 0.5),
+    0 0 20px rgba(255, 0, 128, 0.3);
+}
+
+/* META INFO */
+.meta {
+  margin: 10px 0;
+  display: flex;
+  gap: 20px;
+
+  font-size: 14px;
+  color: #8b93a7;
+}
+
+/* DESCRIPTION */
+.description {
+  margin: 20px 0;
+  line-height: 1.6;
+  color: #cfd8e3;
+}
+
+/* GENRES */
+.genres {
+  margin-bottom: 20px;
+}
+
+.genre-tag {
+  display: inline-block;
+  margin-right: 8px;
+  margin-bottom: 6px;
+  padding: 4px 10px;
+
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  color: #ff2bd6;
+
+  border: 1px solid rgba(255, 43, 214, 0.4);
+  background: rgba(255, 43, 214, 0.08);
+
+  box-shadow: 0 0 8px rgba(255, 43, 214, 0.2);
+}
+
+/* DELETE BUTTON */
+.delete-button {
+  padding: 10px 20px;
+  border: none;
+
+  background: linear-gradient(90deg, #ff2a6d, #ff0000);
+  color: black;
+
+  font-weight: bold;
+  letter-spacing: 2px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.delete-button:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
