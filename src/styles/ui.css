@@ -34,7 +34,6 @@
 
 /* BUTTON */
 .ui-button {
-  width: 100%;
   padding: 10px;
 
   background: linear-gradient(90deg, #ff2a6d, #00f0ff);
@@ -109,4 +108,46 @@
 .ui-checkbox input:checked ~ .ui-checkbox-label {
   color: #00f0ff;
   text-shadow: 0 0 6px rgba(0,240,255,0.6);
+}
+
+
+
+
+
+.modal-overlay {
+    z-index: 999;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  transform: scale(0.95);
+  animation: popIn 0.25s ease-out forwards;
+}
+
+/* cyberpunk glow entrance */
+@keyframes popIn {
+  from {
+    transform: scale(0.8) translateY(20px);
+    opacity: 0;
+    filter: blur(5px);
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

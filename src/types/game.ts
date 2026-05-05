@@ -12,4 +12,5 @@ export interface Game {
 export interface Genre {
   id: number;
   name: string;
+  slug: string;
 }
