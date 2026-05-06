@@ -53,3 +53,20 @@
     0 0 10px #00f0ff33,
     0 0 20px #ff00c833;
 }
+
+
+.form_wrapper {
+  display: flex;
+}
+
+.preview_image_wrap {
+  background: rgba(16, 19, 26, 0.9);
+  padding: 20px;
+  width: 400px;
+  align-content: center;
+  text-align: center;
+}
+
+.preview_image {
+  width: 100%;
+}
