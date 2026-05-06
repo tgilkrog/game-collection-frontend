@@ -7,7 +7,6 @@ export function Home() {
     <PageTransition>
       <section className={styles.hero}>
         <div className="wrapper">
-          <h1>Game Collection</h1>
           <Statistics />
         </div>
       </section>

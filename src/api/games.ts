@@ -8,9 +8,10 @@ export const getGame = (id: number) =>
   api.get(`/game-base/${id}`);
 
 export const createGame = (data: FormData) =>
-  api.post('/game-base', data, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  api.post('/game-base', data);
+
+export const updateGame = (id: number, data: FormData) =>
+  api.put(`/game-base/${id}`, data);
 
 export const deleteGame = (id: number) =>
   api.delete(`/game-base/${id}`);

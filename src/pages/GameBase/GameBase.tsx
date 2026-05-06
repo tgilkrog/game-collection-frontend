@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getGames } from '../../api/games';
 import { getGenres } from '../../api/genres';
+import { createGame } from '../../api/games';
 
 import GameForm from './GameForm';
 import GameList from './GameList';
@@ -29,7 +30,7 @@ export function GameBase() {
     <div className="wrapper">
       <h1>Games</h1>
 
-      <button className="ui-button" onClick={() => setIsFormOpen(true)}>
+      <button className="cybr-btn" onClick={() => setIsFormOpen(true)}>
         + NEW GAME
       </button>
       
@@ -41,10 +42,12 @@ export function GameBase() {
           >
             <GameForm
               genres={genres}
-              onCreated={() => {
+              onSubmit={async (data) => {
+                await createGame(data);
                 fetchData();
                 setIsFormOpen(false);
               }}
+              submitLabel="Create"
             />
           </div>
         </div>
