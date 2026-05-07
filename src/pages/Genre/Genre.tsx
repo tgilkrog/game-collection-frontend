@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Genre } from '../../api/genres';
+import type { Genre } from '../../types/genre';
 import { getGenres, deleteGenre } from '../../api/genres';
 import styles from './Genre.module.css';
 

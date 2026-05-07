@@ -49,6 +49,10 @@ export function Navbar() {
                 GENRE
               </Link>
 
+              <Link to="/gamecopy" className={styles.link} onClick={() => setOpen(false)}>
+                GAME COPIES
+              </Link>
+
               <Link to="/gamebase" className={styles.link} onClick={() => setOpen(false)}>
                 GAMES
               </Link>

@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getGame, deleteGame, updateGame } from '../../api/games';
-import type { Game, Genre } from '../../types/game';
 import GameForm from './GameForm';
 import { getGenres } from '../../api/genres';
+import styles from './game.module.css';
+
+import type { Game } from '../../types/game';
+import type { Genre } from '../../types/genre';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faBuildingUser, faLaptop } from '@fortawesome/free-solid-svg-icons';
@@ -78,6 +81,21 @@ export default function GamePage () {
 
                 </div>
             </div>
+            {game.game_copies?.map(g => (
+                <div className={styles.game_copy_wrapper} key={g.id}>
+                    <h2 className={styles.copy_title}>{g.title}</h2>
+                    <p>Region: {g.region}</p>
+                    <p>Purchase Date: {g.purchase_date ? new Date(g.purchase_date).toLocaleDateString('da-DK') : ''}</p>
+                    <p>Purchase Price: {g.purchase_price}</p>
+                    <p>{g.notes}</p>
+                    {g.parts?.map(p => ( 
+                        <div>
+                            <p>{p.type}</p>
+                            <p>{p.condition.name}</p>
+                        </div>
+                    ))}
+                </div>
+            ))}
             {isFormOpen && (
             <div className="modal-overlay" onClick={() => setIsFormOpen(false)}>
                 <div

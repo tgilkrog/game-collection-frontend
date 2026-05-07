@@ -9,6 +9,8 @@ import { AnimatePresence } from "framer-motion";
 import { GameBase } from "./pages/GameBase/GameBase";
 import GamePage from "./pages/GameBase/GamePage";
 
+import GameCopyPage from "./pages/GameCopy/GameCopyPage";
+
 function App() {
   const location = useLocation();
  /* const [booted, setBooted] = useState(false);
@@ -27,6 +29,7 @@ function App() {
           <Route path="/genre" element={<Genre />} />
           <Route path="/gamebase" element={<GameBase />} />
           <Route path="/gamebase/:id" element={<GamePage />} />
+          <Route path="/gamecopy" element={<GameCopyPage />} />
         </Routes>
       </AnimatePresence>
     </>

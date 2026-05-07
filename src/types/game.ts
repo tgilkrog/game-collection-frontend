@@ -1,3 +1,6 @@
+import type { Genre } from './genre';
+import type { GameCopy } from './gamecopy';
+
 export interface Game {
   id: number;
   title: string;
@@ -6,11 +9,6 @@ export interface Game {
   developer?: string;
   description?: string;
   cover_image?: string;
+  game_copies?: GameCopy[];
   genres?: Genre[];
-}
-
-export interface Genre {
-  id: number;
-  name: string;
-  slug: string;
 }

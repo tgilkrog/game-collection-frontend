@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { Genre } from '../../types/game';
+import type { Genre } from '../../types/genre';
 import styles from './game.module.css';
 
 type FormState = {

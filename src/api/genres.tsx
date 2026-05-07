@@ -1,10 +1,5 @@
 import api from './axios';
-
-export interface Genre {
-  id: number;
-  name: string;
-  slug: string;
-}
+import type { Genre } from '../types/genre';
 
 export const getGenres = () =>
   api.get('/genres');

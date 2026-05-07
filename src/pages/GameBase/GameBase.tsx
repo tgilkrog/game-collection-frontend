@@ -6,7 +6,8 @@ import { createGame } from '../../api/games';
 import GameForm from './GameForm';
 import GameList from './GameList';
 
-import type { Game, Genre } from '../../types/game';
+import type { Game } from '../../types/game';
+import type { Genre } from '../../types/genre';
 
 export function GameBase() {
   const [games, setGames] = useState<Game[]>([]);

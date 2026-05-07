@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { createGenre } from "../../api/genres";
-import styles from "./Genre.module.css";
 
 export default function GenreForm({
   onCreated,
