@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import styles from "./Home.module.css";
 import { PageTransition } from "../../components/PageTransition";
 import { Statistics } from "./statistics";
+import { getHome } from "../../api/home";
 
 export function Home() {
   return (

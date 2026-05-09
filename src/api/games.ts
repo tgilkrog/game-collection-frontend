@@ -15,3 +15,6 @@ export const updateGame = (id: number, data: FormData) =>
 
 export const deleteGame = (id: number) =>
   api.delete(`/game-base/${id}`);
+
+export const searchGame = (search: string) =>
+  api.get(`/game-base/search?q=${search}`);

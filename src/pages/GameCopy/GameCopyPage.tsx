@@ -1,54 +1,82 @@
 import { useEffect, useState } from "react";
-import GameCopy from "./GameCopy";
-import {getConditions} from '../../api/conditions';
+import GameCopyCreate from "./GameCopyCreate";
+import GameCopyList from './GameCopyList';
+import { getConditions } from '../../api/conditions';
 import { getPlatforms } from "../../api/platforms";
 import { getGames } from "../../api/games";
-import { createGame } from "../../api/gameCopy";
+import { createGameCopy, getGameCopies } from "../../api/gameCopy";
 
+import type { GameCopy } from '../../types/gamecopy';
 import type { Game } from '../../types/game';
+import type { Platform } from '../../types/platform';
+import type { Condition } from "../../types/condition";
 
 export default function GameCopyPage() {
-    const [conditions, setConditions] = useState([]);
-    const [platforms, setPlatforms] = useState([]);
+    const [conditions, setConditions] = useState<Condition[]>([]);
+    const [platforms, setPlatforms] = useState<Platform[]>([]);
     const [games, setGames] = useState<Game[]>([]);
-
-    const fetchConditions = async () => {
-      const res = await getConditions();
-      setConditions(res.data);
-    };
-
-    const fetchPlatforms = async () => {
-      const res = await getPlatforms();
-      setPlatforms(res.data);
-    };
-
-    const fetchGames = async () => {
-      const res = await getGames();
-      setGames(res.data);
-    };
+    const [gameCopies, setGameCopies] = useState<GameCopy[]>([]);
+    const [isFormOpen, setIsFormOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
-            fetchConditions();
-            fetchPlatforms();
-            fetchGames();
+            try {
+                const [
+                    conditionsRes,
+                    platformsRes,
+                    gamesRes,
+                    copiesRes,
+                ] = await Promise.all([
+                    getConditions(),
+                    getPlatforms(),
+                    getGames(),
+                    getGameCopies(),
+                ]);
+
+                setConditions(conditionsRes.data);
+                setPlatforms(platformsRes.data);
+                setGames(gamesRes.data);
+                setGameCopies(copiesRes.data);
+            } catch (err) {
+                console.error(err);
+            }
         };
+
         fetchData();
     }, []);
 
     const handleSubmit = async (formData: FormData) => {
         try {
-            await createGame(formData);
+            await createGameCopy(formData);
         } catch (err: any) {
-            console.error(err.response?.data); // 🔥 THIS
+            console.error(err.response?.data);
         }
     };
   return (
-    <GameCopy
-      conditions={conditions}
-      platforms={platforms}
-      games={games}
-      onSubmit={handleSubmit}
-    />
+    <div className="wrapper">
+        <button className="cybr-btn" onClick={() => setIsFormOpen(true)}>
+            + NEW GAME COPY
+        </button>
+
+        <h1>Game Copies</h1>
+
+        <GameCopyList gameCopies={gameCopies}  />
+
+        {isFormOpen && (
+            <div className="modal-overlay" onClick={() => setIsFormOpen(false)}>
+                <div
+                    className="modal-content"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                <GameCopyCreate
+                    conditions={conditions}
+                    platforms={platforms}
+                    games={games}
+                    onSubmit={handleSubmit}
+                />
+                </div>
+            </div>
+        )}
+    </div>
   );
 }

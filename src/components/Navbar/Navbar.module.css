@@ -54,59 +54,6 @@
   transform: translateX(2px);
 }
 
-/* === FULL SCREEN OVERLAY === */
-.overlay {
-  position: fixed;
-  height: 100vh;
-  width: 100vw;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  background: rgba(5, 5, 10, 0.92);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  backdrop-filter: blur(10px);
-  z-index: 9999;
-}
-
-/* subtle scanline effect */
-.overlay::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(255,255,255,0.02),
-    rgba(255,255,255,0.02) 1px,
-    transparent 1px,
-    transparent 4px
-  );
-  pointer-events: none;
-}
-
-/* === MAIN PANEL === */
-.panel {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  padding: 60px 80px;
-
-  background: rgba(10, 10, 20, 0.6);
-  border: 1px solid #00f6ff;
-
-  box-shadow:
-    0 0 20px #00f6ff,
-    0 0 40px #ff2bd6;
-
-  animation: glitchIn 0.3s ease-out;
-  animation: glowPulse 2s infinite;
-}
-
 /* === TITLE === */
 .title {
   color: #ff2bd6;

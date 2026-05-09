@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import styles from './GameCopy.module.css';
 
-import type { CopyPart } from '../../types/CopyPart';
+import type { CopyPart } from '../../types/copypart';
 import type { Condition } from '../../types/condition';
 import type { Platform } from '../../types/platform';
 import type { Game } from '../../types/game';
@@ -22,7 +23,7 @@ type GameCopyFormProps = {
   onSubmit: (data: FormData) => Promise<void>;
 };
 
-export default function GameCopy({
+export default function GameCopyCreate({
   conditions,
   platforms,
   games,
@@ -40,16 +41,22 @@ export default function GameCopy({
 
   const [parts, setParts] = useState<CopyPart[]>([]);
 
+  const numericFields = new Set([
+    'game_base_id',
+    'platform_id',
+    'purchase_price',
+  ]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
     setForm(prev => ({
         ...prev,
-        [name]: ['game_base_id', 'platform_id', 'purchase_price'].includes(name)
+        [name]: numericFields.has(name)
         ? Number(value)
         : value,
     }));
-    };
+  };
 
   const addPart = () => {
     setParts(prev => [
@@ -66,11 +73,11 @@ export default function GameCopy({
     setParts(prev => prev.filter((_, i) => i !== index));
   };
 
-    const updatePart = (
-        index: number,
-        field: keyof CopyPart,
-        value: any
-    ) => {
+  const updatePart = (
+    index: number,
+    field: keyof CopyPart,
+    value: CopyPart[keyof CopyPart]
+  ) => {
     setParts(prev => {
         const updated = [...prev];
         updated[index] = {
@@ -79,7 +86,7 @@ export default function GameCopy({
         };
         return updated;
     });
-    };
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,7 +96,7 @@ export default function GameCopy({
     Object.entries(form).forEach(([key, value]) => {
       formData.append(key, String(value));
     });
-    
+
     parts.forEach((part, index) => {
     formData.append(`parts[${index}][type]`, part.type);
     formData.append(`parts[${index}][condition_id]`, String(part.condition.id));
@@ -120,7 +127,7 @@ export default function GameCopy({
         value={form.game_base_id}
         onChange={handleChange}
       >
-        <option value={0} selected>Select Game</option>
+        <option value={0}>Select Game</option>
         {games.map(g => (
           <option key={g.id} value={g.id}>
             {g.title}
@@ -134,7 +141,7 @@ export default function GameCopy({
         value={form.platform_id}
         onChange={handleChange}
       >
-        <option value={0} selected>Select Platform</option>
+        <option value={0}>Select Platform</option>
         {platforms.map(p => (
           <option key={p.id} value={p.id}>
             {p.name}
@@ -180,40 +187,42 @@ export default function GameCopy({
       <div className="ui-form-header">Parts</div>
 
       {parts.map((part, index) => (
-        <div key={index} style={{ marginBottom: 10 }}>
-          <input
-            className="ui-input"
-            placeholder="Type (disc, case...)"
-            value={part.type}
-            onChange={e => updatePart(index, 'type', e.target.value)}
-          />
+        <div className="part" key={index} style={{ marginBottom: 10 }}>
+          <div className={styles.part_inputs}>
+            <input
+              className="ui-input"
+              placeholder="Type (disc, case...)"
+              value={part.type}
+              onChange={e => updatePart(index, 'type', e.target.value)}
+            />
 
-          <select
-            className="ui-input"
-            value={part.condition.id}
-            onChange={e => {
-                const selected = conditions.find(
-                c => c.id === Number(e.target.value)
-                );
+            <select
+              className="ui-input"
+              value={part.condition.id}
+              onChange={e => {
+                  const selected = conditions.find(
+                  c => c.id === Number(e.target.value)
+                  );
 
-                if (!selected) return;
+                  if (!selected) return;
 
-                updatePart(index, 'condition', selected);
-            }}
-            >
-            {conditions.map(c => (
-                <option key={c.id} value={c.id}>
-                {c.name}
-                </option>
-            ))}
-            </select>
+                  updatePart(index, 'condition', selected);
+              }}
+              >
+              {conditions.map(c => (
+                  <option key={c.id} value={c.id}>
+                  {c.name}
+                  </option>
+              ))}
+              </select>
 
-          <input
-            className="ui-input"
-            placeholder="Notes"
-            value={part.notes}
-            onChange={e => updatePart(index, 'notes', e.target.value)}
-          />
+            <input
+              className="ui-input"
+              placeholder="Notes"
+              value={part.notes}
+              onChange={e => updatePart(index, 'notes', e.target.value)}
+            />
+          </div>
 
           <button type="button" onClick={() => removePart(index)}>
             Remove
@@ -221,7 +230,7 @@ export default function GameCopy({
         </div>
       ))}
 
-      <button type="button" onClick={addPart}>
+      <button type="button" className={styles.part_button} onClick={addPart}>
         Add Part
       </button>
 

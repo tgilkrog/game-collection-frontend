@@ -1,0 +1,8 @@
+.part_inputs {
+    display: flex;
+}
+
+.part_button {
+    display: block;
+    margin-bottom: 50px;
+}

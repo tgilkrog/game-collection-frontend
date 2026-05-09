@@ -1,0 +1,95 @@
+/* LOGIN BUTTON */
+.login {
+    padding: 6px 14px;
+
+    background: transparent;
+    border: 1px solid #ffcc00;
+
+    color: #ffcc00;
+
+    font-size: 12px;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.login:hover {
+  background: #ffcc00;
+  color: black;
+
+  box-shadow: 0 0 15px #ffcc00;
+}
+
+.title {
+  color: #fcee0a;
+
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 2px;
+
+  margin-bottom: 30px;
+
+  text-transform: uppercase;
+}
+
+.login_input {
+  width: 100%;
+
+  margin-bottom: 20px;
+  padding: 14px;
+
+  background: transparent;
+
+  border: none;
+  border-left: 3px solid #00f0ff;
+  border-bottom: 1px solid #333;
+
+  color: white;
+
+  font-size: 16px;
+
+  outline: none;
+
+  transition: 0.2s;
+}
+
+.login_input:focus {
+  border-left-color: #fcee0a;
+
+  box-shadow:
+    0 0 12px rgba(252,238,10,0.3);
+}
+
+.close {
+  width: 100%;
+
+  padding: 14px;
+
+  background: #fcee0a;
+  color: black;
+
+  border: none;
+
+  font-weight: bold;
+  letter-spacing: 2px;
+
+  cursor: pointer;
+
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    95% 100%,
+    0 100%
+  );
+
+  transition: 0.2s;
+}
+
+.close:hover {
+  background: #00f0ff;
+
+  box-shadow:
+    0 0 20px rgba(0,240,255,0.5);
+}

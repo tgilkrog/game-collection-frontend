@@ -28,12 +28,14 @@ export function GameBase() {
   }, []);
 
   return (
-    <div className="wrapper">
-      <h1>Games</h1>
-
+    <div className="wrapper"> 
+      
       <button className="cybr-btn" onClick={() => setIsFormOpen(true)}>
-        + NEW GAME
+        + NEW GAME BASE
       </button>
+      
+      <h1>Games</h1>
+      <GameList games={games} />
       
       {isFormOpen && (
         <div className="modal-overlay" onClick={() => setIsFormOpen(false)}>
@@ -54,7 +56,7 @@ export function GameBase() {
         </div>
       )}
 
-      <GameList games={games} />
+      
     </div>
   );
 }
