@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getGames } from '../../api/games';
 import { getGenres } from '../../api/genres';
 import { createGame } from '../../api/games';
+import { useAuth } from "../../Context/AuthContext";
 
 import GameForm from './GameForm';
 import GameList from './GameList';
@@ -13,6 +14,7 @@ export function GameBase() {
   const [games, setGames] = useState<Game[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const { user } = useAuth();
 
   const fetchData = async () => {
     const [gamesRes, genresRes] = await Promise.all([
@@ -30,13 +32,16 @@ export function GameBase() {
   return (
     <div className="wrapper"> 
       
-      <button className="cybr-btn" onClick={() => setIsFormOpen(true)}>
-        + NEW GAME BASE
-      </button>
+      {user ? ( 
+        <button className="cybr-btn" onClick={() => setIsFormOpen(true)}>
+          + NEW GAME BASE
+        </button>
+      ) : ('')}
+      
       
       <h1>Games</h1>
       <GameList games={games} />
-      
+
       {isFormOpen && (
         <div className="modal-overlay" onClick={() => setIsFormOpen(false)}>
           <div
