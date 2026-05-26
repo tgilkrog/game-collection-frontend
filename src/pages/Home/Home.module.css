@@ -11,14 +11,12 @@
       rgba(0,0,0,1) 0%, 
       rgba(0,0,0,0) 50%
     ),
-    url("/src/assets/hero6.png");
+    url("/src/assets/hero2.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
 }
-
-
 
 
 /* PANEL CONTAINER */

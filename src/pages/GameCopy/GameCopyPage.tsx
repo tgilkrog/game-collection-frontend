@@ -5,6 +5,7 @@ import { getConditions } from '../../api/conditions';
 import { getPlatforms } from "../../api/platforms";
 import { getGames } from "../../api/games";
 import { createGameCopy, getGameCopies } from "../../api/gameCopy";
+import { useAuth } from "../../Context/AuthContext";
 
 import type { GameCopy } from '../../types/gamecopy';
 import type { Game } from '../../types/game';
@@ -17,6 +18,7 @@ export default function GameCopyPage() {
     const [games, setGames] = useState<Game[]>([]);
     const [gameCopies, setGameCopies] = useState<GameCopy[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const { user } = useAuth();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,9 +56,11 @@ export default function GameCopyPage() {
     };
   return (
     <div className="wrapper">
-        <button className="cybr-btn" onClick={() => setIsFormOpen(true)}>
-            + NEW GAME COPY
-        </button>
+        {user ? ( 
+            <button className="cybr-btn" onClick={() => setIsFormOpen(true)}>
+                + NEW GAME COPY
+            </button>
+        ) : ('')}
 
         <h1>Game Copies</h1>
 

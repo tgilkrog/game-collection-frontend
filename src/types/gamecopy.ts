@@ -1,4 +1,5 @@
 import type { CopyPart } from './copypart';
+import type { Platform } from './platform';
 import type { Game } from './game';
 
 export interface GameCopy {
@@ -6,6 +7,7 @@ export interface GameCopy {
   title: string;
   game: Game;
   platform_id: number;
+  platform: Platform,
   region?: string;
   purchase_price?: number;
   purchase_date?: string;

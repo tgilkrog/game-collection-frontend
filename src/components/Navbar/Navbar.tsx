@@ -37,7 +37,7 @@ export function Navbar() {
         </Link>
 
         <Link to="/gamebase" className={styles.link} onClick={() => setOpen(false)}>
-          GAMES
+          GAMES BASES
         </Link>
 
         <button className={styles.close} onClick={() => setOpen(false)}>

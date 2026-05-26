@@ -1,0 +1,150 @@
+.cyber-bg {
+  position: fixed;
+  inset: 0;
+
+  z-index: -3;
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+/* MAIN BACKGROUND */
+
+.cyber-bg::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(0, 240, 255, 0.08),
+      transparent 35%
+    ),
+
+    radial-gradient(
+      circle at bottom right,
+      rgba(255, 0, 140, 0.08),
+      transparent 40%
+    ),
+
+    radial-gradient(
+      circle at center,
+      rgba(176, 0, 255, 0.05),
+      transparent 50%
+    ),
+
+    linear-gradient(
+      180deg,
+      #05070b 0%,
+      #0b1020 40%,
+      #05070b 100%
+    );
+
+  animation: bgShift 20s ease infinite;
+}
+
+/* GRID */
+
+.cyber-bg::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(0, 240, 255, 0.06) 1px,
+      transparent 1px
+    ),
+
+    linear-gradient(
+      90deg,
+      rgba(0, 240, 255, 0.06) 1px,
+      transparent 1px
+    );
+
+  background-size: 60px 60px;
+
+  opacity: 0.3;
+}
+
+/* LIGHT STREAKS */
+
+.cyber-bg span {
+  position: absolute;
+
+  width: 1px;
+  height: 200%;
+
+  background: linear-gradient(
+    transparent,
+    rgba(0, 240, 255, 0.2),
+    transparent
+  );
+
+  animation: streakMove linear infinite;
+}
+
+.cyber-bg span:nth-child(1) {
+  left: 15%;
+  animation-duration: 12s;
+}
+
+.cyber-bg span:nth-child(2) {
+  left: 35%;
+  animation-duration: 18s;
+}
+
+.cyber-bg span:nth-child(3) {
+  left: 70%;
+  animation-duration: 15s;
+}
+
+.cyber-bg span:nth-child(4) {
+  left: 90%;
+  animation-duration: 20s;
+}
+
+/* NOISE */
+
+.noise {
+  position: fixed;
+  inset: 0;
+
+  z-index: -2;
+
+  opacity: 0.03;
+
+  pointer-events: none;
+
+  background-image:
+    url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+}
+
+/* ANIMATIONS */
+
+@keyframes streakMove {
+  from {
+    transform: translateY(-50%);
+  }
+
+  to {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes bgShift {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+
+  50% {
+    filter: hue-rotate(8deg);
+  }
+
+  100% {
+    filter: hue-rotate(0deg);
+  }
+}
