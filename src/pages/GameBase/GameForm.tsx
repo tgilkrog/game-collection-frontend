@@ -26,6 +26,12 @@ type GameFormProps = {
   submitLabel?: string;
 };
 
+type InputProps = {
+  name: keyof FormState;
+  placeholder: string;
+  value: string | number;
+};
+
 export default function GameForm({
   genres,
   onSubmit,
@@ -41,11 +47,8 @@ export default function GameForm({
   });
 
   const [file, setFile] = useState<File | null>(null);
-  const [selectedGenres, setSelectedGenres] = useState<number[]>(
-    initialData?.genres || []);
-  const [preview, setPreview] = useState<string | null>(
-    initialData?.cover_image ? `http://127.0.0.1:8000${initialData.cover_image}` : null
-  );
+  const [selectedGenres, setSelectedGenres] = useState<number[]>(initialData?.genres || []);
+  const [preview, setPreview] = useState<string | null>(initialData?.cover_image ? `http://127.0.0.1:8000${initialData.cover_image}` : null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -96,6 +99,18 @@ export default function GameForm({
     await onSubmit(formData);
   };
 
+  function FormInput({ name, placeholder, value }: InputProps) {
+    return (
+      <input
+        className="ui-input"
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={handleChange}
+      />
+    );
+  }
+
   return (
     <div className={styles.form_wrapper}>
       <div className={styles.preview_image_wrap}>
@@ -112,45 +127,35 @@ export default function GameForm({
       <form onSubmit={handleSubmit} className="ui-form">
         <div className="ui-form-header">New Game Entry</div>
 
-        <input
-          className="ui-input"
+        <FormInput
           name="title"
           placeholder="Title"
           value={form.title}
-          onChange={handleChange}
         />
 
-        <input
-          className="ui-input"
+        <FormInput
           name="developer"
           placeholder="Developer"
           value={form.developer}
-          onChange={handleChange}
         />
 
-        <input
-          className="ui-input"
+        <FormInput
           name="publisher"
           placeholder="Publisher"
           value={form.publisher}
-          onChange={handleChange}
-        />
+        />        
 
-        <input
-          className="ui-input"
+        <FormInput
           name="description"
-          placeholder="description"
+          placeholder="Description"
           value={form.description}
-          onChange={handleChange}
         />
 
-        <input
-          className="ui-input"
+        <FormInput
           name="release_year"
           placeholder="Release Year"
           value={form.release_year}
-          onChange={handleChange}
-        />
+        />  
 
         <input
           type="file"
@@ -159,15 +164,15 @@ export default function GameForm({
         />
 
         <div>
-          {genres.map(g => (
-            <label className="ui-checkbox" key={g.id}>
+          {genres.map(genre => (
+            <label className="ui-checkbox" key={genre.id}>
               <input
                 type="checkbox"
-                checked={selectedGenres.includes(g.id)}
-                onChange={e => handleCheckbox(g.id, e.target.checked)}
+                checked={selectedGenres.includes(genre.id)}
+                onChange={e => handleCheckbox(genre.id, e.target.checked)}
               />
               <span className="ui-checkbox-box"></span>
-              <span className="ui-checkbox-label">{g.name}</span>
+              <span className="ui-checkbox-label">{genre.name}</span>
             </label>
           ))}
         </div>

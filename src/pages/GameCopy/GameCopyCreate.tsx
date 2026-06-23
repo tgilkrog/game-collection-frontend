@@ -23,6 +23,12 @@ type GameCopyFormProps = {
   onSubmit: (data: FormData) => Promise<void>;
 };
 
+type InputProps = {
+  name: keyof FormState;
+  placeholder: string;
+  value: string | number;
+};
+
 export default function GameCopyCreate({
   conditions,
   platforms,
@@ -62,9 +68,9 @@ export default function GameCopyCreate({
     setParts(prev => [
         ...prev,
         {
-        type: '',
-        condition: conditions[0], 
-        notes: ''
+          type: '',
+          condition: conditions[0], 
+          notes: ''
         }
     ]);
     };
@@ -109,16 +115,26 @@ export default function GameCopyCreate({
     await onSubmit(formData);
   };
 
+  function FormInput({ name, placeholder, value }: InputProps) {
+    return (
+      <input
+        className="ui-input"
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={handleChange}
+      />
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="ui-form">
       <div className="ui-form-header">New Game Copy</div>
 
-      <input
-        className="ui-input"
+      <FormInput
         name="title"
         placeholder="Title"
         value={form.title}
-        onChange={handleChange}
       />
 
       <select
@@ -128,9 +144,9 @@ export default function GameCopyCreate({
         onChange={handleChange}
       >
         <option value={0}>Select Game</option>
-        {games.map(g => (
-          <option key={g.id} value={g.id}>
-            {g.title}
+        {games.map(game => (
+          <option key={game.id} value={game.id}>
+            {game.title}
           </option>
         ))}
       </select>
@@ -142,19 +158,17 @@ export default function GameCopyCreate({
         onChange={handleChange}
       >
         <option value={0}>Select Platform</option>
-        {platforms.map(p => (
-          <option key={p.id} value={p.id}>
-            {p.name}
+        {platforms.map(platform => (
+          <option key={platform.id} value={platform.id}>
+            {platform.name}
           </option>
         ))}
       </select>
 
-      <input
-        className="ui-input"
+      <FormInput
         name="region"
         placeholder="Region"
         value={form.region}
-        onChange={handleChange}
       />
 
       <input
@@ -174,12 +188,10 @@ export default function GameCopyCreate({
         onChange={handleChange}
       />
 
-      <input
-        className="ui-input"
+      <FormInput
         name="notes"
         placeholder="Notes"
         value={form.notes}
-        onChange={handleChange}
       />
 
       <hr />
@@ -201,20 +213,20 @@ export default function GameCopyCreate({
               value={part.condition.id}
               onChange={e => {
                   const selected = conditions.find(
-                  c => c.id === Number(e.target.value)
+                    c => c.id === Number(e.target.value)
                   );
 
                   if (!selected) return;
 
                   updatePart(index, 'condition', selected);
               }}
-              >
-              {conditions.map(c => (
-                  <option key={c.id} value={c.id}>
-                  {c.name}
+            >
+              {conditions.map(condition => (
+                  <option key={condition.id} value={condition.id}>
+                  {condition.name}
                   </option>
               ))}
-              </select>
+            </select>
 
             <input
               className="ui-input"
