@@ -1,51 +1,41 @@
 /* === TRIGGER BUTTON === */
 .menuWrapper {
   z-index: 1000;
-}
-
-.menuWrapper::before {
-  content: "";
-  position: absolute;
-  right: -8px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    #00f0ff,
-    transparent
-  );
-
-  opacity: 0.6;
+  position: relative;
 }
 
 .menuButton {
-  width: 42px;
-  height: 32px;
+  width: 36px;
+  height: 30px;
   background: transparent;
-  border: 1px solid rgba(0, 240, 255, 0.3);
+  border: 1px solid #2a3441;
   position: relative;
   cursor: pointer;
+  transition: border-color .15s;
+}
+
+.menuButton:hover {
+  border-color: #5ce1e0;
 }
 
 /* bars */
 .menuButton span {
   position: absolute;
-  left: 8px;
-  right: 8px;
+  left: 7px;
+  right: 7px;
   height: 2px;
-  background: #00f0ff;
-  box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
-  transition: 0.2s;
+  background: #7a8696;
+  transition: background .15s, transform .15s;
 }
 
-.menuButton span:nth-child(1) { top: 8px; }
-.menuButton span:nth-child(2) { top: 15px; }
-.menuButton span:nth-child(3) { top: 22px; }
+.menuButton span:nth-child(1) { top: 7px; }
+.menuButton span:nth-child(2) { top: 14px; }
+.menuButton span:nth-child(3) { top: 21px; }
 
-/* hover glitch effect */
+.menuButton:hover span {
+  background: #5ce1e0;
+}
+
 .menuButton:hover span:nth-child(1) {
   transform: translateX(-2px);
 }

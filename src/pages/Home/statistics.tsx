@@ -18,24 +18,21 @@ export function Statistics() {
     const stats: PlatformStat[] = data?.platform_totals ?? [];
     const total: number = data?.total_copies ?? 0;
 
-    if (isLoading) return <div className={styles.panel}>Loading...</div>;
-    if (isError) return <div className={styles.panel}>Failed to load stats.</div>;
+    if (isLoading || isError) return null;
 
     return (
-        <div className={styles.panel}>
-            <div className={styles.scan}></div>
+        <div className={styles.stats_panel}>
+            <div className={styles.stats_header}>COLLECTION OVERVIEW</div>
 
-            <div className={styles.panel_header}>COLLECTION OVERVIEW</div>
-
-            <div className={`${styles.panel_row} ${styles.total}`}>
-                <span>Total Games</span>
-                <span className={styles.value}>{total}</span>
+            <div className={`${styles.stats_row} ${styles.stats_total}`}>
+                <span>TOTAL</span>
+                <span className={styles.stats_total_value}>{total}</span>
             </div>
 
             {stats.map((g) => (
-                <div key={g.id} className={styles.panel_row}>
-                    <span>{g.alias}</span>
-                    <span className={styles.value}>{g.total}</span>
+                <div key={g.id} className={styles.stats_row}>
+                    <span className={styles.stats_label}>{g.alias}</span>
+                    <span className={styles.stats_value}>{g.total}</span>
                 </div>
             ))}
         </div>

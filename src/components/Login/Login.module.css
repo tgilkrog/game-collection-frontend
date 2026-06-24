@@ -1,25 +1,22 @@
 /* LOGIN BUTTON */
 .login {
-    padding: 6px 14px;
-
-    background: transparent;
-    border: 1px solid #ffcc00;
-
-    color: #ffcc00;
-
-    font-size: 12px;
-    text-transform: uppercase;
-
-    cursor: pointer;
-
-    transition: 0.2s;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid #2a3441;
+  color: #a8b2bd;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  transition: border-color .15s, color .15s;
 }
 
 .login:hover {
-  background: #ffcc00;
-  color: black;
-
-  box-shadow: 0 0 15px #ffcc00;
+  border-color: #5ce1e0;
+  color: #5ce1e0;
+  box-shadow: 0 0 10px rgba(92,225,224,.2);
 }
 
 .title {

@@ -1,123 +1,139 @@
-.topbar_wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 12px 20px;
-
-    background: rgba(10, 10, 20, 0.75);
-    backdrop-filter: blur(12px);
-
-    border-bottom: 1px solid rgba(0, 255, 255, 0.25);
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.12);
-
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    z-index: 99;
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 60px;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 24px;
+  box-sizing: border-box;
+  background: rgba(10,14,19,.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #1a212b;
 }
 
-/* LEFT */
-.left {
-    display: flex;
-    align-items: center;
-}
-
+/* ── LOGO ── */
 .logo {
-    font-size: 30px;
-    font-family: monospace;
-    letter-spacing: 2px;
-    color: #00fff0;
-    text-shadow: 0 0 8px #00fff0;
-    text-decoration: none;
-
-    position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex: none;
 }
 
-/* CENTER */
-.center {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+.logo_icon {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+  background: #5ce1e0;
+  box-shadow: 0 0 12px rgba(92,225,224,.5);
+}
+
+.logo_text {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 5px;
+  color: #eef3f6;
+  line-height: 1;
+}
+
+/* ── SEARCH ── */
+.search_wrap {
+  flex: 1;
+  max-width: 480px;
+  position: relative;
+}
+
+.search_icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #566370;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  pointer-events: none;
 }
 
 .search {
-    width: 500px;
-    padding: 8px 12px;
-
-    background: rgba(0, 0, 0, 0.6);
-
-    border: 1px solid rgba(255, 0, 255, 0.4);
-    outline: none;
-
-    color: white;
-
-    box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
+  width: 100%;
+  background: #0e141b;
+  border: 1px solid #222c38;
+  color: #dfe6ec;
+  padding: 9px 14px 9px 36px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  outline: none;
+  transition: border-color .15s;
+  box-sizing: border-box;
 }
 
 .search:focus {
-    border-color: #ff00ff;
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+  border-color: #5ce1e0;
 }
 
-/* RIGHT */
-.right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+.search::placeholder {
+  color: #566370;
 }
 
-.menu {
-    display: flex;
-    gap: 12px;
-}
-
-.menu a {
-    font-size: 12px;
-    letter-spacing: 1px;
-
-    color: #cfcfcf;
-    text-decoration: none;
-
-    transition: 0.2s;
-}
-
-.menu a:hover {
-    color: #00fff0;
-    text-shadow: 0 0 6px #00fff0;
-}
-
-.center {
-  position: relative;
-  width: 400px;
-}
-
+/* ── SEARCH RESULTS ── */
 .search_popup {
   position: absolute;
-  top: 100%;
-
-  width: 500px;
-  background: #111;
-  border: 1px solid #333;
-
-  z-index: 1000;
-
-  max-height: 400px;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  background: #0d121a;
+  border: 1px solid #1a212b;
+  z-index: 200;
+  max-height: 360px;
   overflow-y: auto;
 }
 
 .search_item {
-  display: block;
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
   text-decoration: none;
-  color: white;
+  color: #a8b2bd;
+  border-bottom: 1px solid #1a212b;
+  transition: background .15s;
+}
+
+.search_item:last-child {
+  border-bottom: none;
 }
 
 .search_item:hover {
-  background: #222;
+  background: rgba(92,225,224,.06);
+  color: #eef3f6;
 }
 
-.image {
-    width: 100px;
+.search_img {
+  width: 32px;
+  height: 42px;
+  object-fit: cover;
+  flex: none;
+}
+
+.search_item_title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .5px;
+}
+
+/* ── RIGHT SLOT ── */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  flex: none;
 }
