@@ -8,7 +8,7 @@ export default function GameCopyList({ gameCopies }: { gameCopies: GameCopy[] })
             <div key={gameCopy.id} className="card">
                 <Link to={`/gamebase/${gameCopy.game.id}`}>
                     <img
-                        src={`http://127.0.0.1:8000${gameCopy.game.cover_image}`}
+                        src={`${import.meta.env.VITE_API_BASE_URL}${gameCopy.game.cover_image}`}
                         className="image"
                         alt={gameCopy.title}
                         loading="lazy"

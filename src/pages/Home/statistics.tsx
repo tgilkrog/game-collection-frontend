@@ -1,27 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import styles from "./Home.module.css";
 import { getHome } from '../../api/home';
 
-type stats = {
-    'id': number,
-    'name': string,
-    'alias': string
-    'total': number
+type PlatformStat = {
+    id: number;
+    name: string;
+    alias: string;
+    total: number;
 }
 
 export function Statistics() {
-    const [stats, setStats] = useState<stats[]>([]);
-    const [total, setTotal]  = useState(0);
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ['home'],
+        queryFn: () => getHome().then(r => r.data),
+    });
 
-    const fetchStats = async () => {
-        const res = await getHome();
-        setStats(res.data.platform_totals);
-        setTotal(res.data.total_copies);
-    };
+    const stats: PlatformStat[] = data?.platform_totals ?? [];
+    const total: number = data?.total_copies ?? 0;
 
-    useEffect(() => {
-    fetchStats();
-    }, []);
+    if (isLoading) return <div className={styles.panel}>Loading...</div>;
+    if (isError) return <div className={styles.panel}>Failed to load stats.</div>;
 
     return (
         <div className={styles.panel}>
@@ -35,7 +33,10 @@ export function Statistics() {
             </div>
 
             {stats.map((g) => (
-                <div className={styles.panel_row}><span>{g.alias}</span><span className={styles.value}>{g.total}</span></div>
+                <div key={g.id} className={styles.panel_row}>
+                    <span>{g.alias}</span>
+                    <span className={styles.value}>{g.total}</span>
+                </div>
             ))}
         </div>
     );

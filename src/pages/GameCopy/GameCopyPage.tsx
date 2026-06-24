@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import GameCopyCreate from "./GameCopyCreate";
 import GameCopyList from './GameCopyList';
 import { getConditions } from '../../api/conditions';
@@ -7,80 +8,76 @@ import { getGames } from "../../api/games";
 import { createGameCopy, getGameCopies } from "../../api/gameCopy";
 import { useAuth } from "../../Context/AuthContext";
 
-import type { GameCopy } from '../../types/gamecopy';
-import type { Game } from '../../types/game';
-import type { Platform } from '../../types/platform';
-import type { Condition } from "../../types/condition";
+const FIVE_MINUTES = 5 * 60 * 1000;
 
 export default function GameCopyPage() {
-    const [conditions, setConditions] = useState<Condition[]>([]);
-    const [platforms, setPlatforms] = useState<Platform[]>([]);
-    const [games, setGames] = useState<Game[]>([]);
-    const [gameCopies, setGameCopies] = useState<GameCopy[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const { user } = useAuth();
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [
-                    conditionsRes,
-                    platformsRes,
-                    gamesRes,
-                    copiesRes,
-                ] = await Promise.all([
-                    getConditions(),
-                    getPlatforms(),
-                    getGames(),
-                    getGameCopies(),
-                ]);
+    const { data: conditions = [] } = useQuery({
+        queryKey: ['conditions'],
+        queryFn: () => getConditions().then(r => r.data),
+        staleTime: FIVE_MINUTES,
+    });
 
-                setConditions(conditionsRes.data);
-                setPlatforms(platformsRes.data);
-                setGames(gamesRes.data);
-                setGameCopies(copiesRes.data);
-            } catch (err) {
-                console.error(err);
-            }
-        };
+    const { data: platforms = [] } = useQuery({
+        queryKey: ['platforms'],
+        queryFn: () => getPlatforms().then(r => r.data),
+        staleTime: FIVE_MINUTES,
+    });
 
-        fetchData();
-    }, []);
+    const { data: games = [] } = useQuery({
+        queryKey: ['games'],
+        queryFn: () => getGames().then(r => r.data),
+    });
 
-    const handleSubmit = async (formData: FormData) => {
-        try {
-            await createGameCopy(formData);
-        } catch (err: any) {
+    const { data: gameCopies = [], isLoading, isError } = useQuery({
+        queryKey: ['gameCopies'],
+        queryFn: () => getGameCopies().then(r => r.data),
+    });
+
+    const createMutation = useMutation({
+        mutationFn: createGameCopy,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['gameCopies'] });
+            setIsFormOpen(false);
+        },
+        onError: (err: any) => {
             console.error(err.response?.data);
-        }
-    };
-  return (
-    <div className="wrapper">
-        {user ? ( 
-            <button className="cybr-btn" onClick={() => setIsFormOpen(true)}>
-                + NEW GAME COPY
-            </button>
-        ) : ('')}
+        },
+    });
 
-        <h1>Game Copies</h1>
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Failed to load game copies.</div>;
 
-        <GameCopyList gameCopies={gameCopies}  />
+    return (
+        <div className="wrapper">
+            {user ? (
+                <button className="cybr-btn" onClick={() => setIsFormOpen(true)}>
+                    + NEW GAME COPY
+                </button>
+            ) : ('')}
 
-        {isFormOpen && (
-            <div className="modal-overlay" onClick={() => setIsFormOpen(false)}>
-                <div
-                    className="modal-content"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                <GameCopyCreate
-                    conditions={conditions}
-                    platforms={platforms}
-                    games={games}
-                    onSubmit={handleSubmit}
-                />
+            <h1>Game Copies</h1>
+
+            <GameCopyList gameCopies={gameCopies} />
+
+            {isFormOpen && (
+                <div className="modal-overlay" onClick={() => setIsFormOpen(false)}>
+                    <div
+                        className="modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                    <GameCopyCreate
+                        conditions={conditions}
+                        platforms={platforms}
+                        games={games}
+                        onSubmit={createMutation.mutateAsync}
+                    />
+                    </div>
                 </div>
-            </div>
-        )}
-    </div>
-  );
+            )}
+        </div>
+    );
 }

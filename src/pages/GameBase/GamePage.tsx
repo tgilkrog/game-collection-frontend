@@ -1,56 +1,67 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getGame, deleteGame, updateGame } from '../../api/games';
 import { getConditions } from '../../api/conditions';
 import GameForm from './GameForm';
 import { getGenres } from '../../api/genres';
 import styles from './game.module.css';
 
-import type { Game } from '../../types/game';
 import type { Genre } from '../../types/genre';
 import type { Condition } from '../../types/condition';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faBuildingUser, faLaptop } from '@fortawesome/free-solid-svg-icons';
 
-export default function GamePage () {
+const FIVE_MINUTES = 5 * 60 * 1000;
+
+export default function GamePage() {
     const { id } = useParams();
-    const [game, setGame] = useState<Game | null>(null); 
-    const [genres, setGenres] = useState<Genre[]>([]);
-    const [conditions, setConditions] = useState<Condition[]>([]);
-    const [isFormOpen, setIsFormOpen] = useState(false);
     const navigate = useNavigate();
-    
-    const handleDelete = async (id: number) => {
-        await deleteGame(id);
-        navigate('/gamebase');
-    };
+    const queryClient = useQueryClient();
+    const [isFormOpen, setIsFormOpen] = useState(false);
 
-    const fetchData = async () => {
-        const [genresRes, conditionsRes] = await Promise.all([
-            getGenres(),
-            getConditions(),
-        ]);
-        setGenres(genresRes.data);
-        setConditions(conditionsRes.data);
-    };
+    const { data: game, isLoading, isError } = useQuery({
+        queryKey: ['game', id],
+        queryFn: () => getGame(Number(id)).then(r => r.data),
+        enabled: !!id,
+    });
 
-    useEffect(() => {
-        if (!id) return;
-        fetchData();
-        getGame(Number(id)).then(res => {
-            setGame(res.data);
-        });
-    }, [id]);
+    const { data: genres = [] } = useQuery({
+        queryKey: ['genres'],
+        queryFn: () => getGenres().then(r => r.data),
+        staleTime: FIVE_MINUTES,
+    });
 
-    if (!game) return <div>Loading...</div>;
+    const { data: conditions = [] } = useQuery({
+        queryKey: ['conditions'],
+        queryFn: () => getConditions().then(r => r.data),
+        staleTime: FIVE_MINUTES,
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: (data: FormData) => updateGame(game!.id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['game', id] });
+            setIsFormOpen(false);
+        },
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: () => deleteGame(game!.id),
+        onSuccess: () => navigate('/gamebase'),
+    });
+
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Failed to load game.</div>;
+    if (!game) return null;
 
     return (
         <div className="wrapper">
             <div className={styles.game_wrapper}>
                 <div className={styles.game_image}>
                     <img
-                        src={`http://127.0.0.1:8000${game.cover_image}`}
+                        src={`${import.meta.env.VITE_API_BASE_URL}${game.cover_image}`}
                         alt={game.title}
                     />
                 </div>
@@ -65,7 +76,7 @@ export default function GamePage () {
                         <p className={styles.description}>{game.description}</p>
 
                         <div className={styles.genres}>
-                        {game.genres?.map(g => (
+                        {game.genres?.map((g: Genre) => (
                             <span key={g.id} className={styles.genre_tag}>
                             {g.name}
                             </span>
@@ -81,14 +92,14 @@ export default function GamePage () {
 
                         <button
                             className="cybr-btn delete"
-                            onClick={() => handleDelete(game.id)}
+                            onClick={() => deleteMutation.mutate()}
                         >
                             DELETE
                         </button>
                     </div>
                 </div>
             </div>
-            {game.game_copies?.map(g => (
+            {game.game_copies?.map((g: any) => (
                 <div className={styles.game_copy_wrapper} key={g.id}>
                     <h2 className={styles.copy_title}>{g.title}</h2>
                     <p>Region: {g.region}</p>
@@ -97,15 +108,15 @@ export default function GamePage () {
                     <p>Purchase Price: {g.purchase_price}</p>
                     <p>Notes: {g.notes}</p>
 
-                    {g.parts?.map(p => ( 
-                        <div className={styles.conditions_row}>
+                    {g.parts?.map((p: any) => (
+                        <div className={styles.conditions_row} key={p.id ?? p.type}>
                             <p className={styles.condition_type}>{p.type}</p>
                             <div className={styles.conditions_items}>
-                                {conditions?.map(c => (
+                                {(conditions as Condition[])?.map(c => (
                                     c.name === p.condition.name ? (
-                                        <p className={`${styles.conditions} ${styles.highlight}`}>{c.name}</p>
+                                        <p key={c.id} className={`${styles.conditions} ${styles.highlight}`}>{c.name}</p>
                                     ) : (
-                                        <p className={styles.conditions}>{c.name}</p>
+                                        <p key={c.id} className={styles.conditions}>{c.name}</p>
                                     )
                                 ))}
                             </div>
@@ -128,16 +139,10 @@ export default function GamePage () {
                         publisher: game.publisher,
                         description: game.description,
                         release_year: game.release_year,
-                        genres: game.genres?.map(g => g.id),
+                        genres: game.genres?.map((g: Genre) => g.id),
                         cover_image: game.cover_image
                     }}
-                    onSubmit={async (data) => {
-                        await updateGame(game.id, data);
-                        setIsFormOpen(false);
-                        getGame(Number(id)).then(res => {
-                            setGame(res.data);
-                        });
-                    }}
+                    onSubmit={updateMutation.mutateAsync}
                     submitLabel="Update"
                 />
                 </div>
