@@ -1,7 +1,7 @@
 import styles from "./Home.module.css";
 import { PageTransition } from "../../components/PageTransition";
 import { Statistics } from "./statistics";
-import { getHome } from "../../api/home";
+import { Feed } from "./Feed";
 
 export function Home() {
   return (
@@ -10,6 +10,7 @@ export function Home() {
         <div className="wrapper">
           <Statistics />
         </div>
+        <Feed />
       </section>
     </PageTransition>
   );
