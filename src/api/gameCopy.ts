@@ -3,6 +3,9 @@ import type { GameCopy } from '../types/gamecopy';
 
 const BASE_URL = '/game-copies';
 
+export const getFeed = () =>
+  api.get<GameCopy[]>('/feed');
+
 export const getGameCopies = () =>
   api.get<GameCopy[]>(BASE_URL);
 

@@ -48,7 +48,7 @@ export default function GameForm({
 
   const [file, setFile] = useState<File | null>(null);
   const [selectedGenres, setSelectedGenres] = useState<number[]>(initialData?.genres || []);
-  const [preview, setPreview] = useState<string | null>(initialData?.cover_image ? `http://127.0.0.1:8000${initialData.cover_image}` : null);
+  const [preview, setPreview] = useState<string | null>(initialData?.cover_image ? `${import.meta.env.VITE_API_BASE_URL}${initialData.cover_image}` : null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;

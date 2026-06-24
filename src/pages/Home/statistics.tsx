@@ -1,41 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import styles from "./Home.module.css";
 import { getHome } from '../../api/home';
 
-type stats = {
-    'id': number,
-    'name': string,
-    'alias': string
-    'total': number
+type PlatformStat = {
+    id: number;
+    name: string;
+    alias: string;
+    total: number;
 }
 
 export function Statistics() {
-    const [stats, setStats] = useState<stats[]>([]);
-    const [total, setTotal]  = useState(0);
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ['home'],
+        queryFn: () => getHome().then(r => r.data),
+    });
 
-    const fetchStats = async () => {
-        const res = await getHome();
-        setStats(res.data.platform_totals);
-        setTotal(res.data.total_copies);
-    };
+    const stats: PlatformStat[] = data?.platform_totals ?? [];
+    const total: number = data?.total_copies ?? 0;
 
-    useEffect(() => {
-    fetchStats();
-    }, []);
+    if (isLoading || isError) return null;
 
     return (
-        <div className={styles.panel}>
-            <div className={styles.scan}></div>
+        <div className={styles.stats_panel}>
+            <div className={styles.stats_header}>COLLECTION OVERVIEW</div>
 
-            <div className={styles.panel_header}>COLLECTION OVERVIEW</div>
-
-            <div className={`${styles.panel_row} ${styles.total}`}>
-                <span>Total Games</span>
-                <span className={styles.value}>{total}</span>
+            <div className={`${styles.stats_row} ${styles.stats_total}`}>
+                <span>TOTAL</span>
+                <span className={styles.stats_total_value}>{total}</span>
             </div>
 
             {stats.map((g) => (
-                <div className={styles.panel_row}><span>{g.alias}</span><span className={styles.value}>{g.total}</span></div>
+                <div key={g.id} className={styles.stats_row}>
+                    <span className={styles.stats_label}>{g.alias}</span>
+                    <span className={styles.stats_value}>{g.total}</span>
+                </div>
             ))}
         </div>
     );
