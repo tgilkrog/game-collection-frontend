@@ -6,12 +6,8 @@ import { getConditions } from '../../api/conditions';
 import GameForm from './GameForm';
 import { getGenres } from '../../api/genres';
 import styles from './game.module.css';
-
 import type { Genre } from '../../types/genre';
 import type { Condition } from '../../types/condition';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faBuildingUser, faLaptop } from '@fortawesome/free-solid-svg-icons';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
@@ -52,13 +48,16 @@ export default function GamePage() {
         onSuccess: () => navigate('/gamebase'),
     });
 
-    if (isLoading) return <div>Loading...</div>;
-    if (isError) return <div>Failed to load game.</div>;
-    if (!game) return null;
+    if (isLoading) return <div className={styles.status}>LOADING...</div>;
+    if (isError)   return <div className={styles.status}>FAILED TO LOAD GAME.</div>;
+    if (!game)     return null;
 
     return (
-        <div className="wrapper">
+        <div className={styles.page}>
+
+            {/* ── Top: cover + info ── */}
             <div className={styles.game_wrapper}>
+
                 <div className={styles.game_image}>
                     <img
                         src={`${import.meta.env.VITE_API_BASE_URL}${game.cover_image}`}
@@ -68,85 +67,123 @@ export default function GamePage() {
 
                 <div className={styles.game_info}>
                     <h1 className={styles.title}>{game.title}</h1>
+
                     <div className={styles.game_info_content}>
-                        <p><FontAwesomeIcon icon={faCalendar} /> Release Year: {game.release_year}</p>
-                        <p><FontAwesomeIcon icon={faLaptop} /> Developer: {game.developer}</p>
-                        <p><FontAwesomeIcon icon={faBuildingUser} /> Publisher: {game.publisher}</p>
+                        <div className={styles.meta_row}>
+                            <span className={styles.meta_label}>RELEASE YEAR</span>
+                            <span className={styles.meta_value}>{game.release_year}</span>
+                        </div>
+                        <div className={styles.meta_row}>
+                            <span className={styles.meta_label}>DEVELOPER</span>
+                            <span className={styles.meta_value}>{game.developer}</span>
+                        </div>
+                        <div className={styles.meta_row}>
+                            <span className={styles.meta_label}>PUBLISHER</span>
+                            <span className={styles.meta_value}>{game.publisher}</span>
+                        </div>
 
                         <p className={styles.description}>{game.description}</p>
 
                         <div className={styles.genres}>
-                        {game.genres?.map((g: Genre) => (
-                            <span key={g.id} className={styles.genre_tag}>
-                            {g.name}
-                            </span>
-                        ))}
+                            {game.genres?.map((g: Genre) => (
+                                <span key={g.id} className={styles.genre_tag}>{g.name}</span>
+                            ))}
                         </div>
 
-                        <button
-                            className="cybr-btn"
-                            onClick={() => setIsFormOpen(true)}
-                        >
-                            Update
-                        </button>
-
-                        <button
-                            className="cybr-btn delete"
-                            onClick={() => deleteMutation.mutate()}
-                        >
-                            DELETE
-                        </button>
+                        <div className={styles.actions}>
+                            <button className={styles.btn} onClick={() => setIsFormOpen(true)}>
+                                UPDATE
+                            </button>
+                            <button className={styles.btn_delete} onClick={() => deleteMutation.mutate()}>
+                                DELETE
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-            {game.game_copies?.map((g: any) => (
-                <div className={styles.game_copy_wrapper} key={g.id}>
-                    <h2 className={styles.copy_title}>{g.title}</h2>
-                    <p>Region: {g.region}</p>
-                    <p>Platform: {g.platform.name}</p>
-                    <p>Purchase Date: {g.purchase_date ? new Date(g.purchase_date).toLocaleDateString('da-DK') : ''}</p>
-                    <p>Purchase Price: {g.purchase_price}</p>
-                    <p>Notes: {g.notes}</p>
 
-                    {g.parts?.map((p: any) => (
-                        <div className={styles.conditions_row} key={p.id ?? p.type}>
-                            <p className={styles.condition_type}>{p.type}</p>
-                            <div className={styles.conditions_items}>
-                                {(conditions as Condition[])?.map(c => (
-                                    c.name === p.condition.name ? (
-                                        <p key={c.id} className={`${styles.conditions} ${styles.highlight}`}>{c.name}</p>
-                                    ) : (
-                                        <p key={c.id} className={styles.conditions}>{c.name}</p>
-                                    )
-                                ))}
+            {/* ── Game copies ── */}
+            {game.game_copies?.length > 0 && (
+                <>
+                    <h2 className={styles.copies_heading}>
+                        COPIES
+                        <span>{String(game.game_copies.length).padStart(2, '0')} ENTRIES</span>
+                    </h2>
+
+                    {game.game_copies.map((g: any) => (
+                        <div className={styles.game_copy_wrapper} key={g.id}>
+                            <div className={styles.copy_title}>{g.platform?.name ?? '—'}</div>
+
+                            <div className={styles.copy_meta}>
+                                {g.region && (
+                                    <div className={styles.copy_meta_row}>
+                                        <span className={styles.copy_meta_label}>REGION</span>
+                                        <span className={styles.copy_meta_value}>{g.region}</span>
+                                    </div>
+                                )}
+                                {g.purchase_date && (
+                                    <div className={styles.copy_meta_row}>
+                                        <span className={styles.copy_meta_label}>PURCHASED</span>
+                                        <span className={styles.copy_meta_value}>
+                                            {new Date(g.purchase_date).toLocaleDateString('da-DK')}
+                                        </span>
+                                    </div>
+                                )}
+                                {g.purchase_price != null && (
+                                    <div className={styles.copy_meta_row}>
+                                        <span className={styles.copy_meta_label}>PRICE</span>
+                                        <span className={styles.copy_meta_value}>{g.purchase_price}</span>
+                                    </div>
+                                )}
+                                {g.notes && (
+                                    <div className={styles.copy_meta_row}>
+                                        <span className={styles.copy_meta_label}>NOTES</span>
+                                        <span className={styles.copy_meta_value}>{g.notes}</span>
+                                    </div>
+                                )}
                             </div>
+
+                            {g.parts?.map((p: any) => (
+                                <div className={styles.conditions_row} key={p.id ?? p.type}>
+                                    <p className={styles.condition_type}>{p.type}</p>
+                                    <div className={styles.conditions_items}>
+                                        {(conditions as Condition[]).map(c => (
+                                            <p
+                                                key={c.id}
+                                                className={`${styles.conditions}${c.name === p.condition.name ? ` ${styles.highlight}` : ''}`}
+                                            >
+                                                {c.name}
+                                            </p>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     ))}
-                </div>
-            ))}
+                </>
+            )}
+
+            {/* ── Edit modal ── */}
             {isFormOpen && (
-            <div className="modal-overlay" onClick={() => setIsFormOpen(false)}>
-                <div
-                    className="modal-content"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                <GameForm
-                    genres={genres}
-                    initialData={{
-                        id: game.id,
-                        title: game.title,
-                        developer: game.developer,
-                        publisher: game.publisher,
-                        description: game.description,
-                        release_year: game.release_year,
-                        genres: game.genres?.map((g: Genre) => g.id),
-                        cover_image: game.cover_image
-                    }}
-                    onSubmit={updateMutation.mutateAsync}
-                    submitLabel="Update"
-                />
+                <div className="modal-overlay" onClick={() => setIsFormOpen(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <GameForm
+                            genres={genres}
+                            initialData={{
+                                id: game.id,
+                                title: game.title,
+                                developer: game.developer,
+                                publisher: game.publisher,
+                                description: game.description,
+                                release_year: game.release_year,
+                                genres: game.genres?.map((g: Genre) => g.id),
+                                cover_image: game.cover_image,
+                            }}
+                            onSubmit={updateMutation.mutateAsync}
+                            submitLabel="Update"
+                        />
+                    </div>
                 </div>
-            </div>
             )}
         </div>
     );

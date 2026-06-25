@@ -144,7 +144,6 @@ export function Home() {
               {feed.map(copy => (
                 <Link key={copy.id} to={`/gamebase/${copy.game.id}`} className={styles.card_link}>
                   <div className={styles.card_cover}>
-                    <span className={styles.badge}>{copy.platform.name}</span>
                     <img
                       src={`${import.meta.env.VITE_API_BASE_URL}${copy.game.cover_image}`}
                       alt={copy.game.title}
@@ -155,8 +154,6 @@ export function Home() {
                       <div className={styles.card_price}>${copy.purchase_price}</div>
                     )}
                   </div>
-                  <div className={styles.card_title}>{copy.game.title}</div>
-                  <div className={styles.card_sub}>{copy.platform.name.toUpperCase()}</div>
                 </Link>
               ))}
             </div>

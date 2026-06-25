@@ -239,7 +239,7 @@
 .grid {
   padding: 24px 34px 40px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, 150px);
   gap: 20px;
   overflow-y: auto;
   flex: 1;

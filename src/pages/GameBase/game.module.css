@@ -1,233 +1,263 @@
+/* ── PAGE SHELL ── */
+.page {
+  padding: 80px 60px 60px;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  color: #a8b2bd;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
 
-/* GAME PAGE */
+/* ── TOP SECTION ── */
 .game_wrapper {
   display: flex;
-  gap: 40px;
-  padding: 0px 200px;
+  gap: 48px;
+  align-items: flex-start;
+  margin-bottom: 40px;
+}
+
+/* ── COVER IMAGE ── */
+.game_image {
+  flex: none;
+  width: 260px;
 }
 
 .game_image img {
-  max-height: 500px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(179, 162, 113, 0.1);
+  width: 100%;
+  display: block;
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+  border: 1px solid #222c38;
+  filter: contrast(1.05) saturate(1.1);
 }
 
-/* RIGHT SIDE */
+/* ── INFO PANEL ── */
 .game_info {
   flex: 1;
-  height: 100%;
+  min-width: 0;
+}
+
+.title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 42px;
+  letter-spacing: 4px;
+  color: #f1f5f8;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0 0 20px;
 }
 
 .game_info_content {
-  background: rgba(10, 14, 24, 0.72);
-
+  background: rgba(10,14,19,.72);
   backdrop-filter: blur(10px);
-
-  border: 1px solid rgba(0, 240, 255, 0.12);
-
-  box-shadow:
-    0 0 20px rgba(0, 240, 255, 0.05),
-    inset 0 0 20px rgba(255,255,255,0.02);
-
-  border-radius: 6px;
-  padding: 25px 50px;
-  height: 100%;
+  border: 1px solid #1a212b;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  padding: 28px 32px;
 }
 
-/* TITLE */
-.title {
-  font-size: 32px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-
-  color: #00f0ff;
-
-  text-shadow:
-    0 0 10px rgba(0, 240, 255, 0.5),
-    0 0 20px rgba(255, 0, 128, 0.3);
-}
-
-/* META INFO */
-.meta {
-  margin: 10px 0;
+/* ── META ROWS ── */
+.meta_row {
   display: flex;
-  gap: 20px;
-
-  font-size: 14px;
-  color: #8b93a7;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
 }
 
-/* DESCRIPTION */
+.meta_row:last-of-type {
+  border-bottom: none;
+}
+
+.meta_label {
+  color: #56616f;
+  min-width: 110px;
+  flex: none;
+}
+
+.meta_value {
+  color: #a8b2bd;
+}
+
+/* ── DESCRIPTION ── */
 .description {
   margin: 20px 0;
-  line-height: 1.6;
-  color: #cfd8e3;
+  line-height: 1.7;
+  font-size: 14px;
+  color: #8a95a3;
+  border-top: 1px solid #1a212b;
+  padding-top: 16px;
 }
 
-/* GENRES */
+/* ── GENRE TAGS ── */
 .genres {
-  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
 .genre_tag {
-  display: inline-block;
-  margin-right: 8px;
-  margin-bottom: 6px;
-  padding: 4px 10px;
-
-  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  letter-spacing: 1px;
-
-  color: #ff2bd6;
-
-  border: 1px solid rgba(255, 43, 214, 0.4);
-  background: rgba(255, 43, 214, 0.08);
-
-  box-shadow: 0 0 8px rgba(255, 43, 214, 0.2);
+  color: #56616f;
+  border: 1px solid #2a3441;
+  padding: 4px 10px;
+  background: rgba(10,14,19,.5);
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
 }
 
-/* DELETE BUTTON */
-.delete-button {
-  padding: 10px 20px;
-  border: none;
+/* ── ACTION BUTTONS ── */
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
 
-  background: linear-gradient(90deg, #ff2a6d, #ff0000);
-  color: black;
-
-  font-weight: bold;
+.btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
   letter-spacing: 2px;
-
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid #2a3441;
+  color: #7a8696;
+  padding: 10px 22px;
   cursor: pointer;
-  transition: 0.2s;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  transition: border-color .15s, color .15s;
 }
 
-.delete-button:hover {
-  filter: brightness(1.2);
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+.btn:hover {
+  border-color: #5ce1e0;
+  color: #5ce1e0;
 }
 
-
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
-  padding: 20px;
+.btn_delete {
+  composes: btn;
+  border-color: #3a1a1a;
+  color: #6b3030;
 }
 
-.card {
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  background: #0f1720;
-  border: 1px solid #1f2937;
+.btn_delete:hover {
+  border-color: #c0392b;
+  color: #e05a4e;
 }
 
-/* Image */
-.image {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  display: block;
-  filter: contrast(1.1) saturate(1.2);
+/* ── GAME COPIES ── */
+.copies_heading {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: #eef3f6;
+  margin: 0 0 20px;
+  text-transform: uppercase;
 }
 
-/* Overlay (hidden by default) */
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-  display: flex;
-  align-items: flex-end;
-  padding: 10px;
-
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-/* Title */
-.title {
-  color: #00f0ff;
-  font-size: 50px;
-  text-shadow: 0 0 6px #00f0ff88;
-  margin: 0px;
-}
-
-/* Show on hover */
-.card:hover .overlay {
-  opacity: 1;
-}
-
-/* Optional glow */
-.card:hover {
-  box-shadow:
-    0 0 10px #00f0ff33,
-    0 0 20px #ff00c833;
-}
-
-
-.form_wrapper {
-  display: flex;
-}
-
-.preview_image_wrap {
-  background: rgba(16, 19, 26, 0.9);
-  padding: 20px;
-  width: 400px;
-  align-content: center;
-  text-align: center;
-}
-
-.preview_image {
-  width: 100%;
+.copies_heading span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #56616f;
+  margin-left: 14px;
+  vertical-align: middle;
 }
 
 .game_copy_wrapper {
-  padding: 50px;
-  margin: 50px 200px;
-  background: rgba(10, 14, 24, 0.72);
-
+  background: rgba(10,14,19,.72);
   backdrop-filter: blur(10px);
-
-  border: 1px solid rgba(0, 240, 255, 0.12);
-
-  box-shadow:
-    0 0 20px rgba(0, 240, 255, 0.05),
-    inset 0 0 20px rgba(255,255,255,0.02);
-
-  border-radius: 6px;
+  border: 1px solid #1a212b;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  padding: 24px 32px;
+  margin-bottom: 16px;
 }
 
 .copy_title {
-  margin: 0px;
-  font-size: 30px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: #dfe6ec;
+  text-transform: uppercase;
+  margin: 0 0 16px;
 }
 
+/* ── COPY META ── */
+.copy_meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px 24px;
+  margin-bottom: 20px;
+}
+
+.copy_meta_row {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.copy_meta_label {
+  color: #56616f;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.copy_meta_value {
+  color: #a8b2bd;
+}
+
+/* ── CONDITIONS ── */
 .conditions_row {
   display: flex;
-  padding: 20px 10px 10px 0px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255,255,255,.04);
+}
+
+.condition_type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #56616f;
+  width: 140px;
+  flex: none;
+  text-transform: uppercase;
+  margin: 0;
 }
 
 .conditions_items {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-}
-
-.condition_type {
-  width: 20%;
-  margin: auto 0px;
-  font-size: 20px;
+  gap: 6px;
 }
 
 .conditions {
-  border: 1px solid cyan;
-  padding: 10px 20px;
-  margin: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: #7a8696;
+  border: 1px solid #2a3441;
+  padding: 8px 16px;
+  margin: 0;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
 }
 
 .highlight {
-  color: #ff2bd6;
-  border-color: #ff2bd6;
+  color: #5ce1e0;
+  border-color: #5ce1e0;
+  background: rgba(92,225,224,.06);
+}
+
+/* ── LOADING / ERROR ── */
+.status {
+  padding: 80px 60px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #56616f;
 }
