@@ -1,7 +1,7 @@
 /* === TRIGGER BUTTON === */
 .menuWrapper {
-  z-index: 1000;
   position: relative;
+  z-index: 1000;
 }
 
 .menuButton {
@@ -18,7 +18,6 @@
   border-color: #5ce1e0;
 }
 
-/* bars */
 .menuButton span {
   position: absolute;
   left: 7px;
@@ -32,91 +31,66 @@
 .menuButton span:nth-child(2) { top: 14px; }
 .menuButton span:nth-child(3) { top: 21px; }
 
-.menuButton:hover span {
-  background: #5ce1e0;
-}
+.menuButton:hover span { background: #5ce1e0; }
+.menuButton:hover span:nth-child(1) { transform: translateX(-2px); }
+.menuButton:hover span:nth-child(3) { transform: translateX(2px); }
 
-.menuButton:hover span:nth-child(1) {
-  transform: translateX(-2px);
-}
-
-.menuButton:hover span:nth-child(3) {
-  transform: translateX(2px);
-}
-
-/* === TITLE === */
+/* === POPUP CONTENT === */
 .title {
-  color: #ff2bd6;
-  font-size: 14px;
-  letter-spacing: 4px;
-
-  text-shadow:
-    0 0 10px #ff2bd6,
-    0 0 20px #00f6ff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #5ce1e0;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #1a212b;
 }
 
-/* === LINKS === */
 .link {
-  color: #00f6ff;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 32px;
+  letter-spacing: 4px;
+  color: #a8b2bd;
   text-decoration: none;
+  padding: 6px 0;
+  transition: color .15s, transform .15s;
+  display: block;
+}
 
-  font-size: 26px;
-  letter-spacing: 3px;
-
-  transition: 0.2s;
-
-  text-shadow: 0 0 10px #00f6ff;
+.link::before {
+  content: "// ";
+  color: transparent;
+  font-size: 18px;
+  vertical-align: middle;
+  transition: color .15s;
 }
 
 .link:hover {
-  color: #ff2bd6;
-  transform: translateX(10px);
-  text-shadow: 0 0 15px #ff2bd6;
+  color: #eef3f6;
+  transform: translateX(8px);
 }
 
-/* === CLOSE BUTTON === */
+.link:hover::before {
+  color: #5ce1e0;
+}
+
 .close {
-  margin-top: 20px;
-
+  margin-top: 28px;
   background: transparent;
-  border: 1px solid #ff2bd6;
-  color: #ff2bd6;
-
-  padding: 10px;
+  border: 1px solid #2a3441;
+  color: #56616f;
+  padding: 10px 20px;
   cursor: pointer;
-
-  text-shadow: 0 0 10px #ff2bd6;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  transition: border-color .15s, color .15s;
+  align-self: flex-start;
 }
 
 .close:hover {
-  box-shadow: 0 0 20px #ff2bd6;
-}
-
-/* === ENTRY ANIMATION === */
-@keyframes glitchIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.9) skewX(10deg);
-  }
-  50% {
-    transform: scale(1.02) skewX(-5deg);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) skewX(0);
-  }
-}
-
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
-}
-
-@keyframes glowPulse {
-  0%, 100% {
-    box-shadow: 0 0 20px #00f6ff, 0 0 40px #ff2bd6;
-  }
-  50% {
-    box-shadow: 0 0 10px #00f6ff, 0 0 25px #ff2bd6;
-  }
+  border-color: #5ce1e0;
+  color: #5ce1e0;
 }

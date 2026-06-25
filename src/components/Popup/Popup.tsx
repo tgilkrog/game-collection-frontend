@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { ReactNode } from "react";
-
+import { createPortal } from "react-dom";
 import styles from "./Popup.module.css";
 
 type PopupProps = {
@@ -9,12 +9,8 @@ type PopupProps = {
   children: ReactNode;
 };
 
-export default function Popup({
-  open,
-  onClose,
-  children,
-}: PopupProps) {
-  return (
+export default function Popup({ open, onClose, children }: PopupProps) {
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
@@ -31,15 +27,13 @@ export default function Popup({
             initial={{ scale: 0.9, opacity: 0, y: 10 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 10 }}
-            transition={{
-              duration: 0.25,
-              ease: "easeOut",
-            }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
           >
             {children}
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

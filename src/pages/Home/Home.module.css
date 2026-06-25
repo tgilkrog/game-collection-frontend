@@ -65,7 +65,7 @@
 /* ── HERO STRIP ── */
 .hero_strip {
   position: relative;
-  height: 180px;
+  height: 150px;
   border-bottom: 1px solid #1a212b;
   flex: none;
 }
