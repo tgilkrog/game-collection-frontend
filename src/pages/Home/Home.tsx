@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // still used in search popup
 import { PageTransition } from "../../components/PageTransition";
 import { getHome } from '../../api/home';
 import { getFeed } from '../../api/gameCopy';
@@ -9,6 +9,7 @@ import { Navbar } from '../../components/Navbar/Navbar';
 import Login from '../../components/Login/Login';
 import styles from './Home.module.css';
 import { Statistics } from './statistics';
+import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
 import type { Game } from '../../types/game';
 
 export function Home() {
@@ -119,7 +120,7 @@ export function Home() {
                         onClick={closeSearch}
                       >
                         <img
-                          src={`${import.meta.env.VITE_API_BASE_URL}${game.cover_image}`}
+                          src={game.cover_image}
                           className={styles.search_img}
                           alt={game.title}
                           loading="lazy"
@@ -141,21 +142,19 @@ export function Home() {
             <div className={styles.loading}>LOADING ARCHIVE...</div>
           ) : (
             <div className={styles.grid}>
-              {feed.map(copy => (
-                <Link key={copy.id} to={`/gamebase/${copy.game.id}`} className={styles.card_link}>
-                  <div className={styles.card_cover}>
-                    <img
-                      src={`${import.meta.env.VITE_API_BASE_URL}${copy.game.cover_image}`}
-                      alt={copy.game.title}
-                      className={styles.card_img}
-                      loading="lazy"
-                    />
-                    {copy.purchase_price != null && (
-                      <div className={styles.card_price}>${copy.purchase_price}</div>
-                    )}
-                  </div>
-                </Link>
-              ))}
+              <GameCardGrid>
+                {feed.map(copy => (
+                  <GameCard
+                    key={copy.id}
+                    href={`/gamebase/${copy.game.id}`}
+                    image={`${import.meta.env.VITE_API_BASE_URL}${copy.game.cover_image}`}
+                    title={copy.game.title}
+                    badge={copy.platform.name}
+                    subtext={copy.platform.name.toUpperCase()}
+                    price={copy.purchase_price}
+                  />
+                ))}
+              </GameCardGrid>
             </div>
           )}
         </main>

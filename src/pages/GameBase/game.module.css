@@ -1,5 +1,7 @@
 /* ── PAGE SHELL ── */
 .page {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 80px 60px 60px;
   font-family: 'Space Grotesk', system-ui, sans-serif;
   color: #a8b2bd;
@@ -261,3 +263,4 @@
   letter-spacing: 2px;
   color: #56616f;
 }
+

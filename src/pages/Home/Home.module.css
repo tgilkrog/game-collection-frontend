@@ -60,6 +60,7 @@
   flex-direction: column;
   overflow-y: auto;
   min-height: 0;
+  width: 100%;
 }
 
 /* ── HERO STRIP ── */
@@ -235,14 +236,15 @@
   margin-top: 2px;
 }
 
-/* ── GRID ── */
+/* ── GRID WRAPPER ── */
 .grid {
   padding: 24px 34px 40px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 150px);
-  gap: 20px;
   overflow-y: auto;
   flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .loading {
@@ -253,77 +255,6 @@
   color: #56616f;
 }
 
-/* ── CARD ── */
-.card_link {
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  cursor: pointer;
-}
-
-.card_cover {
-  position: relative;
-  aspect-ratio: 3/4;
-  background: #10161e;
-  background-image: repeating-linear-gradient(125deg, rgba(255,255,255,.04) 0 2px, transparent 2px 11px);
-  border: 1px solid #222c38;
-  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
-  overflow: hidden;
-  transition: border-color .15s;
-}
-
-.card_link:hover .card_cover {
-  border-color: #5ce1e0;
-}
-
-.card_img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  filter: contrast(1.05) saturate(1.1);
-}
-
-.badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  color: #5a6675;
-  border: 1px solid #2a3441;
-  padding: 3px 6px;
-  background: rgba(10,14,19,.75);
-}
-
-.card_price {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  z-index: 1;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: #5ce1e0;
-}
-
-.card_title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  color: #dfe6ec;
-  line-height: 1.2;
-}
-
-.card_sub {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: .5px;
-  color: #56616f;
-}
 
 /* ── STATS PANEL ── */
 .stats_panel {

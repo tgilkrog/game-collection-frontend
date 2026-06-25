@@ -54,6 +54,7 @@ export default function Topbar() {
 
   return (
     <header className={styles.topbar}>
+      <div className={styles.inner}>
 
       {/* Logo */}
       <Link to="/" className={styles.logo}>
@@ -81,7 +82,7 @@ export default function Topbar() {
                 onClick={closeSearch}
               >
                 <img
-                  src={`${import.meta.env.VITE_API_BASE_URL}${game.cover_image}`}
+                  src={`${game.cover_image}`}
                   className={styles.search_img}
                   alt={game.title}
                   loading="lazy"
@@ -99,6 +100,7 @@ export default function Topbar() {
         <Navbar />
       </div>
 
+      </div>
     </header>
   );
 }
