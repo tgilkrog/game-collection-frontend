@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from './Topbar.module.css';
 import { Navbar } from '../Navbar/Navbar';
 import Login from '../Login/Login';
+import { useAuth } from '../../Context/AuthContext';
 import { searchGame } from '../../api/games';
 import type { Game } from '../../types/game';
 
@@ -11,6 +12,7 @@ export default function Topbar() {
   const [games, setGames] = useState<Game[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     if (search.length < 3) {
@@ -94,8 +96,13 @@ export default function Topbar() {
         )}
       </div>
 
-      {/* Right: login + nav */}
+      {/* Right: profile link + login + nav */}
       <div className={styles.right}>
+        {user && (
+          <Link to={`/profile/${user.name}`} className={styles.profile_link}>
+            {user.name}
+          </Link>
+        )}
         <Login />
         <Navbar />
       </div>
