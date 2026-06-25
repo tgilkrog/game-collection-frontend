@@ -71,19 +71,48 @@ export default function Profile() {
 
         {/* ── Profile header ── */}
         <div className={styles.header}>
-          <div className={styles.header_left}>
-            <div className={styles.eyebrow}>// USER PROFILE</div>
-            <div className={styles.name}>{profileUser.name}</div>
-            <div className={styles.meta}>
-              {copiesLoading ? '— ENTRIES' : `${String(copies.length).padStart(2, '0')} ENTRIES IN COLLECTION`}
-            </div>
-          </div>
 
-          {isOwner && (
-            <button className={styles.add_btn} onClick={() => setFormOpen(true)}>
-              + ADD COPY
-            </button>
+          {/* Banner image (absolute, fills header) */}
+          {profileUser.banner && (
+            <img
+              src={`${import.meta.env.VITE_API_BASE_URL}${profileUser.banner}`}
+              className={styles.banner_img}
+              alt=""
+            />
           )}
+          <div className={styles.banner_overlay} />
+
+          {/* Avatar + info pinned to bottom of banner */}
+          <div className={styles.header_body}>
+
+            <div className={styles.avatar}>
+              {profileUser.avatar
+                ? <img
+                    src={`${import.meta.env.VITE_API_BASE_URL}${profileUser.avatar}`}
+                    className={styles.avatar_img}
+                    alt={profileUser.name}
+                  />
+                : <span className={styles.avatar_initial}>
+                    {profileUser.name[0].toUpperCase()}
+                  </span>
+              }
+            </div>
+
+            <div className={styles.header_left}>
+              <div className={styles.eyebrow}>// USER PROFILE</div>
+              <div className={styles.name}>{profileUser.name}</div>
+              <div className={styles.meta}>
+                {copiesLoading ? '—' : `${String(copies.length).padStart(2, '0')} ENTRIES IN COLLECTION`}
+              </div>
+            </div>
+
+            {isOwner && (
+              <button className={styles.add_btn} onClick={() => setFormOpen(true)}>
+                + ADD COPY
+              </button>
+            )}
+
+          </div>
         </div>
 
         {/* ── Collection grid ── */}

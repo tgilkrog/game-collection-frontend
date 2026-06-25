@@ -10,22 +10,85 @@
 
 /* ── HEADER ── */
 .header {
-  background: rgba(10,14,19,.72);
-  backdrop-filter: blur(10px);
+  position: relative;
+  height: 240px;
   border: 1px solid #1a212b;
   clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
-  padding: 32px 40px;
+  overflow: hidden;
   margin-bottom: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+  background-color: #0d1117;
+  background-image:
+    radial-gradient(ellipse at 30% 60%, rgba(92,225,224,.05), transparent 55%),
+    linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+  background-size: auto, 46px 46px, 46px 46px;
 }
 
+/* ── BANNER IMAGE ── */
+.banner_img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* gradient so text is always readable over the image */
+.banner_overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(10,14,19,.2) 0%, rgba(10,14,19,.85) 100%);
+}
+
+/* ── CONTENT — sits at bottom of banner ── */
+.header_body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 0 32px 24px;
+}
+
+/* ── AVATAR ── */
+.avatar {
+  width: 80px;
+  height: 80px;
+  flex: none;
+  background: #10161e;
+  border: 2px solid #222c38;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar_img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar_initial {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  color: #5ce1e0;
+  line-height: 1;
+}
+
+/* ── INFO ── */
 .header_left {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  min-width: 0;
 }
 
 .eyebrow {
@@ -50,7 +113,7 @@
   font-size: 11px;
   letter-spacing: 1.5px;
   color: #56616f;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 /* ── ADD BUTTON ── */
