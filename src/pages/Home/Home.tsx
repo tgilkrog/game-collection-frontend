@@ -84,7 +84,7 @@ export function Home() {
             <div className={styles.hero_strip_overlay} />
             <div className={styles.hero_strip_content}>
               <div className={styles.hero_eyebrow}>// PHYSICAL ARCHIVE</div>
-              <div className={styles.hero_title}>THE VAULT</div>
+              <div className={styles.hero_title}>THE RETRO VAULT</div>
               <div className={styles.hero_meta}>
                 {totalCopies} TITLES INDEXED · RECENTLY ADDED
               </div>

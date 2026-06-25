@@ -58,7 +58,7 @@ export default function Topbar() {
       {/* Logo */}
       <Link to="/" className={styles.logo}>
         <div className={styles.logo_icon} />
-        <span className={styles.logo_text}>VAULT</span>
+        <span className={styles.logo_text}>THE RETRO VAULT</span>
       </Link>
 
       {/* Search */}
