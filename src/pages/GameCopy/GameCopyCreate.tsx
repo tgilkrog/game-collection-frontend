@@ -23,11 +23,6 @@ type GameCopyFormProps = {
   onSubmit: (data: FormData) => Promise<void>;
 };
 
-type InputProps = {
-  name: keyof FormState;
-  placeholder: string;
-  value: string | number;
-};
 
 export default function GameCopyCreate({
   conditions,
@@ -115,26 +110,16 @@ export default function GameCopyCreate({
     await onSubmit(formData);
   };
 
-  function FormInput({ name, placeholder, value }: InputProps) {
-    return (
-      <input
-        className="ui-input"
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-      />
-    );
-  }
-
   return (
     <form onSubmit={handleSubmit} className="ui-form">
       <div className="ui-form-header">New Game Copy</div>
 
-      <FormInput
+      <input
+        className="ui-input"
         name="title"
         placeholder="Title"
         value={form.title}
+        onChange={handleChange}
       />
 
       <select
@@ -165,10 +150,12 @@ export default function GameCopyCreate({
         ))}
       </select>
 
-      <FormInput
+      <input
+        className="ui-input"
         name="region"
         placeholder="Region"
         value={form.region}
+        onChange={handleChange}
       />
 
       <input
@@ -188,10 +175,12 @@ export default function GameCopyCreate({
         onChange={handleChange}
       />
 
-      <FormInput
+      <input
+        className="ui-input"
         name="notes"
         placeholder="Notes"
         value={form.notes}
+        onChange={handleChange}
       />
 
       <hr />

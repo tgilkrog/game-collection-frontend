@@ -7,6 +7,9 @@ import { getPlatforms } from "../../api/platforms";
 import { getGames } from "../../api/games";
 import { createGameCopy, getGameCopies } from "../../api/gameCopy";
 import { useAuth } from "../../Context/AuthContext";
+import { PageTransition } from '../../components/PageTransition';
+import Popup from '../../components/Popup/Popup';
+import styles from './GameCopy.module.css';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
@@ -43,41 +46,40 @@ export default function GameCopyPage() {
             queryClient.invalidateQueries({ queryKey: ['gameCopies'] });
             setIsFormOpen(false);
         },
-        onError: (err: any) => {
-            console.error(err.response?.data);
-        },
     });
 
-    if (isLoading) return <div>Loading...</div>;
-    if (isError) return <div>Failed to load game copies.</div>;
+    if (isLoading) return <div className={styles.status}>LOADING...</div>;
+    if (isError) return <div className={styles.status}>FAILED TO LOAD.</div>;
 
     return (
-        <div className="wrapper">
-            {user ? (
-                <button className="cybr-btn" onClick={() => setIsFormOpen(true)}>
-                    + NEW GAME COPY
-                </button>
-            ) : ('')}
-
-            <h1>Game Copies</h1>
-
-            <GameCopyList gameCopies={gameCopies} />
-
-            {isFormOpen && (
-                <div className="modal-overlay" onClick={() => setIsFormOpen(false)}>
-                    <div
-                        className="modal-content"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                    <GameCopyCreate
-                        conditions={conditions}
-                        platforms={platforms}
-                        games={games}
-                        onSubmit={createMutation.mutateAsync}
-                    />
+        <PageTransition>
+            <div className={styles.list_page}>
+                <div className={styles.list_header}>
+                    <div>
+                        <div className={styles.list_eyebrow}>// COLLECTION</div>
+                        <h1 className={styles.list_title}>GAME COPIES</h1>
+                        <div className={styles.list_meta}>{String(gameCopies.length).padStart(2, '0')} COPIES LOGGED</div>
                     </div>
+                    {user && (
+                        <button className={styles.action_btn} onClick={() => setIsFormOpen(true)}>
+                            + ADD COPY
+                        </button>
+                    )}
                 </div>
-            )}
-        </div>
+
+                <GameCopyList gameCopies={gameCopies} />
+
+                {user && (
+                    <Popup open={isFormOpen} onClose={() => setIsFormOpen(false)}>
+                        <GameCopyCreate
+                            conditions={conditions}
+                            platforms={platforms}
+                            games={games}
+                            onSubmit={createMutation.mutateAsync}
+                        />
+                    </Popup>
+                )}
+            </div>
+        </PageTransition>
     );
 }

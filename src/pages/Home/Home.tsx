@@ -7,12 +7,14 @@ import { getFeed } from '../../api/gameCopy';
 import { searchGame } from '../../api/games';
 import { Navbar } from '../../components/Navbar/Navbar';
 import Login from '../../components/Login/Login';
+import { useAuth } from '../../Context/AuthContext';
 import styles from './Home.module.css';
 import { Statistics } from './statistics';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
 import type { Game } from '../../types/game';
 
 export function Home() {
+  const { user } = useAuth();
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState<Game[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -132,6 +134,11 @@ export function Home() {
                 )}
               </div>
 
+              {user && (
+                <Link to={`/profile/${user.name}`} className={styles.profile_link}>
+                  {user.name}
+                </Link>
+              )}
               <Login />
               <Navbar />
             </div>

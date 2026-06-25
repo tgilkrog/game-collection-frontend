@@ -135,6 +135,20 @@
   flex: none;
 }
 
+.profile_link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: #56616f;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color .15s;
+}
+
+.profile_link:hover {
+  color: #5ce1e0;
+}
+
 /* ── SEARCH ── */
 .search_wrap {
   position: relative;

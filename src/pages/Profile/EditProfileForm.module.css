@@ -1,0 +1,118 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 320px;
+}
+
+.title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #5ce1e0;
+  margin-bottom: 8px;
+}
+
+.error {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #ff4d4d;
+}
+
+.label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: #56616f;
+  margin-top: 6px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  border-left: 2px solid #5ce1e0;
+  border-bottom: 1px solid #1a212b;
+  color: #f1f5f8;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color .15s;
+}
+
+.input:focus {
+  border-left-color: #5ce1e0;
+  box-shadow: 0 0 8px rgba(92,225,224,.2);
+}
+
+/* preview images */
+.preview_avatar {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  border: 1px solid #222c38;
+}
+
+.preview_banner {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  border: 1px solid #222c38;
+}
+
+/* custom file input */
+.file_label {
+  display: inline-block;
+  padding: 8px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #7a8696;
+  border: 1px solid #2a3441;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.file_label:hover {
+  border-color: #5ce1e0;
+  color: #5ce1e0;
+}
+
+.file_hidden {
+  display: none;
+}
+
+.submit {
+  margin-top: 8px;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid #5ce1e0;
+  color: #5ce1e0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  transition: background .15s, color .15s;
+}
+
+.submit:hover:not(:disabled) {
+  background: rgba(92,225,224,.12);
+}
+
+.submit:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}

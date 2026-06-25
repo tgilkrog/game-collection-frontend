@@ -26,12 +26,6 @@ type GameFormProps = {
   submitLabel?: string;
 };
 
-type InputProps = {
-  name: keyof FormState;
-  placeholder: string;
-  value: string | number;
-};
-
 export default function GameForm({
   genres,
   onSubmit,
@@ -99,18 +93,6 @@ export default function GameForm({
     await onSubmit(formData);
   };
 
-  function FormInput({ name, placeholder, value }: InputProps) {
-    return (
-      <input
-        className="ui-input"
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-      />
-    );
-  }
-
   return (
     <div className={styles.form_wrapper}>
       <div className={styles.preview_image_wrap}>
@@ -127,35 +109,11 @@ export default function GameForm({
       <form onSubmit={handleSubmit} className="ui-form">
         <div className="ui-form-header">New Game Entry</div>
 
-        <FormInput
-          name="title"
-          placeholder="Title"
-          value={form.title}
-        />
-
-        <FormInput
-          name="developer"
-          placeholder="Developer"
-          value={form.developer}
-        />
-
-        <FormInput
-          name="publisher"
-          placeholder="Publisher"
-          value={form.publisher}
-        />        
-
-        <FormInput
-          name="description"
-          placeholder="Description"
-          value={form.description}
-        />
-
-        <FormInput
-          name="release_year"
-          placeholder="Release Year"
-          value={form.release_year}
-        />  
+        <input className="ui-input" name="title" placeholder="Title" value={form.title} onChange={handleChange} />
+        <input className="ui-input" name="developer" placeholder="Developer" value={form.developer} onChange={handleChange} />
+        <input className="ui-input" name="publisher" placeholder="Publisher" value={form.publisher} onChange={handleChange} />
+        <input className="ui-input" name="description" placeholder="Description" value={form.description} onChange={handleChange} />
+        <input className="ui-input" name="release_year" placeholder="Release Year" value={form.release_year} onChange={handleChange} />
 
         <input
           type="file"

@@ -90,3 +90,31 @@
   box-shadow:
     0 0 20px rgba(0,240,255,0.5);
 }
+
+.error {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #ff4d4d;
+  margin-bottom: 16px;
+}
+
+.switch_link {
+  display: block;
+  margin-top: 16px;
+  background: transparent;
+  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #56616f;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  padding: 0;
+  transition: color .15s;
+}
+
+.switch_link:hover {
+  color: #5ce1e0;
+}

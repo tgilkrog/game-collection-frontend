@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { PageTransition } from '../../components/PageTransition';
 import { useAuth } from '../../Context/AuthContext';
-import { getUser, getUserCopies } from '../../api/users';
+import { getUser, getUserCopies, updateUser } from '../../api/users';
 import { createGameCopy } from '../../api/gameCopy';
 import { getConditions } from '../../api/conditions';
 import { getPlatforms } from '../../api/platforms';
@@ -11,16 +11,20 @@ import { getGames } from '../../api/games';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
 import Popup from '../../components/Popup/Popup';
 import GameCopyCreate from '../GameCopy/GameCopyCreate';
+import EditProfileForm from './EditProfileForm';
 import styles from './Profile.module.css';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
-  const { user } = useAuth();
+  const { user, loginUser } = useAuth();
   const isOwner = user?.name === username;
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [formOpen, setFormOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editError, setEditError] = useState('');
 
   const { data: profileUser, isLoading: userLoading, isError: userError } = useQuery({
     queryKey: ['user', username],
@@ -59,6 +63,26 @@ export default function Profile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userCopies', username] });
       setFormOpen(false);
+    },
+  });
+
+  const editMutation = useMutation({
+    mutationFn: (data: FormData) => updateUser(username!, data).then(r => r.data),
+    onSuccess: (updated) => {
+      queryClient.invalidateQueries({ queryKey: ['user', username] });
+      // Keep auth context in sync; token is already stored in localStorage.
+      const token = localStorage.getItem('token') ?? '';
+      loginUser(updated, token);
+      setEditOpen(false);
+      setEditError('');
+      // If the username changed, navigate to the new profile URL.
+      if (updated.name !== username) navigate(`/profile/${updated.name}`);
+    },
+    onError: (err: unknown) => {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message
+        ?? 'Update failed.';
+      setEditError(msg);
     },
   });
 
@@ -107,9 +131,14 @@ export default function Profile() {
             </div>
 
             {isOwner && (
-              <button className={styles.add_btn} onClick={() => setFormOpen(true)}>
-                + ADD COPY
-              </button>
+              <div className={styles.header_actions}>
+                <button className={styles.edit_btn} onClick={() => { setEditError(''); setEditOpen(true); }}>
+                  EDIT PROFILE
+                </button>
+                <button className={styles.add_btn} onClick={() => setFormOpen(true)}>
+                  + ADD COPY
+                </button>
+              </div>
             )}
 
           </div>
@@ -144,6 +173,18 @@ export default function Profile() {
               platforms={platforms}
               games={games}
               onSubmit={createMutation.mutateAsync}
+            />
+          </Popup>
+        )}
+
+        {/* ── Edit profile modal (owner only) ── */}
+        {isOwner && (
+          <Popup open={editOpen} onClose={() => setEditOpen(false)}>
+            <EditProfileForm
+              current={profileUser}
+              onSubmit={editMutation.mutateAsync}
+              loading={editMutation.isPending}
+              error={editError}
             />
           </Popup>
         )}
