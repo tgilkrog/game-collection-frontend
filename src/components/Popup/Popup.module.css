@@ -23,12 +23,15 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 8px;
   padding: 48px 64px;
   background: rgba(10,14,19,.92);
   border: 1px solid #1a212b;
   clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
   min-width: 340px;
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #2a3441 transparent;
 }
 
 /* chamfer accent line */
