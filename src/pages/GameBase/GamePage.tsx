@@ -4,7 +4,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getGame, deleteGame, updateGame } from '../../api/games';
 import { getConditions } from '../../api/conditions';
 import GameForm from './GameForm';
-import { getGenres } from '../../api/genres';
 import styles from './game.module.css';
 import type { Genre } from '../../types/genre';
 import type { Condition } from '../../types/condition';
@@ -21,12 +20,6 @@ export default function GamePage() {
         queryKey: ['game', id],
         queryFn: () => getGame(Number(id)).then(r => r.data),
         enabled: !!id,
-    });
-
-    const { data: genres = [] } = useQuery({
-        queryKey: ['genres'],
-        queryFn: () => getGenres().then(r => r.data),
-        staleTime: FIVE_MINUTES,
     });
 
     const { data: conditions = [] } = useQuery({
@@ -180,7 +173,6 @@ export default function GamePage() {
                 <div className="modal-overlay" onClick={() => setIsFormOpen(false)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <GameForm
-                            genres={genres}
                             initialData={{
                                 id: game.id,
                                 title: game.title,
@@ -188,7 +180,6 @@ export default function GamePage() {
                                 publisher: game.publisher,
                                 description: game.description,
                                 release_year: game.release_year,
-                                genres: game.genres?.map((g: Genre) => g.id),
                                 cover_image: game.cover_image,
                             }}
                             onSubmit={updateMutation.mutateAsync}

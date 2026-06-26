@@ -4,4 +4,5 @@ export type User = {
     email: string;
     avatar?: string;
     banner?: string;
+    banner_position?: number;
 };

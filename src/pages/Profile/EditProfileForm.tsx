@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { User } from '../../types/user';
 import styles from './EditProfileForm.module.css';
 
@@ -15,6 +15,14 @@ export default function EditProfileForm({ current, onSubmit, loading, error }: P
   const [banner, setBanner] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+  const [bannerPosition, setBannerPosition] = useState(current.banner_position ?? 50);
+
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const dragStart = useRef({ y: 0, pos: 0 });
+
+  const apiBase = import.meta.env.VITE_API_BASE_URL;
+  const bannerSrc = bannerPreview ?? (current.banner ? `${apiBase}${current.banner}` : null);
 
   function handleAvatar(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null;
@@ -28,6 +36,43 @@ export default function EditProfileForm({ current, onSubmit, loading, error }: P
     setBannerPreview(file ? URL.createObjectURL(file) : null);
   }
 
+  function handleDragStart(e: React.MouseEvent) {
+    isDragging.current = true;
+    dragStart.current = { y: e.clientY, pos: bannerPosition };
+  }
+
+  function handleTouchStart(e: React.TouchEvent) {
+    isDragging.current = true;
+    dragStart.current = { y: e.touches[0].clientY, pos: bannerPosition };
+  }
+
+  useEffect(() => {
+    function onMove(e: MouseEvent) {
+      if (!isDragging.current || !wrapRef.current) return;
+      const h = wrapRef.current.getBoundingClientRect().height;
+      const delta = (dragStart.current.y - e.clientY) / h * 100;
+      setBannerPosition(p => Math.min(100, Math.max(0, dragStart.current.pos + delta)));
+    }
+    function onTouchMove(e: TouchEvent) {
+      if (!isDragging.current || !wrapRef.current) return;
+      const h = wrapRef.current.getBoundingClientRect().height;
+      const delta = (dragStart.current.y - e.touches[0].clientY) / h * 100;
+      setBannerPosition(p => Math.min(100, Math.max(0, dragStart.current.pos + delta)));
+    }
+    function onUp() { isDragging.current = false; }
+
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    window.addEventListener('touchmove', onTouchMove);
+    window.addEventListener('touchend', onUp);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onUp);
+    };
+  }, []);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const fd = new FormData();
@@ -35,10 +80,9 @@ export default function EditProfileForm({ current, onSubmit, loading, error }: P
     if (name !== current.name) fd.append('name', name);
     if (avatar) fd.append('avatar', avatar);
     if (banner) fd.append('banner', banner);
+    fd.append('banner_position', String(Math.round(bannerPosition)));
     await onSubmit(fd);
   }
-
-  const apiBase = import.meta.env.VITE_API_BASE_URL;
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
@@ -46,52 +90,55 @@ export default function EditProfileForm({ current, onSubmit, loading, error }: P
 
       {error && <div className={styles.error}>{error}</div>}
 
-      {/* Name */}
-      <label className={styles.label}>USERNAME</label>
-      <input
-        className={styles.input}
-        type="text"
-        value={name}
-        onChange={e => setName(e.target.value)}
-        required
-      />
+      {/* Avatar + Username row */}
+      <div className={styles.top_row}>
+        <div className={styles.avatar_col}>
+          <div className={styles.preview_avatar}>
+            {(avatarPreview || current.avatar)
+              ? <img src={avatarPreview ?? `${apiBase}${current.avatar}`} alt="avatar" />
+              : <span>{current.name[0].toUpperCase()}</span>
+            }
+          </div>
+          <label className={styles.file_label}>
+            CHOOSE AVATAR
+            <input className={styles.file_hidden} type="file" accept="image/*" onChange={handleAvatar} />
+          </label>
+        </div>
 
-      {/* Avatar */}
-      <label className={styles.label}>AVATAR</label>
-      {(avatarPreview || current.avatar) && (
-        <img
-          src={avatarPreview ?? `${apiBase}${current.avatar}`}
-          className={styles.preview_avatar}
-          alt="avatar preview"
-        />
-      )}
-      <label className={styles.file_label}>
-        {avatar ? avatar.name : 'CHOOSE FILE'}
-        <input
-          className={styles.file_hidden}
-          type="file"
-          accept="image/*"
-          onChange={handleAvatar}
-        />
-      </label>
+        <div className={styles.name_col}>
+          <label className={styles.label}>USERNAME</label>
+          <input
+            className={styles.input}
+            type="text"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            required
+          />
+        </div>
+      </div>
 
       {/* Banner */}
       <label className={styles.label}>BANNER</label>
-      {(bannerPreview || current.banner) && (
-        <img
-          src={bannerPreview ?? `${apiBase}${current.banner}`}
-          className={styles.preview_banner}
-          alt="banner preview"
-        />
-      )}
+      <div
+        ref={wrapRef}
+        className={styles.banner_preview_wrap}
+        onMouseDown={bannerSrc ? handleDragStart : undefined}
+        onTouchStart={bannerSrc ? handleTouchStart : undefined}
+      >
+        {bannerSrc && (
+          <img
+            src={bannerSrc}
+            className={styles.preview_banner}
+            style={{ objectPosition: `center ${bannerPosition}%` }}
+            draggable={false}
+            alt="banner preview"
+          />
+        )}
+        {bannerSrc && <div className={styles.banner_drag_hint}>DRAG TO REPOSITION</div>}
+      </div>
       <label className={styles.file_label}>
         {banner ? banner.name : 'CHOOSE FILE'}
-        <input
-          className={styles.file_hidden}
-          type="file"
-          accept="image/*"
-          onChange={handleBanner}
-        />
+        <input className={styles.file_hidden} type="file" accept="image/*" onChange={handleBanner} />
       </label>
 
       <button className={styles.submit} type="submit" disabled={loading}>

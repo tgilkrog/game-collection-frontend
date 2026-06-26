@@ -79,6 +79,16 @@ export default function Profile() {
     },
   });
 
+  const totalValue = copies.reduce((sum, c) => sum + Number(c.purchase_price ?? 0), 0);
+  const platformCount = new Set(copies.filter(c => c.platform).map(c => c.platform.name)).size;
+  const partCount = copies.reduce((sum, c) => sum + (c.parts?.length ?? 0), 0);
+
+  const stats = [
+    { label: 'COPIES',      value: String(copies.length).padStart(2, '0') },
+    { label: 'TOTAL VALUE', value: totalValue.toFixed(2) + ' DKK.' },
+    { label: 'PLATFORMS',   value: String(platformCount).padStart(2, '0') },
+  ];
+
   if (userLoading) return <div className={styles.status}>LOADING...</div>;
   if (userError || !profileUser) return <div className={styles.status}>USER NOT FOUND.</div>;
 
@@ -94,6 +104,7 @@ export default function Profile() {
             <img
               src={`${import.meta.env.VITE_API_BASE_URL}${profileUser.banner}`}
               className={styles.banner_img}
+              style={{ objectPosition: `center ${profileUser.banner_position ?? 50}%` }}
               alt=""
             />
           )}
@@ -135,6 +146,16 @@ export default function Profile() {
             )}
 
           </div>
+        </div>
+
+        {/* ── Stats panel ── */}
+        <div className={styles.stats}>
+          {stats.map(s => (
+            <div key={s.label} className={styles.stat_block}>
+              <span className={styles.stat_value}>{copiesLoading ? '—' : s.value}</span>
+              <span className={styles.stat_label}>{s.label}</span>
+            </div>
+          ))}
         </div>
 
         {/* ── Collection grid ── */}

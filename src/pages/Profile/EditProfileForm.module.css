@@ -48,21 +48,89 @@
   box-shadow: 0 0 8px rgba(92,225,224,.2);
 }
 
-/* preview images */
-.preview_avatar {
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
-  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
-  border: 1px solid #222c38;
+/* ── AVATAR + USERNAME ROW ── */
+.top_row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
 }
+
+.avatar_col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: none;
+}
+
+.name_col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.preview_avatar {
+  width: 200px;
+  height: 200px;
+  flex: none;
+  background: #10161e;
+  border: 1px solid #222c38;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview_avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.preview_avatar span {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  color: #5ce1e0;
+  line-height: 1;
+}
+
+.banner_preview_wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 1;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  border: 1px solid #222c38;
+  background: #0d1117;
+}
+
+.banner_preview_wrap:active { cursor: grabbing; }
 
 .preview_banner {
   width: 100%;
-  height: 80px;
+  height: 100%;
   object-fit: cover;
-  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
-  border: 1px solid #222c38;
+  display: block;
+  pointer-events: none;
+}
+
+.banner_drag_hint {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,.4);
+  pointer-events: none;
 }
 
 /* custom file input */
