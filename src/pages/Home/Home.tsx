@@ -11,12 +11,12 @@ import { useAuth } from '../../Context/AuthContext';
 import styles from './Home.module.css';
 import { Statistics } from './statistics';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
-import type { Game } from '../../types/game';
+import type { GameSearchResult } from '../../types/game';
 
 export function Home() {
   const { user } = useAuth();
   const [search, setSearch] = useState('');
-  const [searchResults, setSearchResults] = useState<Game[]>([]);
+  const [searchResults, setSearchResults] = useState<GameSearchResult[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +41,7 @@ export function Home() {
     const timeout = setTimeout(async () => {
       try {
         const res = await searchGame(search);
-        setSearchResults(res.data);
+        setSearchResults(res.data.filter(g => g.source === 'local'));
         setSearchOpen(true);
       } catch {
         setSearchOpen(false);
@@ -117,7 +117,7 @@ export function Home() {
                     {searchResults.map(game => (
                       <Link
                         key={game.id}
-                        to={`/gamebase/${game.id}`}
+                        to={`/gamebase/${game.id!}`}
                         className={styles.search_item}
                         onClick={closeSearch}
                       >
@@ -154,7 +154,7 @@ export function Home() {
                   <GameCard
                     key={copy.id}
                     href={`/gamebase/${copy.game.id}`}
-                    image={`${import.meta.env.VITE_API_BASE_URL}${copy.game.cover_image}`}
+                    image={`${copy.game.cover_image}`}
                     title={copy.game.title}
                     badge={copy.platform.name}
                     subtext={copy.platform.name.toUpperCase()}

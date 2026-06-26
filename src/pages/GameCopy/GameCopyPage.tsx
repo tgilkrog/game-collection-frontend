@@ -4,7 +4,6 @@ import GameCopyCreate from "./GameCopyCreate";
 import GameCopyList from './GameCopyList';
 import { getConditions } from '../../api/conditions';
 import { getPlatforms } from "../../api/platforms";
-import { getGames } from "../../api/games";
 import { createGameCopy, getGameCopies } from "../../api/gameCopy";
 import { useAuth } from "../../Context/AuthContext";
 import { PageTransition } from '../../components/PageTransition';
@@ -28,11 +27,6 @@ export default function GameCopyPage() {
         queryKey: ['platforms'],
         queryFn: () => getPlatforms().then(r => r.data),
         staleTime: FIVE_MINUTES,
-    });
-
-    const { data: games = [] } = useQuery({
-        queryKey: ['games'],
-        queryFn: () => getGames().then(r => r.data),
     });
 
     const { data: gameCopies = [], isLoading, isError } = useQuery({
@@ -74,7 +68,6 @@ export default function GameCopyPage() {
                         <GameCopyCreate
                             conditions={conditions}
                             platforms={platforms}
-                            games={games}
                             onSubmit={createMutation.mutateAsync}
                         />
                     </Popup>

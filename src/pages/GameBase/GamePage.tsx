@@ -60,7 +60,7 @@ export default function GamePage() {
 
                 <div className={styles.game_image}>
                     <img
-                        src={`${import.meta.env.VITE_API_BASE_URL}${game.cover_image}`}
+                        src={`${game.cover_image}`}
                         alt={game.title}
                     />
                 </div>
@@ -82,11 +82,23 @@ export default function GamePage() {
                             <span className={styles.meta_value}>{game.publisher}</span>
                         </div>
 
-                        <p className={styles.description}>{game.description}</p>
+                        <p className={styles.description} dangerouslySetInnerHTML={{ __html: game.description }}></p>
 
-                        <div className={styles.genres}>
-                            {game.genres?.map((g: Genre) => (
-                                <span key={g.id} className={styles.genre_tag}>{g.name}</span>
+                        <div className={styles.tag_groups}>
+                            {[
+                                { label: 'GENRES',       items: game.genres },
+                                { label: 'THEMES',       items: game.themes },
+                                { label: 'GAME MODES',   items: game.game_modes },
+                                { label: 'PERSPECTIVES', items: game.player_perspectives },
+                            ].filter(g => g.items && g.items.length > 0).map(group => (
+                                <div key={group.label} className={styles.tag_group}>
+                                    <span className={styles.tag_group_label}>{group.label}</span>
+                                    <div className={styles.tag_row}>
+                                        {group.items!.map((item: Genre) => (
+                                            <span key={item.id} className={styles.tag}>{item.name}</span>
+                                        ))}
+                                    </div>
+                                </div>
                             ))}
                         </div>
 

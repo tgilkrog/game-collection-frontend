@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { searchGame } from '../../api/games';
+import type { GameSearchResult } from '../../types/game';
 import type { CopyPart } from '../../types/copypart';
 import type { Condition } from '../../types/condition';
 import type { Platform } from '../../types/platform';
-import type { Game } from '../../types/game';
 import styles from './GameCopyCreate.module.css';
 
 type FormState = {
-  game_base_id: number;
   platform_id: number;
   title: string;
   region: string;
@@ -18,13 +18,11 @@ type FormState = {
 type Props = {
   conditions: Condition[];
   platforms: Platform[];
-  games: Game[];
   onSubmit: (data: FormData) => Promise<void>;
 };
 
-export default function GameCopyCreate({ conditions, platforms, games, onSubmit }: Props) {
+export default function GameCopyCreate({ conditions, platforms, onSubmit }: Props) {
   const [form, setForm] = useState<FormState>({
-    game_base_id: 0,
     platform_id: 0,
     title: '',
     region: '',
@@ -35,7 +33,43 @@ export default function GameCopyCreate({ conditions, platforms, games, onSubmit 
   const [parts, setParts] = useState<CopyPart[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
-  const numericFields = new Set(['game_base_id', 'platform_id', 'purchase_price']);
+  // game search
+  const [gameQuery, setGameQuery] = useState('');
+  const [gameResults, setGameResults] = useState<GameSearchResult[]>([]);
+  const [selectedGame, setSelectedGame] = useState<GameSearchResult | null>(null);
+  const [searching, setSearching] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (gameQuery.length < 2) { setGameResults([]); return; }
+    const t = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const res = await searchGame(gameQuery);
+        setGameResults(res.data);
+      } catch {
+        setGameResults([]);
+      } finally {
+        setSearching(false);
+      }
+    }, 300);
+    return () => clearTimeout(t);
+  }, [gameQuery]);
+
+  function selectGame(g: GameSearchResult) {
+    console.log(g);
+    setSelectedGame(g);
+    setGameQuery('');
+    setGameResults([]);
+  }
+
+  function clearGame() {
+    setSelectedGame(null);
+    setGameQuery('');
+    setGameResults([]);
+  }
+
+  const numericFields = new Set(['platform_id', 'purchase_price']);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -45,11 +79,11 @@ export default function GameCopyCreate({ conditions, platforms, games, onSubmit 
     }));
   };
 
-  const addPart = () => {
+  const addPart = () =>
     setParts(prev => [...prev, { type: '', condition: conditions[0], notes: '' }]);
-  };
 
-  const removePart = (i: number) => setParts(prev => prev.filter((_, idx) => idx !== i));
+  const removePart = (i: number) =>
+    setParts(prev => prev.filter((_, idx) => idx !== i));
 
   const updatePart = (i: number, field: keyof CopyPart, value: CopyPart[keyof CopyPart]) =>
     setParts(prev => prev.map((p, idx) => idx === i ? { ...p, [field]: value } : p));
@@ -58,11 +92,21 @@ export default function GameCopyCreate({ conditions, platforms, games, onSubmit 
     e.preventDefault();
     const fd = new FormData();
     Object.entries(form).forEach(([k, v]) => fd.append(k, String(v)));
+
+    if (selectedGame) {
+      if (selectedGame.source === 'local' && selectedGame.id) {
+        fd.append('game_base_id', String(selectedGame.id));
+      } else {
+        fd.append('igdb_id', String(selectedGame.igdb_id));
+      }
+    }
+
     parts.forEach((part, i) => {
       fd.append(`parts[${i}][type]`, part.type);
       fd.append(`parts[${i}][condition_id]`, String(part.condition.id));
       if (part.notes) fd.append(`parts[${i}][notes]`, part.notes);
     });
+
     setSubmitting(true);
     try {
       await onSubmit(fd);
@@ -75,13 +119,58 @@ export default function GameCopyCreate({ conditions, platforms, games, onSubmit 
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.form_title}>// NEW GAME COPY</div>
 
-      {/* Game */}
-      <div className={styles.field}>
+      {/* ── Game search ── */}
+      <div className={styles.field} ref={searchRef}>
         <label className={styles.label}>Game</label>
-        <select className={styles.select} name="game_base_id" value={form.game_base_id} onChange={handleChange}>
-          <option value={0}>— select game —</option>
-          {games.map(g => <option key={g.id} value={g.id}>{g.title}</option>)}
-        </select>
+
+        {selectedGame ? (
+          <div className={styles.selected_game}>
+            {selectedGame.cover_image && (
+              <img src={selectedGame.cover_image} className={styles.selected_thumb} alt="" />
+            )}
+            <span className={styles.selected_title}>{selectedGame.title}</span>
+            <span className={`${styles.source_badge} ${selectedGame.source === 'local' ? styles.badge_local : styles.badge_igdb}`}>
+              {selectedGame.source}
+            </span>
+            <button type="button" className={styles.clear_btn} onClick={clearGame}>×</button>
+          </div>
+        ) : (
+          <input
+            className={styles.input}
+            placeholder="Search for a game…"
+            value={gameQuery}
+            onChange={e => setGameQuery(e.target.value)}
+            autoComplete="off"
+          />
+        )}
+
+        {gameResults.length > 0 && (
+          <div className={styles.search_results}>
+            {searching && <div className={styles.search_hint}>SEARCHING…</div>}
+            {gameResults.map(g => (
+              <button
+                key={`${g.source}-${g.igdb_id}`}
+                type="button"
+                className={styles.result_item}
+                onClick={() => selectGame(g)}
+              >
+                {g.cover_image && (
+                  <img src={g.cover_image} className={styles.result_thumb} alt="" />
+                )}
+                <span className={styles.result_title}>{g.title}</span>
+                {g.platforms && g.platforms.length > 0 && (
+                  <span className={styles.result_platforms}>{g.platforms.join(' · ')}</span>
+                )}
+                <span className={`${styles.source_badge} ${g.source === 'local' ? styles.badge_local : styles.badge_igdb}`}>
+                  {g.source}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+        {gameQuery.length >= 2 && !searching && gameResults.length === 0 && (
+          <div className={styles.search_hint}>NO RESULTS</div>
+        )}
       </div>
 
       {/* Platform */}
@@ -135,7 +224,6 @@ export default function GameCopyCreate({ conditions, platforms, games, onSubmit 
             </button>
           </div>
 
-          {/* Part type */}
           <div className={styles.field}>
             <label className={styles.label}>Type</label>
             <input
@@ -146,7 +234,6 @@ export default function GameCopyCreate({ conditions, platforms, games, onSubmit 
             />
           </div>
 
-          {/* Condition pills */}
           <div className={styles.field}>
             <label className={styles.label}>Condition</label>
             <div className={styles.condition_pills}>
@@ -163,7 +250,6 @@ export default function GameCopyCreate({ conditions, platforms, games, onSubmit 
             </div>
           </div>
 
-          {/* Part notes */}
           <div className={styles.field}>
             <label className={styles.label}>Notes</label>
             <input

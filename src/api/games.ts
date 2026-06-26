@@ -1,5 +1,5 @@
 import api from './axios';
-import type { Game } from '../types/game';
+import type { Game, GameSearchResult } from '../types/game';
 
 export const getGames = () =>
   api.get<Game[]>('/game-base');
@@ -16,5 +16,5 @@ export const updateGame = (id: number, data: FormData) =>
 export const deleteGame = (id: number) =>
   api.delete(`/game-base/${id}`);
 
-export const searchGame = (search: string) =>
-  api.get(`/game-base/search?q=${search}`);
+export const searchGame = (q: string) =>
+  api.get<GameSearchResult[]>(`/game-base/search?q=${encodeURIComponent(q)}`);

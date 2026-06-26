@@ -64,6 +64,130 @@
   color: #f1f5f8;
 }
 
+/* ── GAME SEARCH RESULTS ── */
+.search_results {
+  border: 1px solid #1a212b;
+  background: rgba(10,14,19,.95);
+  margin-top: 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+.result_item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #0d1117;
+  color: #a8b2bd;
+  cursor: pointer;
+  text-align: left;
+  transition: background .12s;
+  width: 100%;
+}
+
+.result_item:last-child { border-bottom: none; }
+
+.result_item:hover { background: rgba(92,225,224,.06); }
+
+.result_thumb {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  flex: none;
+  opacity: .85;
+}
+
+.result_title {
+  flex: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .5px;
+  color: #c8d0d8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result_platforms {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #56616f;
+  white-space: nowrap;
+  flex: none;
+}
+
+.source_badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  padding: 2px 6px;
+  flex: none;
+}
+
+.badge_local {
+  color: #5ce1e0;
+  border: 1px solid rgba(92,225,224,.3);
+}
+
+.badge_igdb {
+  color: #56616f;
+  border: 1px solid #2a3441;
+}
+
+.search_hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #56616f;
+  padding: 8px 10px;
+}
+
+/* ── SELECTED GAME ── */
+.selected_game {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(92,225,224,.05);
+  border-left: 2px solid #5ce1e0;
+  border-bottom: 1px solid #1a212b;
+}
+
+.selected_thumb {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  flex: none;
+}
+
+.selected_title {
+  flex: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #f1f5f8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clear_btn {
+  background: transparent;
+  border: none;
+  color: #56616f;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  flex: none;
+  transition: color .15s;
+}
+
+.clear_btn:hover { color: #e05a4e; }
+
 /* ── DIVIDER ── */
 .divider {
   border: none;

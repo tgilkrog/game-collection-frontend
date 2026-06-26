@@ -8,7 +8,7 @@ export default function GameCopyList({ gameCopies }: { gameCopies: GameCopy[] })
         <GameCard
           key={copy.id}
           href={`/gamebase/${copy.game.id}`}
-          image={`${import.meta.env.VITE_API_BASE_URL}${copy.game.cover_image}`}
+          image={`${copy.game.cover_image}`}
           title={copy.game.title}
           badge={copy.platform?.name}
           subtext={copy.platform?.name?.toUpperCase()}

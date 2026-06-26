@@ -5,11 +5,11 @@ import { Navbar } from '../Navbar/Navbar';
 import Login from '../Login/Login';
 import { useAuth } from '../../Context/AuthContext';
 import { searchGame } from '../../api/games';
-import type { Game } from '../../types/game';
+import type { GameSearchResult } from '../../types/game';
 
 export default function Topbar() {
   const [search, setSearch] = useState('');
-  const [games, setGames] = useState<Game[]>([]);
+  const [games, setGames] = useState<GameSearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
@@ -24,7 +24,7 @@ export default function Topbar() {
     const timeout = setTimeout(async () => {
       try {
         const res = await searchGame(search);
-        setGames(res.data);
+        setGames(res.data.filter(g => g.source === 'local'));
         setIsOpen(true);
       } catch {
         setIsOpen(false);
@@ -79,7 +79,7 @@ export default function Topbar() {
             {games.map(game => (
               <Link
                 key={game.id}
-                to={`/gamebase/${game.id}`}
+                to={`/gamebase/${game.id!}`}
                 className={styles.search_item}
                 onClick={closeSearch}
               >

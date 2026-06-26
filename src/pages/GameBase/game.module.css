@@ -92,20 +92,44 @@
   padding-top: 16px;
 }
 
-/* ── GENRE TAGS ── */
-.genres {
+/* ── TAG GROUPS (genres / themes / game modes / perspectives) ── */
+.tag_groups {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 24px;
+  padding-top: 4px;
 }
 
-.genre_tag {
+.tag_group {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.tag_group_label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #56616f;
+  text-transform: uppercase;
+  min-width: 100px;
+  flex: none;
+  padding-top: 5px;
+}
+
+.tag_row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: #56616f;
+  color: #a8b2bd;
   border: 1px solid #2a3441;
   padding: 4px 10px;
   background: rgba(10,14,19,.5);

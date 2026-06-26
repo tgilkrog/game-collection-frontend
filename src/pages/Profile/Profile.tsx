@@ -7,7 +7,6 @@ import { getUser, getUserCopies, updateUser } from '../../api/users';
 import { createGameCopy } from '../../api/gameCopy';
 import { getConditions } from '../../api/conditions';
 import { getPlatforms } from '../../api/platforms';
-import { getGames } from '../../api/games';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
 import Popup from '../../components/Popup/Popup';
 import GameCopyCreate from '../GameCopy/GameCopyCreate';
@@ -49,12 +48,6 @@ export default function Profile() {
     queryKey: ['platforms'],
     queryFn: () => getPlatforms().then(r => r.data),
     staleTime: FIVE_MINUTES,
-    enabled: isOwner,
-  });
-
-  const { data: games = [] } = useQuery({
-    queryKey: ['games'],
-    queryFn: () => getGames().then(r => r.data),
     enabled: isOwner,
   });
 
@@ -156,7 +149,7 @@ export default function Profile() {
               <GameCard
                 key={copy.id}
                 href={`/gamebase/${copy.game.id}`}
-                image={`${import.meta.env.VITE_API_BASE_URL}${copy.game.cover_image}`}
+                image={`${copy.game.cover_image}`}
                 title={copy.game.title}
                 badge={copy.platform?.name}
                 price={copy.purchase_price}
@@ -171,7 +164,6 @@ export default function Profile() {
             <GameCopyCreate
               conditions={conditions}
               platforms={platforms}
-              games={games}
               onSubmit={createMutation.mutateAsync}
             />
           </Popup>

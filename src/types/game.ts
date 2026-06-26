@@ -11,4 +11,16 @@ export interface Game {
   cover_image?: string;
   game_copies?: GameCopy[];
   genres?: Genre[];
+  themes?: Genre[];
+  game_modes?: Genre[];
+  player_perspectives?: Genre[];
+}
+
+export interface GameSearchResult {
+  source: 'local' | 'igdb';
+  id?: number;
+  igdb_id: number;
+  title: string;
+  cover_image?: string;
+  platforms?: string[];
 }

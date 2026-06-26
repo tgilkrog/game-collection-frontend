@@ -8,7 +8,7 @@ export default function GameList({ games }: { games: Game[] }) {
         <GameCard
           key={game.id}
           href={`/gamebase/${game.id}`}
-          image={`${import.meta.env.VITE_API_BASE_URL}${game.cover_image}`}
+          image={`${game.cover_image}`}
           title={game.title}
         />
       ))}
