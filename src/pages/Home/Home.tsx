@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom'; // still used in search popup
+import { Link } from 'react-router-dom';
 import { PageTransition } from "../../components/PageTransition";
 import { getHome } from '../../api/home';
 import { getFeed } from '../../api/gameCopy';
@@ -8,6 +8,7 @@ import { searchGame } from '../../api/games';
 import { Navbar } from '../../components/Navbar/Navbar';
 import Login from '../../components/Login/Login';
 import { useAuth } from '../../Context/AuthContext';
+import { getAssetUrl } from '../../utils/assetUrl';
 import styles from './Home.module.css';
 import { Statistics } from './statistics';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
@@ -25,11 +26,12 @@ export function Home() {
     queryFn: () => getHome().then(r => r.data),
   });
 
-  const { data: feed = [], isLoading } = useQuery({
+  const { data: feedData, isLoading } = useQuery({
     queryKey: ['feed'],
     queryFn: () => getFeed().then(r => r.data),
   });
 
+  const feed = feedData?.data ?? [];
   const totalCopies: number = homeData?.total_copies ?? 0;
 
   useEffect(() => {
@@ -40,8 +42,8 @@ export function Home() {
     }
     const timeout = setTimeout(async () => {
       try {
-        const res = await searchGame(search);
-        setSearchResults(res.data.filter(g => g.source === 'local'));
+        const res = await searchGame(search, 'local');
+        setSearchResults(res.data);
         setSearchOpen(true);
       } catch {
         setSearchOpen(false);
@@ -122,7 +124,7 @@ export function Home() {
                         onClick={closeSearch}
                       >
                         <img
-                          src={game.cover_image}
+                          src={getAssetUrl(game.cover_image)}
                           className={styles.search_img}
                           alt={game.title}
                           loading="lazy"
@@ -154,7 +156,7 @@ export function Home() {
                   <GameCard
                     key={copy.id}
                     href={`/gamebase/${copy.game.id}`}
-                    image={`${copy.game.cover_image}`}
+                    image={getAssetUrl(copy.game.cover_image)}
                     title={copy.game.title}
                     badge={copy.platform.name}
                     subtext={copy.platform.name.toUpperCase()}

@@ -1,13 +1,14 @@
 import api from './axios';
 import type { GameCopy } from '../types/gamecopy';
+import type { Paginated } from '../types/pagination';
 
 const BASE_URL = '/game-copies';
 
-export const getFeed = () =>
-  api.get<GameCopy[]>('/feed');
+export const getFeed = (page = 1) =>
+  api.get<Paginated<GameCopy>>(`/feed?page=${page}`);
 
-export const getGameCopies = () =>
-  api.get<GameCopy[]>(BASE_URL);
+export const getGameCopies = (page = 1) =>
+  api.get<Paginated<GameCopy>>(`${BASE_URL}?page=${page}`);
 
 export const getGameCopy = (id: number) =>
   api.get(`${BASE_URL}/${id}`);

@@ -1,5 +1,6 @@
 import type { GameCopy } from '../../types/gamecopy';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
+import { getAssetUrl } from '../../utils/assetUrl';
 
 export default function GameCopyList({ gameCopies }: { gameCopies: GameCopy[] }) {
   return (
@@ -8,7 +9,7 @@ export default function GameCopyList({ gameCopies }: { gameCopies: GameCopy[] })
         <GameCard
           key={copy.id}
           href={`/gamebase/${copy.game.id}`}
-          image={`${copy.game.cover_image}`}
+          image={getAssetUrl(copy.game.cover_image)}
           title={copy.game.title}
           badge={copy.platform?.name}
           subtext={copy.platform?.name?.toUpperCase()}

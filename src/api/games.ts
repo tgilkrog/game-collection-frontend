@@ -1,11 +1,12 @@
 import api from './axios';
-import type { Game, GameSearchResult } from '../types/game';
+import type { Game, GameListItem, GameSearchResult } from '../types/game';
+import type { Paginated } from '../types/pagination';
 
-export const getGames = () =>
-  api.get<Game[]>('/game-base');
+export const getGames = (page = 1) =>
+  api.get<Paginated<GameListItem>>(`/game-base?page=${page}`);
 
 export const getGame = (id: number) =>
-  api.get(`/game-base/${id}`);
+  api.get<Game>(`/game-base/${id}`);
 
 export const createGame = (data: FormData) =>
   api.post('/game-base', data);
@@ -16,5 +17,7 @@ export const updateGame = (id: number, data: FormData) =>
 export const deleteGame = (id: number) =>
   api.delete(`/game-base/${id}`);
 
-export const searchGame = (q: string) =>
-  api.get<GameSearchResult[]>(`/game-base/search?q=${encodeURIComponent(q)}`);
+export const searchGame = (q: string, source?: 'local' | 'igdb') =>
+  api.get<GameSearchResult[]>(
+    `/game-base/search?q=${encodeURIComponent(q)}${source ? `&source=${source}` : ''}`
+  );

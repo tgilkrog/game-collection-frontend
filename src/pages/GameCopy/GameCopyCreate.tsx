@@ -38,17 +38,20 @@ export default function GameCopyCreate({ conditions, platforms, onSubmit }: Prop
   const [gameResults, setGameResults] = useState<GameSearchResult[]>([]);
   const [selectedGame, setSelectedGame] = useState<GameSearchResult | null>(null);
   const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState('');
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (gameQuery.length < 2) { setGameResults([]); return; }
+    if (gameQuery.length < 2) { setGameResults([]); setSearchError(''); return; }
     const t = setTimeout(async () => {
       setSearching(true);
       try {
         const res = await searchGame(gameQuery);
         setGameResults(res.data);
+        setSearchError('');
       } catch {
         setGameResults([]);
+        setSearchError('SEARCH FAILED. CHECK CONNECTION AND RETRY.');
       } finally {
         setSearching(false);
       }
@@ -168,9 +171,10 @@ export default function GameCopyCreate({ conditions, platforms, onSubmit }: Prop
             ))}
           </div>
         )}
-        {gameQuery.length >= 2 && !searching && gameResults.length === 0 && (
+        {gameQuery.length >= 2 && !searching && gameResults.length === 0 && !searchError && (
           <div className={styles.search_hint}>NO RESULTS</div>
         )}
+        {searchError && <div className={styles.search_hint}>{searchError}</div>}
       </div>
 
       {/* Platform */}

@@ -8,12 +8,14 @@ import { createGameCopy, getGameCopies } from "../../api/gameCopy";
 import { useAuth } from "../../Context/AuthContext";
 import { PageTransition } from '../../components/PageTransition';
 import Popup from '../../components/Popup/Popup';
+import { Pagination } from '../../components/Pagination/Pagination';
 import styles from './GameCopy.module.css';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
 export default function GameCopyPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [page, setPage] = useState(1);
     const { user } = useAuth();
     const queryClient = useQueryClient();
 
@@ -29,9 +31,9 @@ export default function GameCopyPage() {
         staleTime: FIVE_MINUTES,
     });
 
-    const { data: gameCopies = [], isLoading, isError } = useQuery({
-        queryKey: ['gameCopies'],
-        queryFn: () => getGameCopies().then(r => r.data),
+    const { data: copiesData, isLoading, isError } = useQuery({
+        queryKey: ['gameCopies', page],
+        queryFn: () => getGameCopies(page).then(r => r.data),
     });
 
     const createMutation = useMutation({
@@ -45,6 +47,10 @@ export default function GameCopyPage() {
     if (isLoading) return <div className={styles.status}>LOADING...</div>;
     if (isError) return <div className={styles.status}>FAILED TO LOAD.</div>;
 
+    const gameCopies = copiesData?.data ?? [];
+    const total = copiesData?.meta.total ?? 0;
+    const lastPage = copiesData?.meta.last_page ?? 1;
+
     return (
         <PageTransition>
             <div className={styles.list_page}>
@@ -52,7 +58,7 @@ export default function GameCopyPage() {
                     <div>
                         <div className={styles.list_eyebrow}>// COLLECTION</div>
                         <h1 className={styles.list_title}>GAME COPIES</h1>
-                        <div className={styles.list_meta}>{String(gameCopies.length).padStart(2, '0')} COPIES LOGGED</div>
+                        <div className={styles.list_meta}>{String(total).padStart(2, '0')} COPIES LOGGED</div>
                     </div>
                     {user && (
                         <button className={styles.action_btn} onClick={() => setIsFormOpen(true)}>
@@ -62,6 +68,8 @@ export default function GameCopyPage() {
                 </div>
 
                 <GameCopyList gameCopies={gameCopies} />
+
+                <Pagination currentPage={page} lastPage={lastPage} onPageChange={setPage} />
 
                 {user && (
                     <Popup open={isFormOpen} onClose={() => setIsFormOpen(false)}>

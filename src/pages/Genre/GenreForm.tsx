@@ -9,18 +9,25 @@ export default function GenreForm({
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
-    await createGenre({ name, slug });
-
-    setName("");
-    setSlug("");
-    setLoading(false);
-
-    onCreated();
+    setError("");
+    try {
+      await createGenre({ name, slug });
+      setName("");
+      setSlug("");
+      onCreated();
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message
+        ?? "Failed to create genre.";
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -32,6 +39,7 @@ export default function GenreForm({
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="NAME"
+        required
       />
 
       <input
@@ -39,9 +47,12 @@ export default function GenreForm({
         value={slug}
         onChange={(e) => setSlug(e.target.value)}
         placeholder="SLUG"
+        required
       />
 
-      <button className="ui-button" type="submit">
+      {error && <div className="ui-error">{error}</div>}
+
+      <button className="ui-button" type="submit" disabled={loading}>
         {loading ? "PROCESSING..." : "CREATE"}
       </button>
     </form>

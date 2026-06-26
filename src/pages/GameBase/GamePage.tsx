@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { getAssetUrl } from '../../utils/assetUrl';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getGame, deleteGame, updateGame } from '../../api/games';
 import { getConditions } from '../../api/conditions';
@@ -53,7 +54,7 @@ export default function GamePage() {
 
                 <div className={styles.game_image}>
                     <img
-                        src={`${game.cover_image}`}
+                        src={getAssetUrl(game.cover_image)}
                         alt={game.title}
                     />
                 </div>
@@ -75,7 +76,7 @@ export default function GamePage() {
                             <span className={styles.meta_value}>{game.publisher}</span>
                         </div>
 
-                        <p className={styles.description} dangerouslySetInnerHTML={{ __html: game.description }}></p>
+                        <p className={styles.description}>{game.description}</p>
 
                         <div className={styles.tag_groups}>
                             {[

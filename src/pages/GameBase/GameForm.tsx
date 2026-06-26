@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getAssetUrl } from '../../utils/assetUrl';
 import styles from './game.module.css';
 
 type FormState = {
@@ -21,6 +22,7 @@ type GameFormProps = {
     cover_image?: string;
   };
   submitLabel?: string;
+  genres?: { id: number; name: string }[];
 };
 
 export default function GameForm({ onSubmit, initialData, submitLabel }: GameFormProps) {
@@ -34,8 +36,9 @@ export default function GameForm({ onSubmit, initialData, submitLabel }: GameFor
 
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(
-    initialData?.cover_image ? `${import.meta.env.VITE_API_BASE_URL}${initialData.cover_image}` : null
+    initialData?.cover_image ? getAssetUrl(initialData.cover_image) : null
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] || null;
@@ -55,10 +58,15 @@ export default function GameForm({ onSubmit, initialData, submitLabel }: GameFor
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData();
-    Object.entries(form).forEach(([key, value]) => formData.append(key, String(value)));
-    if (file) formData.append('cover_image', file);
-    await onSubmit(formData);
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData();
+      Object.entries(form).forEach(([key, value]) => formData.append(key, String(value)));
+      if (file) formData.append('cover_image', file);
+      await onSubmit(formData);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -71,13 +79,15 @@ export default function GameForm({ onSubmit, initialData, submitLabel }: GameFor
       </div>
       <form onSubmit={handleSubmit} className="ui-form">
         <div className="ui-form-header">New Game Entry</div>
-        <input className="ui-input" name="title" placeholder="Title" value={form.title} onChange={handleChange} />
+        <input className="ui-input" name="title" placeholder="Title" value={form.title} onChange={handleChange} required />
         <input className="ui-input" name="developer" placeholder="Developer" value={form.developer} onChange={handleChange} />
         <input className="ui-input" name="publisher" placeholder="Publisher" value={form.publisher} onChange={handleChange} />
         <input className="ui-input" name="description" placeholder="Description" value={form.description} onChange={handleChange} />
-        <input className="ui-input" name="release_year" placeholder="Release Year" value={form.release_year} onChange={handleChange} />
+        <input className="ui-input" name="release_year" type="number" placeholder="Release Year" min="1950" max="2030" value={form.release_year} onChange={handleChange} required />
         <input type="file" name="cover_image" onChange={handleFileChange} />
-        <button className="cybr-btn" type="submit">{submitLabel || 'Submit'}</button>
+        <button className="cybr-btn" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'SAVING...' : (submitLabel || 'Submit')}
+        </button>
       </form>
     </div>
   );

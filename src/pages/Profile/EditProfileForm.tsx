@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import type { User } from '../../types/user';
+import { getAssetUrl } from '../../utils/assetUrl';
 import styles from './EditProfileForm.module.css';
 
 type Props = {
@@ -21,8 +22,7 @@ export default function EditProfileForm({ current, onSubmit, loading, error }: P
   const isDragging = useRef(false);
   const dragStart = useRef({ y: 0, pos: 0 });
 
-  const apiBase = import.meta.env.VITE_API_BASE_URL;
-  const bannerSrc = bannerPreview ?? (current.banner ? `${apiBase}${current.banner}` : null);
+  const bannerSrc = bannerPreview ?? (current.banner ? getAssetUrl(current.banner) : null);
 
   function handleAvatar(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null;
@@ -95,7 +95,7 @@ export default function EditProfileForm({ current, onSubmit, loading, error }: P
         <div className={styles.avatar_col}>
           <div className={styles.preview_avatar}>
             {(avatarPreview || current.avatar)
-              ? <img src={avatarPreview ?? `${apiBase}${current.avatar}`} alt="avatar" />
+              ? <img src={avatarPreview ?? getAssetUrl(current.avatar)} alt="avatar" />
               : <span>{current.name[0].toUpperCase()}</span>
             }
           </div>
