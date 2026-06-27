@@ -1,4 +1,4 @@
-.page {
+﻿.page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 80px 60px 60px;
@@ -15,48 +15,48 @@
 }
 
 .eyebrow {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 3px;
-  color: #5ce1e0;
+  color: var(--color-teal);
   margin-bottom: 6px;
 }
 
 .title {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 36px;
   letter-spacing: 4px;
-  color: #f1f5f8;
+  color: var(--color-text-primary);
   text-transform: uppercase;
   line-height: 1;
   margin: 0 0 6px;
 }
 
 .meta {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 1.5px;
-  color: #56616f;
+  color: var(--color-text-muted);
 }
 
 .search {
   padding: 10px 16px;
   background: transparent;
-  border: 1px solid #2a3441;
-  color: #f1f5f8;
-  font-family: 'JetBrains Mono', monospace;
+  border: 1px solid var(--color-border-mid);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 1.5px;
   outline: none;
   width: 260px;
-  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  clip-path: var(--clip-sm);
   transition: border-color .15s;
   flex: none;
 }
 
-.search:focus { border-color: #5ce1e0; }
-.search::placeholder { color: #56616f; }
+.search:focus { border-color: var(--color-teal); }
+.search::placeholder { color: var(--color-text-muted); }
 
 .grid {
   display: grid;
@@ -71,20 +71,20 @@
   align-items: center;
   gap: 10px;
   padding: 24px 16px;
-  background: rgba(10,14,19,.72);
-  border: 1px solid #1a212b;
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-dark);
+  clip-path: var(--clip-md);
   text-decoration: none;
   transition: border-color .15s;
 }
 
-.card:hover { border-color: #5ce1e0; }
+.card:hover { border-color: var(--color-teal); }
 
 .card_avatar {
   width: 72px;
   height: 72px;
-  background: #10161e;
-  border: 1px solid #222c38;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-accent);
   border-radius: 50%;
   overflow: hidden;
   display: flex;
@@ -101,34 +101,34 @@
 }
 
 .card_avatar span {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 28px;
-  color: #5ce1e0;
+  color: var(--color-teal);
   line-height: 1;
 }
 
 .card_name {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 16px;
   letter-spacing: 2px;
-  color: #f1f5f8;
+  color: var(--color-text-primary);
   text-transform: uppercase;
   text-align: center;
 }
 
 .card_meta {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 1.5px;
-  color: #56616f;
+  color: var(--color-text-muted);
 }
 
 .status {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 2px;
-  color: #56616f;
+  color: var(--color-text-muted);
   padding: 40px 0;
 }

@@ -4,8 +4,11 @@ import type { Paginated } from '../types/pagination';
 
 const BASE_URL = '/game-copies';
 
-export const getFeed = (page = 1) =>
-  api.get<Paginated<GameCopy>>(`/feed?page=${page}`);
+export const getFeed = (following = false, page = 1) => {
+  const params = new URLSearchParams({ page: String(page) });
+  if (following) params.set('following', '1');
+  return api.get<Paginated<GameCopy>>(`/feed?${params}`);
+};
 
 export const getGameCopies = (page = 1) =>
   api.get<Paginated<GameCopy>>(`${BASE_URL}?page=${page}`);

@@ -7,10 +7,10 @@
 }
 
 .form_title {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 3px;
-  color: #b026ff;
+  color: var(--color-purple);
   margin-bottom: 20px;
 }
 
@@ -30,10 +30,10 @@
 }
 
 .label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 2.5px;
-  color: #56616f;
+  color: var(--color-text-muted);
   text-transform: uppercase;
 }
 
@@ -41,12 +41,12 @@
 .select {
   width: 100%;
   padding: 9px 12px;
-  background: rgba(10,14,19,.6);
+  background: var(--color-bg-input);
   border: none;
-  border-left: 2px solid #2a3441;
-  border-bottom: 1px solid #1a212b;
-  color: #f1f5f8;
-  font-family: 'JetBrains Mono', monospace;
+  border-left: 2px solid var(--color-border-mid);
+  border-bottom: 1px solid var(--color-border-dark);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
   font-size: 12px;
   outline: none;
   box-sizing: border-box;
@@ -56,17 +56,17 @@
 
 .input:focus,
 .select:focus {
-  border-left-color: #b026ff;
+  border-left-color: var(--color-purple);
 }
 
 .select option {
   background: #0d1117;
-  color: #f1f5f8;
+  color: var(--color-text-primary);
 }
 
 /* â”€â”€ GAME SEARCH RESULTS â”€â”€ */
 .search_results {
-  border: 1px solid #1a212b;
+  border: 1px solid var(--color-border-dark);
   background: rgba(10,14,19,.95);
   margin-top: 2px;
   display: flex;
@@ -81,7 +81,7 @@
   background: transparent;
   border: none;
   border-bottom: 1px solid #0d1117;
-  color: #a8b2bd;
+  color: var(--color-text-secondary);
   cursor: pointer;
   text-align: left;
   transition: background .12s;
@@ -102,7 +102,7 @@
 
 .result_title {
   flex: 1;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: .5px;
   color: #c8d0d8;
@@ -112,16 +112,16 @@
 }
 
 .result_platforms {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 1px;
-  color: #56616f;
+  color: var(--color-text-muted);
   white-space: nowrap;
   flex: none;
 }
 
 .source_badge {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 8px;
   letter-spacing: 1.5px;
   padding: 2px 6px;
@@ -129,20 +129,20 @@
 }
 
 .badge_local {
-  color: #b026ff;
+  color: var(--color-purple);
   border: 1px solid rgba(176,38,255,.3);
 }
 
 .badge_igdb {
-  color: #56616f;
-  border: 1px solid #2a3441;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-mid);
 }
 
 .search_hint {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 2px;
-  color: #56616f;
+  color: var(--color-text-muted);
   padding: 8px 10px;
 }
 
@@ -153,8 +153,8 @@
   gap: 10px;
   padding: 8px 10px;
   background: rgba(176,38,255,.05);
-  border-left: 2px solid #b026ff;
-  border-bottom: 1px solid #1a212b;
+  border-left: 2px solid var(--color-purple);
+  border-bottom: 1px solid var(--color-border-dark);
 }
 
 .selected_thumb {
@@ -166,9 +166,9 @@
 
 .selected_title {
   flex: 1;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: #f1f5f8;
+  color: var(--color-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -177,7 +177,7 @@
 .clear_btn {
   background: transparent;
   border: none;
-  color: #56616f;
+  color: var(--color-text-muted);
   font-size: 16px;
   cursor: pointer;
   padding: 0 2px;
@@ -191,15 +191,15 @@
 /* â”€â”€ DIVIDER â”€â”€ */
 .divider {
   border: none;
-  border-top: 1px solid #1a212b;
+  border-top: 1px solid var(--color-border-dark);
   margin: 8px 0 20px;
 }
 
 .section_label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 2.5px;
-  color: #b026ff;
+  color: var(--color-purple);
   text-transform: uppercase;
   margin-bottom: 12px;
 }
@@ -207,7 +207,7 @@
 /* â”€â”€ PARTS â”€â”€ */
 .part_card {
   background: rgba(10,14,19,.5);
-  border: 1px solid #1a212b;
+  border: 1px solid var(--color-border-dark);
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
   padding: 14px 16px;
   margin-bottom: 10px;
@@ -224,17 +224,17 @@
 }
 
 .part_index {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 2px;
-  color: #56616f;
+  color: var(--color-text-muted);
 }
 
 .part_remove {
   background: transparent;
-  border: 1px solid #2a3441;
-  color: #56616f;
-  font-family: 'JetBrains Mono', monospace;
+  border: 1px solid var(--color-border-mid);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
   font-size: 10px;
   padding: 3px 8px;
   cursor: pointer;
@@ -244,7 +244,7 @@
 }
 
 .part_remove:hover {
-  border-color: #c0392b;
+  border-color: var(--color-error);
   color: #e05a4e;
 }
 
@@ -256,39 +256,39 @@
 }
 
 .pill {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   padding: 5px 12px;
   background: transparent;
-  border: 1px solid #2a3441;
-  color: #56616f;
+  border: 1px solid var(--color-border-mid);
+  color: var(--color-text-muted);
   cursor: pointer;
-  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+  clip-path: var(--clip-xs);
   transition: border-color .15s, color .15s, background .15s;
 }
 
 .pill:hover {
   border-color: #3a4f5f;
-  color: #a8b2bd;
+  color: var(--color-text-secondary);
 }
 
 .pill_active {
-  border-color: #b026ff;
-  color: #b026ff;
+  border-color: var(--color-purple);
+  color: var(--color-purple);
   background: rgba(176,38,255,.08);
 }
 
 /* â”€â”€ BUTTONS â”€â”€ */
 .add_part_btn {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
   background: transparent;
-  border: 1px dashed #2a3441;
-  color: #56616f;
+  border: 1px dashed var(--color-border-mid);
+  color: var(--color-text-muted);
   padding: 10px;
   cursor: pointer;
   width: 100%;
@@ -297,17 +297,17 @@
 }
 
 .add_part_btn:hover {
-  border-color: #b026ff;
-  color: #b026ff;
+  border-color: var(--color-purple);
+  color: var(--color-purple);
 }
 
 .submit_btn {
   width: 100%;
   padding: 12px;
   background: transparent;
-  border: 1px solid #b026ff;
-  color: #b026ff;
-  font-family: 'JetBrains Mono', monospace;
+  border: 1px solid var(--color-purple);
+  color: var(--color-purple);
+  font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;

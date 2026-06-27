@@ -20,3 +20,7 @@ export type UserListItem = {
     avatar?: string;
     copy_count: number;
 };
+
+export type PlatformStat = { name: string; count: number; value: number };
+export type GenreStat    = { name: string; count: number };
+export type DecadeStat   = { decade: string; count: number };

@@ -8,14 +8,14 @@
   width: 36px;
   height: 30px;
   background: transparent;
-  border: 1px solid #2a3441;
+  border: 1px solid var(--color-border-mid);
   position: relative;
   cursor: pointer;
   transition: border-color .15s;
 }
 
 .menuButton:hover {
-  border-color: #b026ff;
+  border-color: var(--color-purple);
 }
 
 .menuButton span {
@@ -23,7 +23,7 @@
   left: 7px;
   right: 7px;
   height: 2px;
-  background: #7a8696;
+  background: var(--color-text-dim);
   transition: background .15s, transform .15s;
 }
 
@@ -31,27 +31,27 @@
 .menuButton span:nth-child(2) { top: 14px; }
 .menuButton span:nth-child(3) { top: 21px; }
 
-.menuButton:hover span { background: #b026ff; }
+.menuButton:hover span { background: var(--color-purple); }
 .menuButton:hover span:nth-child(1) { transform: translateX(-2px); }
 .menuButton:hover span:nth-child(3) { transform: translateX(2px); }
 
 /* === POPUP CONTENT === */
 .title {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 3px;
-  color: #b026ff;
+  color: var(--color-purple);
   margin-bottom: 24px;
   padding-bottom: 14px;
-  border-bottom: 1px solid #1a212b;
+  border-bottom: 1px solid var(--color-border-dark);
 }
 
 .link {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 32px;
   letter-spacing: 4px;
-  color: #a8b2bd;
+  color: var(--color-text-secondary);
   text-decoration: none;
   padding: 6px 0;
   transition: color .15s, transform .15s;
@@ -67,30 +67,30 @@
 }
 
 .link:hover {
-  color: #eef3f6;
+  color: var(--color-text-bright);
   transform: translateX(8px);
 }
 
 .link:hover::before {
-  color: #b026ff;
+  color: var(--color-purple);
 }
 
 .close {
   margin-top: 28px;
   background: transparent;
-  border: 1px solid #2a3441;
-  color: #56616f;
+  border: 1px solid var(--color-border-mid);
+  color: var(--color-text-muted);
   padding: 10px 20px;
   cursor: pointer;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 2px;
-  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  clip-path: var(--clip-sm);
   transition: border-color .15s, color .15s;
   align-self: flex-start;
 }
 
 .close:hover {
-  border-color: #b026ff;
-  color: #b026ff;
+  border-color: var(--color-purple);
+  color: var(--color-purple);
 }

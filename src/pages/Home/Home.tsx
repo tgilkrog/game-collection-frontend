@@ -19,6 +19,7 @@ export function Home() {
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState<GameSearchResult[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [feedMode, setFeedMode] = useState<'global' | 'following'>('global');
   const searchRef = useRef<HTMLDivElement>(null);
 
   const { data: homeData } = useQuery({
@@ -28,8 +29,8 @@ export function Home() {
   });
 
   const { data: feedData, isLoading } = useQuery({
-    queryKey: ['feed'],
-    queryFn: () => getFeed().then(r => r.data),
+    queryKey: ['feed', feedMode],
+    queryFn: () => getFeed(feedMode === 'following').then(r => r.data),
   });
 
   const feed = feedData?.data ?? [];
@@ -101,7 +102,21 @@ export function Home() {
           <header className={styles.content_header}>
             <div>
               <h1 className={styles.content_heading}>RECENTLY ADDED COPIES</h1>
-              <div className={styles.content_sub}>{String(feed.length).padStart(2, '0')} ENTRIES</div>
+              <div className={styles.content_sub}>
+                {String(feed.length).padStart(2, '0')} ENTRIES
+                {user && (
+                  <span className={styles.feed_toggle}>
+                    <button
+                      className={`${styles.feed_btn} ${feedMode === 'global' ? styles.feed_btn_active : ''}`}
+                      onClick={() => setFeedMode('global')}
+                    >ALL</button>
+                    <button
+                      className={`${styles.feed_btn} ${feedMode === 'following' ? styles.feed_btn_active : ''}`}
+                      onClick={() => setFeedMode('following')}
+                    >FOLLOWING</button>
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className={styles.header_right}>

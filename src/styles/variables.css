@@ -1,0 +1,37 @@
+:root {
+  /* Accent colors */
+  --color-purple: #b026ff;
+  --color-teal:   #5ce1e0;
+
+  /* Text scale */
+  --color-text-primary:   #f1f5f8;
+  --color-text-bright:    #eef3f6;
+  --color-text-secondary: #a8b2bd;
+  --color-text-dim:       #7a8696;
+  --color-text-muted:     #56616f;
+
+  /* Borders */
+  --color-border-dark:   #1a212b;
+  --color-border-mid:    #2a3441;
+  --color-border-accent: #222c38;
+
+  /* Backgrounds */
+  --color-bg-dark:    #0a0e13;
+  --color-bg-surface: #10161e;
+  --color-bg-card:    rgba(10, 14, 19, .72);
+  --color-bg-input:   rgba(10, 14, 19, .60);
+
+  /* Semantic */
+  --color-error: #c0392b;
+
+  /* Typography */
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-display: 'Rajdhani', sans-serif;
+  --font-body:    'Space Grotesk', system-ui, sans-serif;
+
+  /* Clip-path chamfer presets (cut top-right corner) */
+  --clip-xs: polygon(0 0, calc(100% - 6px)  0, 100%  6px, 100% 100%, 0 100%);
+  --clip-sm: polygon(0 0, calc(100% - 8px)  0, 100%  8px, 100% 100%, 0 100%);
+  --clip-md: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+  --clip-lg: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+}

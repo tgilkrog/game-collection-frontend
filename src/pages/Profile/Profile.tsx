@@ -5,7 +5,7 @@ import { PageTransition } from '../../components/PageTransition';
 import { useAuth } from '../../Context/AuthContext';
 import {
   getUser, getUserCopies, updateUser, changePassword,
-  followUser, unfollowUser, getUserWishlist,
+  followUser, unfollowUser, getUserWishlist, getUserStats,
 } from '../../api/users';
 import { createGameCopy } from '../../api/gameCopy';
 import { getConditions } from '../../api/conditions';
@@ -18,10 +18,33 @@ import EditProfileForm from './EditProfileForm';
 import { getAssetUrl } from '../../utils/assetUrl';
 import styles from './Profile.module.css';
 import type { GameListItem } from '../../types/game';
+import type { PlatformStat, GenreStat, DecadeStat } from '../../types/user';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
-type Tab = 'collection' | 'wishlist';
+type Tab = 'collection' | 'wishlist' | 'stats';
+
+type StatRow = { label: string; count: number; meta?: string };
+
+function StatSection({ title, rows }: { title: string; rows: StatRow[] }) {
+  const max = Math.max(...rows.map(r => r.count), 1);
+  if (rows.length === 0) return null;
+  return (
+    <div className={styles.stats_section}>
+      <div className={styles.stats_heading}>{title}</div>
+      {rows.map(row => (
+        <div key={row.label} className={styles.bar_row}>
+          <span className={styles.bar_label}>{row.label}</span>
+          <div className={styles.bar_track}>
+            <div className={styles.bar_fill} style={{ width: `${(row.count / max) * 100}%` }} />
+          </div>
+          <span className={styles.bar_count}>{row.count}</span>
+          {row.meta && <span className={styles.bar_meta}>{row.meta}</span>}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
@@ -65,6 +88,13 @@ export default function Profile() {
     queryKey: ['userWishlist', username, wishlistPage],
     queryFn: () => getUserWishlist(username!, wishlistPage).then((r: { data: { data: GameListItem[], meta: { last_page: number, total: number } } }) => r.data),
     enabled: !!username && tab === 'wishlist',
+    staleTime: FIVE_MINUTES,
+  });
+
+  const { data: statsData } = useQuery({
+    queryKey: ['userStats', username],
+    queryFn: () => getUserStats(username!).then(r => r.data),
+    enabled: !!username && tab === 'stats',
     staleTime: FIVE_MINUTES,
   });
 
@@ -241,6 +271,12 @@ export default function Profile() {
           >
             WISHLIST {!wishlistLoading && tab === 'wishlist' && <span>({wishlistTotal})</span>}
           </button>
+          <button
+            className={`${styles.tab_btn} ${tab === 'stats' ? styles.tab_btn_active : ''}`}
+            onClick={() => setTab('stats')}
+          >
+            STATS
+          </button>
         </div>
 
         {/* ── Collection tab ── */}
@@ -285,6 +321,40 @@ export default function Profile() {
             )}
             <Pagination currentPage={wishlistPage} lastPage={wishlistLastPage} onPageChange={setWishlistPage} />
           </>
+        )}
+
+        {/* ── Stats tab ── */}
+        {tab === 'stats' && (
+          <div className={styles.stats_page}>
+            {!statsData ? (
+              <div className={styles.status}>LOADING...</div>
+            ) : (
+              <>
+                <StatSection
+                  title="PLATFORMS"
+                  rows={(statsData.byPlatform as PlatformStat[]).map(p => ({
+                    label: p.name,
+                    count: p.count,
+                    meta: `${p.value.toFixed(2)} DKK`,
+                  }))}
+                />
+                <StatSection
+                  title="GENRES"
+                  rows={(statsData.byGenre as GenreStat[]).map(g => ({
+                    label: g.name,
+                    count: g.count,
+                  }))}
+                />
+                <StatSection
+                  title="DECADES"
+                  rows={(statsData.byDecade as DecadeStat[]).map(d => ({
+                    label: d.decade,
+                    count: d.count,
+                  }))}
+                />
+              </>
+            )}
+          </div>
         )}
 
         {/* ── Add copy modal ── */}

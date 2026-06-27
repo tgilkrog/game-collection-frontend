@@ -4,14 +4,14 @@
   justify-content: center;
   gap: 16px;
   margin-top: 40px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
 }
 
 .btn {
   background: transparent;
-  border: 1px solid #b026ff;
-  color: #b026ff;
-  font-family: 'JetBrains Mono', monospace;
+  border: 1px solid var(--color-purple);
+  color: var(--color-purple);
+  font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 2px;
   padding: 8px 18px;
@@ -21,7 +21,7 @@
 }
 
 .btn:hover:not(:disabled) {
-  background: #b026ff;
+  background: var(--color-purple);
   color: #0a0e14;
 }
 

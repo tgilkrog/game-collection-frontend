@@ -1,5 +1,5 @@
 import api from './axios';
-import type { User, UserListItem } from '../types/user';
+import type { User, UserListItem, PlatformStat, GenreStat, DecadeStat } from '../types/user';
 import type { GameCopy } from '../types/gamecopy';
 import type { Paginated } from '../types/pagination';
 
@@ -28,3 +28,6 @@ export const unfollowUser = (username: string) =>
 
 export const getUserWishlist = (username: string, page = 1) =>
   api.get(`/users/${username}/wishlist?page=${page}`);
+
+export const getUserStats = (username: string) =>
+  api.get<{ byPlatform: PlatformStat[]; byGenre: GenreStat[]; byDecade: DecadeStat[] }>(`/users/${username}/stats`);
