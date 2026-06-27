@@ -1,4 +1,4 @@
-.form {
+﻿.form {
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -10,11 +10,11 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   letter-spacing: 3px;
-  color: #5ce1e0;
+  color: #b026ff;
   margin-bottom: 20px;
 }
 
-/* ── FIELD ── */
+/* â”€â”€ FIELD â”€â”€ */
 .field {
   display: flex;
   flex-direction: column;
@@ -56,7 +56,7 @@
 
 .input:focus,
 .select:focus {
-  border-left-color: #5ce1e0;
+  border-left-color: #b026ff;
 }
 
 .select option {
@@ -64,7 +64,7 @@
   color: #f1f5f8;
 }
 
-/* ── GAME SEARCH RESULTS ── */
+/* â”€â”€ GAME SEARCH RESULTS â”€â”€ */
 .search_results {
   border: 1px solid #1a212b;
   background: rgba(10,14,19,.95);
@@ -90,7 +90,7 @@
 
 .result_item:last-child { border-bottom: none; }
 
-.result_item:hover { background: rgba(92,225,224,.06); }
+.result_item:hover { background: rgba(176,38,255,.06); }
 
 .result_thumb {
   width: 32px;
@@ -129,8 +129,8 @@
 }
 
 .badge_local {
-  color: #5ce1e0;
-  border: 1px solid rgba(92,225,224,.3);
+  color: #b026ff;
+  border: 1px solid rgba(176,38,255,.3);
 }
 
 .badge_igdb {
@@ -146,14 +146,14 @@
   padding: 8px 10px;
 }
 
-/* ── SELECTED GAME ── */
+/* â”€â”€ SELECTED GAME â”€â”€ */
 .selected_game {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
-  background: rgba(92,225,224,.05);
-  border-left: 2px solid #5ce1e0;
+  background: rgba(176,38,255,.05);
+  border-left: 2px solid #b026ff;
   border-bottom: 1px solid #1a212b;
 }
 
@@ -188,7 +188,7 @@
 
 .clear_btn:hover { color: #e05a4e; }
 
-/* ── DIVIDER ── */
+/* â”€â”€ DIVIDER â”€â”€ */
 .divider {
   border: none;
   border-top: 1px solid #1a212b;
@@ -199,12 +199,12 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px;
   letter-spacing: 2.5px;
-  color: #5ce1e0;
+  color: #b026ff;
   text-transform: uppercase;
   margin-bottom: 12px;
 }
 
-/* ── PARTS ── */
+/* â”€â”€ PARTS â”€â”€ */
 .part_card {
   background: rgba(10,14,19,.5);
   border: 1px solid #1a212b;
@@ -275,12 +275,12 @@
 }
 
 .pill_active {
-  border-color: #5ce1e0;
-  color: #5ce1e0;
-  background: rgba(92,225,224,.08);
+  border-color: #b026ff;
+  color: #b026ff;
+  background: rgba(176,38,255,.08);
 }
 
-/* ── BUTTONS ── */
+/* â”€â”€ BUTTONS â”€â”€ */
 .add_part_btn {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
@@ -297,16 +297,16 @@
 }
 
 .add_part_btn:hover {
-  border-color: #5ce1e0;
-  color: #5ce1e0;
+  border-color: #b026ff;
+  color: #b026ff;
 }
 
 .submit_btn {
   width: 100%;
   padding: 12px;
   background: transparent;
-  border: 1px solid #5ce1e0;
-  color: #5ce1e0;
+  border: 1px solid #b026ff;
+  color: #b026ff;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   letter-spacing: 2px;
@@ -318,7 +318,7 @@
 }
 
 .submit_btn:hover:not(:disabled) {
-  background: rgba(92,225,224,.1);
+  background: rgba(176,38,255,.1);
 }
 
 .submit_btn:disabled {

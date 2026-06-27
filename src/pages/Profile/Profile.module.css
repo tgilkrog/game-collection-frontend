@@ -1,4 +1,4 @@
-.page {
+﻿.page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 80px 60px 60px;
@@ -8,7 +8,7 @@
   box-sizing: border-box;
 }
 
-/* ── HEADER ── */
+/* â”€â”€ HEADER â”€â”€ */
 .header {
   position: relative;
   height: 240px;
@@ -18,13 +18,13 @@
   margin-bottom: 40px;
   background-color: #0d1117;
   background-image:
-    radial-gradient(ellipse at 30% 60%, rgba(92,225,224,.05), transparent 55%),
+    radial-gradient(ellipse at 30% 60%, rgba(176,38,255,.05), transparent 55%),
     linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
   background-size: auto, 46px 46px, 46px 46px;
 }
 
-/* ── BANNER IMAGE ── */
+/* â”€â”€ BANNER IMAGE â”€â”€ */
 .banner_img {
   position: absolute;
   inset: 0;
@@ -41,7 +41,7 @@
   background: linear-gradient(to bottom, rgba(10,14,19,.2) 0%, rgba(10,14,19,.85) 100%);
 }
 
-/* ── CONTENT — sits at bottom of banner ── */
+/* â”€â”€ CONTENT â€” sits at bottom of banner â”€â”€ */
 .header_body {
   position: absolute;
   bottom: 0;
@@ -53,7 +53,7 @@
   padding: 0 32px 24px;
 }
 
-/* ── AVATAR ── */
+/* â”€â”€ AVATAR â”€â”€ */
 .avatar {
   width: 100px;
   height: 100px;
@@ -78,11 +78,11 @@
   font-family: 'Rajdhani', sans-serif;
   font-weight: 700;
   font-size: 32px;
-  color: #5ce1e0;
+  color: #b026ff;
   line-height: 1;
 }
 
-/* ── INFO ── */
+/* â”€â”€ INFO â”€â”€ */
 .header_left {
   flex: 1;
   display: flex;
@@ -95,7 +95,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   letter-spacing: 3px;
-  color: #5ce1e0;
+  color: #b026ff;
 }
 
 .name {
@@ -116,14 +116,14 @@
   margin-top: 2px;
 }
 
-/* ── HEADER ACTIONS (button group) ── */
+/* â”€â”€ HEADER ACTIONS (button group) â”€â”€ */
 .header_actions {
   display: flex;
   gap: 10px;
   flex: none;
 }
 
-/* ── EDIT BUTTON ── */
+/* â”€â”€ EDIT BUTTON â”€â”€ */
 .edit_btn {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
@@ -139,11 +139,11 @@
 }
 
 .edit_btn:hover {
-  border-color: #5ce1e0;
-  color: #5ce1e0;
+  border-color: #b026ff;
+  color: #b026ff;
 }
 
-/* ── ADD BUTTON ── */
+/* â”€â”€ ADD BUTTON â”€â”€ */
 .add_btn {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
@@ -160,11 +160,11 @@
 }
 
 .add_btn:hover {
-  border-color: #5ce1e0;
-  color: #5ce1e0;
+  border-color: #b026ff;
+  color: #b026ff;
 }
 
-/* ── SECTION HEADING ── */
+/* â”€â”€ SECTION HEADING â”€â”€ */
 .section_heading {
   font-family: 'Rajdhani', sans-serif;
   font-weight: 600;
@@ -184,7 +184,7 @@
   vertical-align: middle;
 }
 
-/* ── STATUS ── */
+/* â”€â”€ STATUS â”€â”€ */
 .status {
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
@@ -193,7 +193,7 @@
   padding: 40px 0;
 }
 
-/* ── STATS PANEL ── */
+/* â”€â”€ STATS PANEL â”€â”€ */
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -205,7 +205,7 @@
   background: rgba(10,14,19,.72);
   backdrop-filter: blur(10px);
   border: 1px solid #1a212b;
-  border-left: 2px solid #5ce1e0;
+  border-left: 2px solid #b026ff;
   clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
   padding: 20px 24px;
   display: flex;
@@ -230,7 +230,7 @@
   text-transform: uppercase;
 }
 
-/* ── GRID WRAPPER ── */
+/* â”€â”€ GRID WRAPPER â”€â”€ */
 .grid {
   width: 100%;
 }

@@ -80,39 +80,47 @@ export default function Login() {
                 {error && <div className={styles.error}>{error}</div>}
 
                 {mode === 'register' && (
-                    <input
-                        className={styles.login_input}
-                        type="text"
-                        placeholder="Username"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
+                    <div className={styles.field}>
+                        <label className={styles.label}>USERNAME</label>
+                        <input
+                            className={styles.login_input}
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
                 )}
 
-                <input
-                    className={styles.login_input}
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
+                <div className={styles.field}>
+                    <label className={styles.label}>EMAIL</label>
+                    <input
+                        className={styles.login_input}
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
 
-                <input
-                    className={styles.login_input}
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-
-                {mode === 'register' && (
+                <div className={styles.field}>
+                    <label className={styles.label}>PASSWORD</label>
                     <input
                         className={styles.login_input}
                         type="password"
-                        placeholder="Confirm Password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
+                </div>
+
+                {mode === 'register' && (
+                    <div className={styles.field}>
+                        <label className={styles.label}>CONFIRM PASSWORD</label>
+                        <input
+                            className={styles.login_input}
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                    </div>
                 )}
 
                 <button className={styles.close} onClick={handleSubmit} disabled={loading}>

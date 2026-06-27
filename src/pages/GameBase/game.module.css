@@ -1,4 +1,4 @@
-/* ── PAGE SHELL ── */
+﻿/* â”€â”€ PAGE SHELL â”€â”€ */
 .page {
   max-width: 1200px;
   margin: 0 auto;
@@ -9,7 +9,7 @@
   box-sizing: border-box;
 }
 
-/* ── TOP SECTION ── */
+/* â”€â”€ TOP SECTION â”€â”€ */
 .game_wrapper {
   display: flex;
   gap: 48px;
@@ -17,7 +17,7 @@
   margin-bottom: 40px;
 }
 
-/* ── COVER IMAGE ── */
+/* â”€â”€ COVER IMAGE â”€â”€ */
 .game_image {
   flex: none;
   /*width: 260px;*/
@@ -34,7 +34,7 @@
   filter: contrast(1.05) saturate(1.1);
 }
 
-/* ── INFO PANEL ── */
+/* â”€â”€ INFO PANEL â”€â”€ */
 .game_info {
   flex: 1;
   min-width: 0;
@@ -59,7 +59,7 @@
   padding: 28px 32px;
 }
 
-/* ── META ROWS ── */
+/* â”€â”€ META ROWS â”€â”€ */
 .meta_row {
   display: flex;
   align-items: baseline;
@@ -85,7 +85,7 @@
   color: #a8b2bd;
 }
 
-/* ── DESCRIPTION ── */
+/* â”€â”€ DESCRIPTION â”€â”€ */
 .description {
   margin: 20px 0;
   line-height: 1.7;
@@ -95,7 +95,7 @@
   padding-top: 16px;
 }
 
-/* ── TAG GROUPS (genres / themes / game modes / perspectives) ── */
+/* â”€â”€ TAG GROUPS (genres / themes / game modes / perspectives) â”€â”€ */
 .tag_groups {
   display: flex;
   flex-direction: column;
@@ -139,7 +139,7 @@
   clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
 }
 
-/* ── ACTION BUTTONS ── */
+/* â”€â”€ ACTION BUTTONS â”€â”€ */
 .actions {
   display: flex;
   gap: 12px;
@@ -161,8 +161,8 @@
 }
 
 .btn:hover {
-  border-color: #5ce1e0;
-  color: #5ce1e0;
+  border-color: #b026ff;
+  color: #b026ff;
 }
 
 .btn_delete {
@@ -176,7 +176,7 @@
   color: #e05a4e;
 }
 
-/* ── GAME COPIES ── */
+/* â”€â”€ GAME COPIES â”€â”€ */
 .copies_heading {
   font-family: 'Rajdhani', sans-serif;
   font-weight: 600;
@@ -215,7 +215,7 @@
   margin: 0 0 16px;
 }
 
-/* ── COPY META ── */
+/* â”€â”€ COPY META â”€â”€ */
 .copy_meta {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -239,7 +239,7 @@
   color: #a8b2bd;
 }
 
-/* ── CONDITIONS ── */
+/* â”€â”€ CONDITIONS â”€â”€ */
 .conditions_row {
   display: flex;
   align-items: center;
@@ -277,12 +277,12 @@
 }
 
 .highlight {
-  color: #5ce1e0;
-  border-color: #5ce1e0;
-  background: rgba(92,225,224,.06);
+  color: #b026ff;
+  border-color: #b026ff;
+  background: rgba(176,38,255,.06);
 }
 
-/* ── LOADING / ERROR ── */
+/* â”€â”€ LOADING / ERROR â”€â”€ */
 .status {
   padding: 80px 60px;
   font-family: 'JetBrains Mono', monospace;
@@ -291,7 +291,7 @@
   color: #56616f;
 }
 
-/* ── LIST PAGE (GameBase list view) ── */
+/* â”€â”€ LIST PAGE (GameBase list view) â”€â”€ */
 .list_page {
   max-width: 1200px;
   margin: 0 auto;
@@ -311,7 +311,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   letter-spacing: 3px;
-  color: #5ce1e0;
+  color: #b026ff;
   margin-bottom: 6px;
 }
 
@@ -349,7 +349,7 @@
 }
 
 .action_btn:hover {
-  border-color: #5ce1e0;
-  color: #5ce1e0;
+  border-color: #b026ff;
+  color: #b026ff;
 }
 

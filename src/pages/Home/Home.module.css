@@ -1,4 +1,4 @@
-/* ── ROOT ── */
+﻿/* â”€â”€ ROOT â”€â”€ */
 .root {
   position: relative;
   height: 100vh;
@@ -11,7 +11,7 @@
   flex-direction: column;
 }
 
-/* ── BACKGROUND ── */
+/* â”€â”€ BACKGROUND â”€â”€ */
 .bg_image {
   position: fixed;
   inset: 0;
@@ -36,7 +36,7 @@
   z-index: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(1100px 560px at 82% -12%, rgba(92,225,224,.07), transparent 60%),
+    radial-gradient(1100px 560px at 82% -12%, rgba(176,38,255,.07), transparent 60%),
     linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
   background-size: auto, 46px 46px, 46px 46px;
@@ -51,7 +51,7 @@
   mix-blend-mode: multiply;
 }
 
-/* ── MAIN ── */
+/* â”€â”€ MAIN â”€â”€ */
 .main {
   position: relative;
   z-index: 1;
@@ -63,7 +63,7 @@
   width: 100%;
 }
 
-/* ── HERO STRIP ── */
+/* â”€â”€ HERO STRIP â”€â”€ */
 .hero_strip {
   position: relative;
   height: 150px;
@@ -91,7 +91,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   letter-spacing: 3px;
-  color: #5ce1e0;
+  color: #b026ff;
   margin-bottom: 6px;
 }
 
@@ -112,7 +112,7 @@
   margin-top: 7px;
 }
 
-/* ── CONTENT HEADER ── */
+/* â”€â”€ CONTENT HEADER â”€â”€ */
 .content_header {
   display: flex;
   align-items: center;
@@ -146,10 +146,10 @@
 }
 
 .profile_link:hover {
-  color: #5ce1e0;
+  color: #b026ff;
 }
 
-/* ── SEARCH ── */
+/* â”€â”€ SEARCH â”€â”€ */
 .search_wrap {
   position: relative;
 }
@@ -181,7 +181,7 @@
 }
 
 .search:focus {
-  border-color: #5ce1e0;
+  border-color: #b026ff;
 }
 
 .search::placeholder {
@@ -216,7 +216,7 @@
 }
 
 .search_item:hover {
-  background: rgba(92,225,224,.06);
+  background: rgba(176,38,255,.06);
   color: #eef3f6;
 }
 
@@ -250,7 +250,7 @@
   margin-top: 2px;
 }
 
-/* ── GRID WRAPPER ── */
+/* â”€â”€ GRID WRAPPER â”€â”€ */
 .grid {
   padding: 24px 34px 40px;
   overflow-y: auto;
@@ -270,7 +270,7 @@
 }
 
 
-/* ── STATS PANEL ── */
+/* â”€â”€ STATS PANEL â”€â”€ */
 .stats_panel {
   position: absolute;
   bottom: 20px;
@@ -287,7 +287,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   letter-spacing: 2.5px;
-  color: #5ce1e0;
+  color: #b026ff;
   margin-bottom: 10px;
 }
 
@@ -330,6 +330,6 @@
   font-family: 'Rajdhani', sans-serif;
   font-weight: 600;
   font-size: 15px;
-  color: #5ce1e0;
+  color: #b026ff;
   line-height: 1;
 }

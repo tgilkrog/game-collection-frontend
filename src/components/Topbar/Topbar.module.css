@@ -1,4 +1,4 @@
-.topbar {
+﻿.topbar {
   position: fixed;
   top: 0;
   left: 0;
@@ -22,7 +22,7 @@
   gap: 20px;
 }
 
-/* ── LOGO ── */
+/* â”€â”€ LOGO â”€â”€ */
 .logo {
   display: flex;
   align-items: center;
@@ -36,8 +36,9 @@
   height: 22px;
   flex: none;
   clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
-  background: #5ce1e0;
-  box-shadow: 0 0 12px rgba(92,225,224,.5);
+  background: #b026ff;
+  box-shadow: 0 0 12px rgba(176,38,255,.5);
+  opacity: 0.8;
 }
 
 .logo_text {
@@ -49,7 +50,7 @@
   line-height: 1;
 }
 
-/* ── SEARCH ── */
+/* â”€â”€ SEARCH â”€â”€ */
 .search_wrap {
   flex: 1;
   max-width: 480px;
@@ -83,14 +84,14 @@
 }
 
 .search:focus {
-  border-color: #5ce1e0;
+  border-color: #b026ff;
 }
 
 .search::placeholder {
   color: #566370;
 }
 
-/* ── SEARCH RESULTS ── */
+/* â”€â”€ SEARCH RESULTS â”€â”€ */
 .search_popup {
   position: absolute;
   top: calc(100% + 6px);
@@ -119,7 +120,7 @@
 }
 
 .search_item:hover {
-  background: rgba(92,225,224,.06);
+  background: rgba(176,38,255,.06);
   color: #eef3f6;
 }
 
@@ -136,7 +137,7 @@
   letter-spacing: .5px;
 }
 
-/* ── PROFILE LINK ── */
+/* â”€â”€ PROFILE LINK â”€â”€ */
 .profile_link {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
@@ -148,10 +149,10 @@
 }
 
 .profile_link:hover {
-  color: #5ce1e0;
+  color: #b026ff;
 }
 
-/* ── RIGHT SLOT ── */
+/* â”€â”€ RIGHT SLOT â”€â”€ */
 .right {
   display: flex;
   align-items: center;

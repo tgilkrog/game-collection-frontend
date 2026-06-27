@@ -22,13 +22,14 @@ export function GameBase() {
   const { data: gamesData, isLoading, isError } = useQuery({
     queryKey: ['games', page],
     queryFn: () => getGames(page).then(r => r.data),
+    staleTime: FIVE_MINUTES,
   });
 
   const { data: genres = [] } = useQuery({
     queryKey: ['genres'],
     queryFn: () => getGenres().then(r => r.data),
     staleTime: FIVE_MINUTES,
-    enabled: !!user,
+    enabled: isFormOpen,
   });
 
   const createMutation = useMutation({

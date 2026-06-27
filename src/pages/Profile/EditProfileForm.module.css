@@ -1,4 +1,4 @@
-.form {
+﻿.form {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -9,7 +9,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   letter-spacing: 3px;
-  color: #5ce1e0;
+  color: #b026ff;
   margin-bottom: 8px;
 }
 
@@ -33,7 +33,7 @@
   padding: 10px 12px;
   background: transparent;
   border: none;
-  border-left: 2px solid #5ce1e0;
+  border-left: 2px solid #b026ff;
   border-bottom: 1px solid #1a212b;
   color: #f1f5f8;
   font-family: 'JetBrains Mono', monospace;
@@ -44,11 +44,11 @@
 }
 
 .input:focus {
-  border-left-color: #5ce1e0;
-  box-shadow: 0 0 8px rgba(92,225,224,.2);
+  border-left-color: #b026ff;
+  box-shadow: 0 0 8px rgba(176,38,255,.2);
 }
 
-/* ── AVATAR + USERNAME ROW ── */
+/* â”€â”€ AVATAR + USERNAME ROW â”€â”€ */
 .top_row {
   display: flex;
   gap: 16px;
@@ -94,7 +94,7 @@
   font-family: 'Rajdhani', sans-serif;
   font-weight: 700;
   font-size: 32px;
-  color: #5ce1e0;
+  color: #b026ff;
   line-height: 1;
 }
 
@@ -153,8 +153,8 @@
 }
 
 .file_label:hover {
-  border-color: #5ce1e0;
-  color: #5ce1e0;
+  border-color: #b026ff;
+  color: #b026ff;
 }
 
 .file_hidden {
@@ -166,8 +166,8 @@
   width: 100%;
   padding: 12px;
   background: transparent;
-  border: 1px solid #5ce1e0;
-  color: #5ce1e0;
+  border: 1px solid #b026ff;
+  color: #b026ff;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   letter-spacing: 2px;
@@ -177,7 +177,7 @@
 }
 
 .submit:hover:not(:disabled) {
-  background: rgba(92,225,224,.12);
+  background: rgba(176,38,255,.12);
 }
 
 .submit:disabled {

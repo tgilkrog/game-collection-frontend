@@ -1,4 +1,4 @@
-/* === FULL SCREEN OVERLAY === */
+﻿/* === FULL SCREEN OVERLAY === */
 .overlay {
   position: fixed;
   inset: 0;
@@ -42,7 +42,7 @@
   right: 0;
   width: 20px;
   height: 20px;
-  background: #5ce1e0;
+  background: #b026ff;
   clip-path: polygon(0 0, 100% 100%, 100% 0);
   opacity: .5;
 }

@@ -1,4 +1,4 @@
-/* LOGIN BUTTON */
+/* ── TRIGGER BUTTON ── */
 .login {
   padding: 8px 16px;
   background: transparent;
@@ -14,81 +14,17 @@
 }
 
 .login:hover {
-  border-color: #5ce1e0;
-  color: #5ce1e0;
-  box-shadow: 0 0 10px rgba(92,225,224,.2);
+  border-color: #b026ff;
+  color: #b026ff;
 }
 
+/* ── POPUP CONTENT ── */
 .title {
-  color: #fcee0a;
-
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 2px;
-
-  margin-bottom: 30px;
-
-  text-transform: uppercase;
-}
-
-.login_input {
-  width: 100%;
-
-  margin-bottom: 20px;
-  padding: 14px;
-
-  background: transparent;
-
-  border: none;
-  border-left: 3px solid #00f0ff;
-  border-bottom: 1px solid #333;
-
-  color: white;
-
-  font-size: 16px;
-
-  outline: none;
-
-  transition: 0.2s;
-}
-
-.login_input:focus {
-  border-left-color: #fcee0a;
-
-  box-shadow:
-    0 0 12px rgba(252,238,10,0.3);
-}
-
-.close {
-  width: 100%;
-
-  padding: 14px;
-
-  background: #fcee0a;
-  color: black;
-
-  border: none;
-
-  font-weight: bold;
-  letter-spacing: 2px;
-
-  cursor: pointer;
-
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    95% 100%,
-    0 100%
-  );
-
-  transition: 0.2s;
-}
-
-.close:hover {
-  background: #00f0ff;
-
-  box-shadow:
-    0 0 20px rgba(0,240,255,0.5);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #b026ff;
+  margin-bottom: 24px;
 }
 
 .error {
@@ -96,12 +32,75 @@
   font-size: 11px;
   letter-spacing: 1px;
   color: #ff4d4d;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
+/* ── INPUTS ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+
+.label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: #56616f;
+  text-transform: uppercase;
+}
+
+.login_input {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(10,14,19,.6);
+  border: none;
+  border-left: 2px solid #2a3441;
+  border-bottom: 1px solid #1a212b;
+  color: #f1f5f8;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color .15s;
+}
+
+.login_input:focus {
+  border-left-color: #b026ff;
+  box-shadow: 0 0 8px rgba(176,38,255,.2);
+}
+
+/* ── SUBMIT ── */
+.close {
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid #b026ff;
+  color: #b026ff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  transition: background .15s;
+}
+
+.close:hover:not(:disabled) {
+  background: rgba(176,38,255,.12);
+}
+
+.close:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* ── MODE SWITCH ── */
 .switch_link {
   display: block;
-  margin-top: 16px;
+  margin-top: 14px;
   background: transparent;
   border: none;
   font-family: 'JetBrains Mono', monospace;
@@ -116,5 +115,5 @@
 }
 
 .switch_link:hover {
-  color: #5ce1e0;
+  color: #b026ff;
 }

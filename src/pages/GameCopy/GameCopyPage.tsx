@@ -24,17 +24,20 @@ export default function GameCopyPage() {
         queryKey: ['conditions'],
         queryFn: () => getConditions().then(r => r.data),
         staleTime: FIVE_MINUTES,
+        enabled: isFormOpen,
     });
 
     const { data: platforms = [] } = useQuery({
         queryKey: ['platforms'],
         queryFn: () => getPlatforms().then(r => r.data),
         staleTime: FIVE_MINUTES,
+        enabled: isFormOpen,
     });
 
     const { data: copiesData, isLoading, isError } = useQuery({
         queryKey: ['gameCopies', page],
         queryFn: () => getGameCopies(page).then(r => r.data),
+        staleTime: FIVE_MINUTES,
     });
 
     const createMutation = useMutation({

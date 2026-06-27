@@ -1,4 +1,4 @@
-.part_inputs {
+﻿.part_inputs {
     display: flex;
 }
 
@@ -7,7 +7,7 @@
     margin-bottom: 50px;
 }
 
-/* ── LIST PAGE ── */
+/* â”€â”€ LIST PAGE â”€â”€ */
 .list_page {
   max-width: 1200px;
   margin: 0 auto;
@@ -27,7 +27,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   letter-spacing: 3px;
-  color: #5ce1e0;
+  color: #b026ff;
   margin-bottom: 6px;
 }
 
@@ -65,8 +65,8 @@
 }
 
 .action_btn:hover {
-  border-color: #5ce1e0;
-  color: #5ce1e0;
+  border-color: #b026ff;
+  color: #b026ff;
 }
 
 .status {
@@ -94,5 +94,5 @@
 }
 
 .copy_user_tag:hover {
-  color: #5ce1e0;
+  color: #b026ff;
 }
