@@ -10,6 +10,7 @@ import { GameBase } from "./pages/GameBase/GameBase";
 import GamePage from "./pages/GameBase/GamePage";
 
 import GameCopyPage from "./pages/GameCopy/GameCopyPage";
+import GameCopyDetailPage from "./pages/GameCopy/GameCopyDetailPage";
 import Profile from "./pages/Profile/Profile";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/gamebase" element={<GameBase />} />
           <Route path="/gamebase/:id" element={<GamePage />} />
           <Route path="/gamecopy" element={<GameCopyPage />} />
+          <Route path="/gamecopy/:id" element={<GameCopyDetailPage />} />
           <Route path="/profile/:username" element={<Profile />} />
         </Routes>
       </AnimatePresence>

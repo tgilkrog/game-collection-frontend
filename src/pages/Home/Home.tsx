@@ -156,7 +156,7 @@ export function Home() {
                 {feed.map(copy => (
                   <GameCard
                     key={copy.id}
-                    href={`/gamebase/${copy.game.id}`}
+                    href={`/gamecopy/${copy.id}`}
                     image={getAssetUrl(copy.game.cover_image)}
                     title={copy.game.title}
                     badge={copy.platform.name}

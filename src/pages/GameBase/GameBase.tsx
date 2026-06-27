@@ -28,6 +28,7 @@ export function GameBase() {
     queryKey: ['genres'],
     queryFn: () => getGenres().then(r => r.data),
     staleTime: FIVE_MINUTES,
+    enabled: !!user,
   });
 
   const createMutation = useMutation({

@@ -11,7 +11,7 @@ export const getGameCopies = (page = 1) =>
   api.get<Paginated<GameCopy>>(`${BASE_URL}?page=${page}`);
 
 export const getGameCopy = (id: number) =>
-  api.get(`${BASE_URL}/${id}`);
+  api.get<GameCopy>(`${BASE_URL}/${id}`);
 
 export const createGameCopy = (data: FormData) =>
   api.post(BASE_URL, data);

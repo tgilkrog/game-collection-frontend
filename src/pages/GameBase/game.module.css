@@ -20,10 +20,13 @@
 /* ── COVER IMAGE ── */
 .game_image {
   flex: none;
-  width: 260px;
+  /*width: 260px;*/
+  height: 450px;
+  margin-top: 60px;
 }
 
 .game_image img {
+  height: 100%;
   width: 100%;
   display: block;
   clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);

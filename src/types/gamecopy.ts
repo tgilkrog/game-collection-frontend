@@ -7,10 +7,11 @@ export interface GameCopy {
   title: string;
   game: Game;
   platform_id: number;
-  platform: Platform,
+  platform: Platform;
   region?: string;
   purchase_price?: number;
   purchase_date?: string;
   notes?: string;
   parts: CopyPart[];
+  user?: { id: number; name: string };
 }

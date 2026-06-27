@@ -4,6 +4,7 @@ import { getAssetUrl } from '../../utils/assetUrl';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getGame, deleteGame, updateGame } from '../../api/games';
 import { getConditions } from '../../api/conditions';
+import { useAuth } from '../../Context/AuthContext';
 import GameForm from './GameForm';
 import styles from './game.module.css';
 import type { Genre } from '../../types/genre';
@@ -19,6 +20,8 @@ export default function GamePage() {
     const queryClient = useQueryClient();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [mutationError, setMutationError] = useState('');
+
+    const { user } = useAuth();
 
     const { data: game, isLoading, isError } = useQuery({
         queryKey: ['game', id],
