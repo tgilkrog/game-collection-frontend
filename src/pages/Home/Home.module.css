@@ -261,6 +261,26 @@
   box-sizing: border-box;
 }
 
+.copy_card_wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.copy_user_tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #56616f;
+  text-decoration: none;
+  padding: 5px 2px;
+  text-transform: uppercase;
+  transition: color .15s;
+}
+
+.copy_user_tag:hover {
+  color: #b026ff;
+}
+
 .loading {
   padding: 60px 34px;
   font-family: 'JetBrains Mono', monospace;

@@ -100,7 +100,7 @@ export function Home() {
           {/* Content header — now also the nav bar */}
           <header className={styles.content_header}>
             <div>
-              <h1 className={styles.content_heading}>RECENTLY ADDED</h1>
+              <h1 className={styles.content_heading}>RECENTLY ADDED COPIES</h1>
               <div className={styles.content_sub}>{String(feed.length).padStart(2, '0')} ENTRIES</div>
             </div>
 
@@ -154,15 +154,21 @@ export function Home() {
             <div className={styles.grid}>
               <GameCardGrid>
                 {feed.map(copy => (
-                  <GameCard
-                    key={copy.id}
-                    href={`/gamecopy/${copy.id}`}
-                    image={getAssetUrl(copy.game.cover_image)}
-                    title={copy.game.title}
-                    badge={copy.platform.name}
-                    subtext={copy.platform.name.toUpperCase()}
-                    price={copy.purchase_price}
-                  />
+                  <div key={copy.id} className={styles.copy_card_wrapper}>
+                    <GameCard
+                      href={`/gamecopy/${copy.id}`}
+                      image={getAssetUrl(copy.game.cover_image)}
+                      title={copy.game.title}
+                      badge={copy.platform.name}
+                      subtext={copy.platform.name.toUpperCase()}
+                      price={copy.purchase_price}
+                    />
+                    {copy.user && (
+                      <Link to={`/profile/${copy.user.name}`} className={styles.copy_user_tag}>
+                        // {copy.user.name}
+                      </Link>
+                    )}
+                  </div>
                 ))}
               </GameCardGrid>
             </div>
