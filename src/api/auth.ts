@@ -1,21 +1,9 @@
 import axios from 'axios';
+import api from './axios';
 
-const authApi = axios.create({
-  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-});
+export const getCsrfCookie = () =>
+  axios.get(`${import.meta.env.VITE_API_BASE_URL}/sanctum/csrf-cookie`, {
+    withCredentials: true,
+  });
 
-authApi.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-});
-
-export default authApi;
+export const logoutApi = () => api.post('/logout');

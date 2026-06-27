@@ -60,7 +60,6 @@ export default function GameCopyCreate({ conditions, platforms, onSubmit }: Prop
   }, [gameQuery]);
 
   function selectGame(g: GameSearchResult) {
-    console.log(g);
     setSelectedGame(g);
     setGameQuery('');
     setGameResults([]);

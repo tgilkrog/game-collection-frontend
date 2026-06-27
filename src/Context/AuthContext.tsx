@@ -6,11 +6,12 @@ import {
 } from "react";
 
 import type { User } from '../types/user';
+import { getCsrfCookie, logoutApi } from '../api/auth';
 
 type AuthContextType = {
     user: User | null;
-    loginUser: (user: User, token: string) => void;
-    logoutUser: () => void;
+    loginUser: (user: User) => void;
+    logoutUser: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -20,27 +21,22 @@ export function AuthProvider({
 }: {
     children: React.ReactNode;
 }) {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(() => {
+        const stored = localStorage.getItem("user");
+        return stored ? JSON.parse(stored) : null;
+    });
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
+    // Ensure CSRF cookie is set on every app load
+    useEffect(() => { getCsrfCookie(); }, []);
 
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-    }, []);
-
-    function loginUser(user: User, token: string) {
-        localStorage.setItem("token", token);
+    function loginUser(user: User) {
         localStorage.setItem("user", JSON.stringify(user));
-
         setUser(user);
     }
 
-    function logoutUser() {
-        localStorage.removeItem("token");
+    async function logoutUser() {
+        try { await logoutApi(); } catch { /* session may already be gone */ }
         localStorage.removeItem("user");
-
         setUser(null);
     }
 
@@ -61,9 +57,7 @@ export function useAuth() {
     const context = useContext(AuthContext);
 
     if (!context) {
-        throw new Error(
-            "useAuth must be used inside AuthProvider"
-        );
+        throw new Error("useAuth must be used inside AuthProvider");
     }
 
     return context;

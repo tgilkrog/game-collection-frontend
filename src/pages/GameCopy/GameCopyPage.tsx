@@ -16,6 +16,7 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 export default function GameCopyPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [page, setPage] = useState(1);
+    const [mutationError, setMutationError] = useState('');
     const { user } = useAuth();
     const queryClient = useQueryClient();
 
@@ -41,6 +42,12 @@ export default function GameCopyPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['gameCopies'] });
             setIsFormOpen(false);
+            setMutationError('');
+        },
+        onError: (err: unknown) => {
+            const msg = (err as { response?: { data?: { message?: string } } })
+                ?.response?.data?.message ?? 'Failed to create copy.';
+            setMutationError(msg);
         },
     });
 
@@ -72,7 +79,8 @@ export default function GameCopyPage() {
                 <Pagination currentPage={page} lastPage={lastPage} onPageChange={setPage} />
 
                 {user && (
-                    <Popup open={isFormOpen} onClose={() => setIsFormOpen(false)}>
+                    <Popup open={isFormOpen} onClose={() => { setIsFormOpen(false); setMutationError(''); }}>
+                        {mutationError && <div className="ui-error">{mutationError}</div>}
                         <GameCopyCreate
                             conditions={conditions}
                             platforms={platforms}

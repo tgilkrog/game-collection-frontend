@@ -114,6 +114,16 @@
 
 
 
+.ui-error {
+  color: #ff2a6d;
+  font-size: 13px;
+  border-left: 3px solid #ff2a6d;
+  padding-left: 8px;
+  margin-bottom: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 1px;
+}
+
 .modal-overlay {
     z-index: 999;
     position: fixed;

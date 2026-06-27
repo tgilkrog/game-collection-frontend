@@ -1,11 +1,8 @@
-import authApi from './auth';
+import api from './axios';
+import type { User } from '../types/user';
 
-export async function login(email: string, password: string) {
-  const response = await authApi.post('/login', {
-    email,
-    password,
-  });
-
+export async function login(email: string, password: string): Promise<{ user: User }> {
+  const response = await api.post<{ user: User }>('/login', { email, password });
   return response.data;
 }
 
@@ -14,13 +11,12 @@ export async function register(
   email: string,
   password: string,
   passwordConfirmation: string,
-) {
-  const response = await authApi.post('/register', {
+): Promise<{ user: User }> {
+  const response = await api.post<{ user: User }>('/register', {
     name,
     email,
     password,
     password_confirmation: passwordConfirmation,
   });
-
-  return response.data as { user: import('../types/user').User; token: string };
+  return response.data;
 }

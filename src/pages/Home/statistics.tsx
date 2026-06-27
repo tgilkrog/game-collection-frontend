@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import styles from "./Home.module.css";
 import { getHome } from '../../api/home';
+import { useAuth } from '../../Context/AuthContext';
 
 type PlatformStat = {
     id: number;
@@ -10,9 +11,11 @@ type PlatformStat = {
 }
 
 export function Statistics() {
+    const { user } = useAuth();
     const { data, isLoading, isError } = useQuery({
         queryKey: ['home'],
         queryFn: () => getHome().then(r => r.data),
+        enabled: !!user,
     });
 
     const stats: PlatformStat[] = data?.platform_totals ?? [];

@@ -15,6 +15,7 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 export function GameBase() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [mutationError, setMutationError] = useState('');
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
@@ -34,6 +35,12 @@ export function GameBase() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['games'] });
       setIsFormOpen(false);
+      setMutationError('');
+    },
+    onError: (err: unknown) => {
+      const msg = (err as { response?: { data?: { message?: string } } })
+        ?.response?.data?.message ?? 'Failed to create game.';
+      setMutationError(msg);
     },
   });
 
@@ -65,7 +72,8 @@ export function GameBase() {
         <Pagination currentPage={page} lastPage={lastPage} onPageChange={setPage} />
 
         {user && (
-          <Popup open={isFormOpen} onClose={() => setIsFormOpen(false)}>
+          <Popup open={isFormOpen} onClose={() => { setIsFormOpen(false); setMutationError(''); }}>
+            {mutationError && <div className="ui-error">{mutationError}</div>}
             <GameForm
               genres={genres}
               onSubmit={createMutation.mutateAsync}

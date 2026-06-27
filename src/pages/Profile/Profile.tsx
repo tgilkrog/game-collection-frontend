@@ -26,6 +26,7 @@ export default function Profile() {
   const [formOpen, setFormOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editError, setEditError] = useState('');
+  const [copyError, setCopyError] = useState('');
   const [copiesPage, setCopiesPage] = useState(1);
 
   useEffect(() => {
@@ -63,6 +64,12 @@ export default function Profile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userCopies', username] });
       setFormOpen(false);
+      setCopyError('');
+    },
+    onError: (err: unknown) => {
+      const msg = (err as { response?: { data?: { message?: string } } })
+        ?.response?.data?.message ?? 'Failed to create copy.';
+      setCopyError(msg);
     },
   });
 
@@ -70,8 +77,7 @@ export default function Profile() {
     mutationFn: (data: FormData) => updateUser(username!, data).then(r => r.data),
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ['user', username] });
-      const token = localStorage.getItem('token') ?? '';
-      loginUser(updated, token);
+      loginUser(updated);
       setEditOpen(false);
       setEditError('');
       if (updated.name !== username) navigate(`/profile/${updated.name}`);
@@ -191,7 +197,8 @@ export default function Profile() {
 
         {/* ── Add copy modal (owner only) ── */}
         {isOwner && (
-          <Popup open={formOpen} onClose={() => setFormOpen(false)}>
+          <Popup open={formOpen} onClose={() => { setFormOpen(false); setCopyError(''); }}>
+            {copyError && <div className="ui-error">{copyError}</div>}
             <GameCopyCreate
               conditions={conditions}
               platforms={platforms}

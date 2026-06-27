@@ -8,6 +8,8 @@ import GameForm from './GameForm';
 import styles from './game.module.css';
 import type { Genre } from '../../types/genre';
 import type { Condition } from '../../types/condition';
+import type { GameCopy } from '../../types/gamecopy';
+import type { CopyPart } from '../../types/copypart';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
@@ -16,6 +18,7 @@ export default function GamePage() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [mutationError, setMutationError] = useState('');
 
     const { data: game, isLoading, isError } = useQuery({
         queryKey: ['game', id],
@@ -34,12 +37,23 @@ export default function GamePage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['game', id] });
             setIsFormOpen(false);
+            setMutationError('');
+        },
+        onError: (err: unknown) => {
+            const msg = (err as { response?: { data?: { message?: string } } })
+                ?.response?.data?.message ?? 'Failed to update game.';
+            setMutationError(msg);
         },
     });
 
     const deleteMutation = useMutation({
         mutationFn: () => deleteGame(game!.id),
         onSuccess: () => navigate('/gamebase'),
+        onError: (err: unknown) => {
+            const msg = (err as { response?: { data?: { message?: string } } })
+                ?.response?.data?.message ?? 'Failed to delete game.';
+            setMutationError(msg);
+        },
     });
 
     if (isLoading) return <div className={styles.status}>LOADING...</div>;
@@ -96,6 +110,8 @@ export default function GamePage() {
                             ))}
                         </div>
 
+                        {mutationError && <div className="ui-error">{mutationError}</div>}
+
                         <div className={styles.actions}>
                             <button className={styles.btn} onClick={() => setIsFormOpen(true)}>
                                 UPDATE
@@ -116,7 +132,7 @@ export default function GamePage() {
                         <span>{String(game.game_copies.length).padStart(2, '0')} ENTRIES</span>
                     </h2>
 
-                    {game.game_copies.map((g: any) => (
+                    {game.game_copies.map((g: GameCopy) => (
                         <div className={styles.game_copy_wrapper} key={g.id}>
                             <div className={styles.copy_title}>{g.platform?.name ?? '—'}</div>
 
@@ -149,7 +165,7 @@ export default function GamePage() {
                                 )}
                             </div>
 
-                            {g.parts?.map((p: any) => (
+                            {g.parts?.map((p: CopyPart) => (
                                 <div className={styles.conditions_row} key={p.id ?? p.type}>
                                     <p className={styles.condition_type}>{p.type}</p>
                                     <div className={styles.conditions_items}>

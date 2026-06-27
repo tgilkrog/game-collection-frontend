@@ -38,14 +38,14 @@ export default function Login() {
 
             if (mode === 'login') {
                 const res = await login(email, password);
-                loginUser(res.user, res.token);
+                loginUser(res.user);
             } else {
                 if (password !== confirmPassword) {
                     setError("Passwords do not match");
                     return;
                 }
                 const res = await register(name, email, password, confirmPassword);
-                loginUser(res.user, res.token);
+                loginUser(res.user);
             }
 
             setOpen(false);
@@ -66,7 +66,7 @@ export default function Login() {
                         Login
                     </button>
                 ) : (
-                    <button className={styles.login} onClick={() => logoutUser()}>
+                    <button className={styles.login} onClick={() => void logoutUser()}>
                         Terminate User
                     </button>
                 )}

@@ -24,6 +24,7 @@ export function Home() {
   const { data: homeData } = useQuery({
     queryKey: ['home'],
     queryFn: () => getHome().then(r => r.data),
+    enabled: !!user,
   });
 
   const { data: feedData, isLoading } = useQuery({
