@@ -1,9 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { PageTransition } from '../../components/PageTransition';
 import { useAuth } from '../../Context/AuthContext';
-import { getUser, getUserCopies, updateUser } from '../../api/users';
+import {
+  getUser, getUserCopies, updateUser, changePassword,
+  followUser, unfollowUser, getUserWishlist,
+} from '../../api/users';
 import { createGameCopy } from '../../api/gameCopy';
 import { getConditions } from '../../api/conditions';
 import { getPlatforms } from '../../api/platforms';
@@ -14,8 +17,11 @@ import GameCopyCreate from '../GameCopy/GameCopyCreate';
 import EditProfileForm from './EditProfileForm';
 import { getAssetUrl } from '../../utils/assetUrl';
 import styles from './Profile.module.css';
+import type { GameListItem } from '../../types/game';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
+
+type Tab = 'collection' | 'wishlist';
 
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
@@ -23,14 +29,23 @@ export default function Profile() {
   const isOwner = user?.name === username;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
+  const [tab, setTab] = useState<Tab>('collection');
   const [formOpen, setFormOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [passwordOpen, setPasswordOpen] = useState(false);
   const [editError, setEditError] = useState('');
   const [copyError, setCopyError] = useState('');
   const [copiesPage, setCopiesPage] = useState(1);
+  const [wishlistPage, setWishlistPage] = useState(1);
+  const [pwData, setPwData] = useState({ current_password: '', password: '', password_confirmation: '' });
+  const [pwError, setPwError] = useState('');
+  const [pwSuccess, setPwSuccess] = useState(false);
 
   useEffect(() => {
     setCopiesPage(1);
+    setWishlistPage(1);
+    setTab('collection');
   }, [username]);
 
   const { data: profileUser, isLoading: userLoading, isError: userError } = useQuery({
@@ -42,27 +57,36 @@ export default function Profile() {
   const { data: copiesData, isLoading: copiesLoading } = useQuery({
     queryKey: ['userCopies', username, copiesPage],
     queryFn: () => getUserCopies(username!, copiesPage).then(r => r.data),
-    enabled: !!username,
+    enabled: !!username && tab === 'collection',
+    staleTime: FIVE_MINUTES,
+  });
+
+  const { data: wishlistData, isLoading: wishlistLoading } = useQuery({
+    queryKey: ['userWishlist', username, wishlistPage],
+    queryFn: () => getUserWishlist(username!, wishlistPage).then((r: { data: { data: GameListItem[], meta: { last_page: number, total: number } } }) => r.data),
+    enabled: !!username && tab === 'wishlist',
+    staleTime: FIVE_MINUTES,
   });
 
   const { data: conditions = [] } = useQuery({
     queryKey: ['conditions'],
     queryFn: () => getConditions().then(r => r.data),
     staleTime: FIVE_MINUTES,
-    enabled: isOwner,
+    enabled: isOwner && formOpen,
   });
 
   const { data: platforms = [] } = useQuery({
     queryKey: ['platforms'],
     queryFn: () => getPlatforms().then(r => r.data),
     staleTime: FIVE_MINUTES,
-    enabled: isOwner,
+    enabled: isOwner && formOpen,
   });
 
   const createMutation = useMutation({
     mutationFn: createGameCopy,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userCopies', username] });
+      queryClient.invalidateQueries({ queryKey: ['user', username] });
       setFormOpen(false);
       setCopyError('');
     },
@@ -83,27 +107,41 @@ export default function Profile() {
       if (updated.name !== username) navigate(`/profile/${updated.name}`);
     },
     onError: (err: unknown) => {
-      const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-        ?? 'Update failed.';
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Update failed.';
       setEditError(msg);
     },
   });
 
+  const passwordMutation = useMutation({
+    mutationFn: () => changePassword(username!, pwData),
+    onSuccess: () => {
+      setPwSuccess(true);
+      setPwError('');
+      setPwData({ current_password: '', password: '', password_confirmation: '' });
+    },
+    onError: (err: unknown) => {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Password change failed.';
+      setPwError(msg);
+    },
+  });
+
+  const followMutation = useMutation({
+    mutationFn: () => profileUser?.is_following ? unfollowUser(username!) : followUser(username!),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['user', username] }),
+  });
+
   const copies = copiesData?.data ?? [];
-  const lastPage = copiesData?.meta.last_page ?? 1;
-  const totalCount = copiesData?.meta.total ?? 0;
+  const copiesLastPage = copiesData?.meta.last_page ?? 1;
+  const copiesTotal = copiesData?.meta.total ?? 0;
+  const wishlistItems = wishlistData?.data ?? [];
+  const wishlistLastPage = wishlistData?.meta.last_page ?? 1;
+  const wishlistTotal = wishlistData?.meta.total ?? 0;
 
-  const { totalValue, platformCount } = useMemo(() => ({
-    totalValue:    copies.reduce((sum, c) => sum + Number(c.purchase_price ?? 0), 0),
-    platformCount: new Set(copies.filter(c => c.platform).map(c => c.platform.name)).size,
-  }), [copies]);
-
-  const stats = [
-    { label: 'COPIES',      value: String(totalCount).padStart(2, '0') },
-    { label: 'TOTAL VALUE', value: totalValue.toFixed(2) + ' DKK.' },
-    { label: 'PLATFORMS',   value: String(platformCount).padStart(2, '0') },
-  ];
+  const stats = profileUser ? [
+    { label: 'COPIES',      value: String(profileUser.copy_count ?? 0).padStart(2, '0') },
+    { label: 'TOTAL VALUE', value: Number(profileUser.total_value ?? 0).toFixed(2) + ' DKK.' },
+    { label: 'PLATFORMS',   value: String(profileUser.platform_count ?? 0).padStart(2, '0') },
+  ] : [];
 
   if (userLoading) return <div className={styles.status}>LOADING...</div>;
   if (userError || !profileUser) return <div className={styles.status}>USER NOT FOUND.</div>;
@@ -114,7 +152,6 @@ export default function Profile() {
 
         {/* ── Profile header ── */}
         <div className={styles.header}>
-
           {profileUser.banner && (
             <img
               src={getAssetUrl(profileUser.banner)}
@@ -126,17 +163,10 @@ export default function Profile() {
           <div className={styles.banner_overlay} />
 
           <div className={styles.header_body}>
-
             <div className={styles.avatar}>
               {profileUser.avatar
-                ? <img
-                    src={getAssetUrl(profileUser.avatar)}
-                    className={styles.avatar_img}
-                    alt={profileUser.name}
-                  />
-                : <span className={styles.avatar_initial}>
-                    {profileUser.name[0].toUpperCase()}
-                  </span>
+                ? <img src={getAssetUrl(profileUser.avatar)} className={styles.avatar_img} alt={profileUser.name} />
+                : <span className={styles.avatar_initial}>{profileUser.name[0].toUpperCase()}</span>
               }
             </div>
 
@@ -144,58 +174,120 @@ export default function Profile() {
               <div className={styles.eyebrow}>// USER PROFILE</div>
               <div className={styles.name}>{profileUser.name}</div>
               <div className={styles.meta}>
-                {copiesLoading ? '—' : `${String(totalCount).padStart(2, '0')} ENTRIES IN COLLECTION`}
+                {`${String(profileUser.copy_count ?? 0).padStart(2, '0')} ENTRIES IN COLLECTION`}
               </div>
             </div>
 
-            {isOwner && (
-              <div className={styles.header_actions}>
-                <button className={styles.edit_btn} onClick={() => { setEditError(''); setEditOpen(true); }}>
-                  EDIT PROFILE
+            <div className={styles.header_actions}>
+              {isOwner ? (
+                <>
+                  <button className={styles.edit_btn} onClick={() => { setEditError(''); setEditOpen(true); }}>
+                    EDIT PROFILE
+                  </button>
+                  <button className={styles.edit_btn} onClick={() => { setPwError(''); setPwSuccess(false); setPasswordOpen(true); }}>
+                    PASSWORD
+                  </button>
+                  <button className={styles.add_btn} onClick={() => setFormOpen(true)}>
+                    + ADD COPY
+                  </button>
+                </>
+              ) : user && (
+                <button
+                  className={`${styles.follow_btn} ${profileUser.is_following ? styles.follow_btn_active : ''}`}
+                  onClick={() => followMutation.mutate()}
+                  disabled={followMutation.isPending}
+                >
+                  {profileUser.is_following ? 'UNFOLLOW' : 'FOLLOW'}
                 </button>
-                <button className={styles.add_btn} onClick={() => setFormOpen(true)}>
-                  + ADD COPY
-                </button>
-              </div>
-            )}
-
+              )}
+            </div>
           </div>
         </div>
 
-        {/* ── Stats panel ── */}
+        {/* ── Stats ── */}
         <div className={styles.stats}>
           {stats.map(s => (
             <div key={s.label} className={styles.stat_block}>
-              <span className={styles.stat_value}>{copiesLoading ? '—' : s.value}</span>
+              <span className={styles.stat_value}>{s.value}</span>
               <span className={styles.stat_label}>{s.label}</span>
             </div>
           ))}
         </div>
 
-        {/* ── Collection grid ── */}
-        <h2 className={styles.section_heading}>
-          COLLECTION
-          {!copiesLoading && <span>{String(totalCount).padStart(2, '0')} COPIES</span>}
-        </h2>
-
-        <div className={styles.grid}>
-          <GameCardGrid>
-            {copies.filter(c => c.game).map(copy => (
-              <GameCard
-                key={copy.id}
-                href={`/gamebase/${copy.game.id}`}
-                image={getAssetUrl(copy.game.cover_image)}
-                title={copy.game.title}
-                badge={copy.platform?.name}
-                price={copy.purchase_price}
-              />
-            ))}
-          </GameCardGrid>
+        {/* ── Social counts ── */}
+        <div className={styles.social_counts}>
+          <span className={styles.social_count}>
+            <strong>{profileUser.followers_count ?? 0}</strong> FOLLOWERS
+          </span>
+          <span className={styles.social_count}>
+            <strong>{profileUser.following_count ?? 0}</strong> FOLLOWING
+          </span>
         </div>
 
-        <Pagination currentPage={copiesPage} lastPage={lastPage} onPageChange={setCopiesPage} />
+        {/* ── Bio ── */}
+        {profileUser.bio && <p className={styles.bio}>{profileUser.bio}</p>}
 
-        {/* ── Add copy modal (owner only) ── */}
+        {/* ── Tabs ── */}
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tab_btn} ${tab === 'collection' ? styles.tab_btn_active : ''}`}
+            onClick={() => setTab('collection')}
+          >
+            COLLECTION {!copiesLoading && <span>({copiesTotal})</span>}
+          </button>
+          <button
+            className={`${styles.tab_btn} ${tab === 'wishlist' ? styles.tab_btn_active : ''}`}
+            onClick={() => setTab('wishlist')}
+          >
+            WISHLIST {!wishlistLoading && tab === 'wishlist' && <span>({wishlistTotal})</span>}
+          </button>
+        </div>
+
+        {/* ── Collection tab ── */}
+        {tab === 'collection' && (
+          <>
+            <div className={styles.grid}>
+              <GameCardGrid>
+                {copies.filter(c => c.game).map(copy => (
+                  <GameCard
+                    key={copy.id}
+                    href={`/gamebase/${copy.game.id}`}
+                    image={getAssetUrl(copy.game.cover_image)}
+                    title={copy.game.title}
+                    badge={copy.platform?.name}
+                    price={copy.purchase_price}
+                  />
+                ))}
+              </GameCardGrid>
+            </div>
+            <Pagination currentPage={copiesPage} lastPage={copiesLastPage} onPageChange={setCopiesPage} />
+          </>
+        )}
+
+        {/* ── Wishlist tab ── */}
+        {tab === 'wishlist' && (
+          <>
+            {wishlistLoading ? (
+              <div className={styles.status}>LOADING...</div>
+            ) : (
+              <div className={styles.grid}>
+                <GameCardGrid>
+                  {wishlistItems.map((game: GameListItem) => (
+                    <GameCard
+                      key={game.id}
+                      href={`/gamebase/${game.id}`}
+                      image={getAssetUrl(game.cover_image)}
+                      title={game.title}
+                    />
+                  ))}
+                </GameCardGrid>
+              </div>
+            )}
+            <Pagination currentPage={wishlistPage} lastPage={wishlistLastPage} onPageChange={setWishlistPage} />
+          </>
+        )}
+
+        {/* ── Add copy modal ── */}
         {isOwner && (
           <Popup open={formOpen} onClose={() => { setFormOpen(false); setCopyError(''); }}>
             {copyError && <div className="ui-error">{copyError}</div>}
@@ -207,7 +299,7 @@ export default function Profile() {
           </Popup>
         )}
 
-        {/* ── Edit profile modal (owner only) ── */}
+        {/* ── Edit profile modal ── */}
         {isOwner && (
           <Popup open={editOpen} onClose={() => setEditOpen(false)}>
             <EditProfileForm
@@ -216,6 +308,38 @@ export default function Profile() {
               loading={editMutation.isPending}
               error={editError}
             />
+          </Popup>
+        )}
+
+        {/* ── Password change modal ── */}
+        {isOwner && (
+          <Popup open={passwordOpen} onClose={() => setPasswordOpen(false)}>
+            <form
+              className={styles.pw_form}
+              onSubmit={e => { e.preventDefault(); setPwSuccess(false); passwordMutation.mutate(); }}
+            >
+              <div className={styles.pw_title}>// CHANGE PASSWORD</div>
+              {pwError && <div className="ui-error">{pwError}</div>}
+              {pwSuccess && <div style={{ color: '#5ce1e0', fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: 1 }}>PASSWORD UPDATED.</div>}
+              {(['current_password', 'password', 'password_confirmation'] as const).map(field => (
+                <div key={field}>
+                  <label className={styles.pw_label}>
+                    {field === 'current_password' ? 'CURRENT PASSWORD' : field === 'password' ? 'NEW PASSWORD' : 'CONFIRM NEW PASSWORD'}
+                  </label>
+                  <input
+                    className={styles.pw_input}
+                    type="password"
+                    required
+                    minLength={field !== 'current_password' ? 8 : undefined}
+                    value={pwData[field]}
+                    onChange={e => setPwData(d => ({ ...d, [field]: e.target.value }))}
+                  />
+                </div>
+              ))}
+              <button className={styles.pw_submit} type="submit" disabled={passwordMutation.isPending}>
+                {passwordMutation.isPending ? 'SAVING...' : 'UPDATE PASSWORD'}
+              </button>
+            </form>
           </Popup>
         )}
 

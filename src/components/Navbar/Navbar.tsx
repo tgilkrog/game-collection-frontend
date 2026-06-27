@@ -36,6 +36,10 @@ export function Navbar() {
           GAMES BASES
         </Link>
 
+        <Link to="/users" className={styles.link} onClick={() => setOpen(false)}>
+          COLLECTORS
+        </Link>
+
         <button className={styles.close} onClick={() => setOpen(false)}>
           TERMINATE
         </button>

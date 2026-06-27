@@ -20,6 +20,7 @@ export interface Game {
   themes?: Genre[];
   game_modes?: Genre[];
   player_perspectives?: Genre[];
+  is_wishlisted?: boolean;
 }
 
 export interface GameSearchResult {

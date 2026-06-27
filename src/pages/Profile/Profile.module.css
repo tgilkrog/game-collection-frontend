@@ -234,3 +234,145 @@
 .grid {
   width: 100%;
 }
+
+/* â”€â”€ FOLLOW BUTTON â”€â”€ */
+.follow_btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid #5ce1e0;
+  color: #5ce1e0;
+  padding: 10px 22px;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  transition: background .15s, border-color .15s, color .15s;
+  flex: none;
+}
+
+.follow_btn:hover { background: rgba(92,225,224,.1); }
+
+.follow_btn_active {
+  border-color: #2a3441;
+  color: #56616f;
+}
+
+.follow_btn_active:hover {
+  border-color: #c0392b;
+  color: #e05a4e;
+}
+
+/* â”€â”€ SOCIAL COUNTS â”€â”€ */
+.social_counts {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.social_count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: #56616f;
+}
+
+.social_count strong {
+  color: #a8b2bd;
+  font-weight: 600;
+}
+
+/* â”€â”€ BIO â”€â”€ */
+.bio {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #8a95a3;
+  margin-bottom: 28px;
+  max-width: 640px;
+}
+
+/* â”€â”€ TABS â”€â”€ */
+.tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 28px;
+  border-bottom: 1px solid #1a212b;
+}
+
+.tab_btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #56616f;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+  margin-bottom: -1px;
+}
+
+.tab_btn:hover { color: #a8b2bd; }
+
+.tab_btn_active {
+  color: #b026ff;
+  border-bottom-color: #b026ff;
+}
+
+/* â”€â”€ PASSWORD FORM â”€â”€ */
+.pw_form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 300px;
+}
+
+.pw_title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #b026ff;
+  margin-bottom: 4px;
+}
+
+.pw_label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: #56616f;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.pw_input {
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  border-left: 2px solid #b026ff;
+  border-bottom: 1px solid #1a212b;
+  color: #f1f5f8;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.pw_submit {
+  padding: 11px;
+  background: transparent;
+  border: 1px solid #b026ff;
+  color: #b026ff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  transition: background .15s;
+  margin-top: 4px;
+}
+
+.pw_submit:hover:not(:disabled) { background: rgba(176,38,255,.12); }
+.pw_submit:disabled { opacity: .5; cursor: not-allowed; }

@@ -4,6 +4,7 @@ import { getAssetUrl } from '../../utils/assetUrl';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getGame, deleteGame, updateGame } from '../../api/games';
 import { getConditions } from '../../api/conditions';
+import { addToWishlist, removeFromWishlist } from '../../api/wishlist';
 import { useAuth } from '../../Context/AuthContext';
 import GameForm from './GameForm';
 import styles from './game.module.css';
@@ -57,6 +58,13 @@ export default function GamePage() {
                 ?.response?.data?.message ?? 'Failed to delete game.';
             setMutationError(msg);
         },
+    });
+
+    const wishlistMutation = useMutation({
+        mutationFn: () => game?.is_wishlisted
+            ? removeFromWishlist(game!.id)
+            : addToWishlist(game!.id),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['game', id] }),
     });
 
     if (isLoading) return <div className={styles.status}>LOADING...</div>;
@@ -116,12 +124,25 @@ export default function GamePage() {
                         {mutationError && <div className="ui-error">{mutationError}</div>}
 
                         <div className={styles.actions}>
-                            <button className={styles.btn} onClick={() => setIsFormOpen(true)}>
-                                UPDATE
-                            </button>
-                            <button className={styles.btn_delete} onClick={() => deleteMutation.mutate()}>
-                                DELETE
-                            </button>
+                            {user && (
+                                <button
+                                    className={styles.btn}
+                                    onClick={() => wishlistMutation.mutate()}
+                                    disabled={wishlistMutation.isPending}
+                                >
+                                    {game.is_wishlisted ? '✓ WISHLISTED' : '+ WISHLIST'}
+                                </button>
+                            )}
+                            {user && (
+                                <>
+                                    <button className={styles.btn} onClick={() => setIsFormOpen(true)}>
+                                        UPDATE
+                                    </button>
+                                    <button className={styles.btn_delete} onClick={() => deleteMutation.mutate()}>
+                                        DELETE
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

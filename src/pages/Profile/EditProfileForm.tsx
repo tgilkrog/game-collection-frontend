@@ -12,6 +12,7 @@ type Props = {
 
 export default function EditProfileForm({ current, onSubmit, loading, error }: Props) {
   const [name, setName] = useState(current.name);
+  const [bio, setBio] = useState(current.bio ?? '');
   const [avatar, setAvatar] = useState<File | null>(null);
   const [banner, setBanner] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -78,6 +79,7 @@ export default function EditProfileForm({ current, onSubmit, loading, error }: P
     const fd = new FormData();
     fd.append('_method', 'PUT');
     if (name !== current.name) fd.append('name', name);
+    fd.append('bio', bio);
     if (avatar) fd.append('avatar', avatar);
     if (banner) fd.append('banner', banner);
     fd.append('banner_position', String(Math.round(bannerPosition)));
@@ -113,6 +115,16 @@ export default function EditProfileForm({ current, onSubmit, loading, error }: P
             value={name}
             onChange={e => setName(e.target.value)}
             required
+          />
+          <label className={styles.label}>BIO</label>
+          <textarea
+            className={styles.input}
+            rows={3}
+            maxLength={500}
+            value={bio}
+            onChange={e => setBio(e.target.value)}
+            placeholder="Tell others about your collection..."
+            style={{ resize: 'vertical' }}
           />
         </div>
       </div>
