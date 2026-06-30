@@ -1,9 +1,13 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getGameCopy, deleteGameCopy } from '../../api/gameCopy';
+import { getGameCopy, updateGameCopy, deleteGameCopy } from '../../api/gameCopy';
 import { getConditions } from '../../api/conditions';
+import { getPlatforms } from '../../api/platforms';
 import { useAuth } from '../../Context/AuthContext';
 import { getAssetUrl } from '../../utils/assetUrl';
+import Popup from '../../components/Popup/Popup';
+import GameCopyEdit from './GameCopyEdit';
 import styles from '../GameBase/game.module.css';
 import type { Condition } from '../../types/condition';
 import type { CopyPart } from '../../types/copypart';
@@ -16,6 +20,7 @@ export default function GameCopyDetailPage() {
     const navigate = useNavigate();
     const { user } = useAuth();
     const queryClient = useQueryClient();
+    const [editOpen, setEditOpen] = useState(false);
 
     const { data: copy, isLoading, isError } = useQuery({
         queryKey: ['gameCopy', id],
@@ -27,6 +32,21 @@ export default function GameCopyDetailPage() {
         queryKey: ['conditions'],
         queryFn: () => getConditions().then(r => r.data),
         staleTime: FIVE_MINUTES,
+    });
+
+    const { data: platforms = [] } = useQuery({
+        queryKey: ['platforms'],
+        queryFn: () => getPlatforms().then(r => r.data),
+        staleTime: FIVE_MINUTES,
+        enabled: editOpen,
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: (data: object) => updateGameCopy(Number(id), data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['gameCopy', id] });
+            setEditOpen(false);
+        },
     });
 
     const deleteMutation = useMutation({
@@ -87,16 +107,11 @@ export default function GameCopyDetailPage() {
                             ))}
                         </div>
 
-                        {isOwner && (
-                            <div className={styles.actions}>
-                                <button className={styles.btn_delete} onClick={() => deleteMutation.mutate()}>
-                                    DELETE
-                                </button>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
+
+            <div className={styles.section_divider} />
 
             <div className={styles.game_copy_wrapper}>
                 <div className={styles.copy_title}>{copy.platform?.name ?? '—'}</div>
@@ -104,7 +119,9 @@ export default function GameCopyDetailPage() {
                     {copy.purchase_price != null && (
                         <div className={styles.copy_meta_row}>
                             <span className={styles.copy_meta_label}>PRICE</span>
-                            <span className={styles.copy_meta_value}>{Number(copy.purchase_price).toFixed(2)} DKK</span>
+                            <span className={styles.copy_meta_value}>
+                                {Number(copy.purchase_price).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} DKK
+                            </span>
                         </div>
                     )}
                     {copy.purchase_date && (
@@ -128,6 +145,17 @@ export default function GameCopyDetailPage() {
                         </div>
                     )}
                 </div>
+
+                {isOwner && (
+                    <div className={styles.actions}>
+                        <button className={styles.btn} onClick={() => setEditOpen(true)}>
+                            EDIT
+                        </button>
+                        <button className={styles.btn_delete} onClick={() => deleteMutation.mutate()}>
+                            DELETE
+                        </button>
+                    </div>
+                )}
             </div>
 
             {copy.parts?.length > 0 && (
@@ -155,6 +183,17 @@ export default function GameCopyDetailPage() {
                         ))}
                     </div>
                 </>
+            )}
+
+            {isOwner && (
+                <Popup open={editOpen} onClose={() => setEditOpen(false)}>
+                    <GameCopyEdit
+                        copy={copy}
+                        conditions={conditions}
+                        platforms={platforms}
+                        onSubmit={updateMutation.mutateAsync}
+                    />
+                </Popup>
             )}
         </div>
     );

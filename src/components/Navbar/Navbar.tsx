@@ -40,6 +40,10 @@ export function Navbar() {
           COLLECTORS
         </Link>
 
+        <Link to="/platforms" className={styles.link} onClick={() => setOpen(false)}>
+          PLATFORMS
+        </Link>
+
         <button className={styles.close} onClick={() => setOpen(false)}>
           TERMINATE
         </button>

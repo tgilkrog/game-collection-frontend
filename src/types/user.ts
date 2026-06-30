@@ -7,11 +7,13 @@ export type User = {
     banner_position?: number;
     bio?: string;
     copy_count?: number;
+    wishlist_count?: number;
     total_value?: number;
     platform_count?: number;
     followers_count?: number;
     following_count?: number;
     is_following?: boolean;
+    rank?: string;
 };
 
 export type UserListItem = {
@@ -19,6 +21,7 @@ export type UserListItem = {
     name: string;
     avatar?: string;
     copy_count: number;
+    rank?: string;
 };
 
 export type PlatformStat = { name: string; count: number; value: number };

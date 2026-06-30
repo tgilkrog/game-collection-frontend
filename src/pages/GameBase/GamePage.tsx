@@ -133,16 +133,6 @@ export default function GamePage() {
                                     {game.is_wishlisted ? '✓ WISHLISTED' : '+ WISHLIST'}
                                 </button>
                             )}
-                            {user && (
-                                <>
-                                    <button className={styles.btn} onClick={() => setIsFormOpen(true)}>
-                                        UPDATE
-                                    </button>
-                                    <button className={styles.btn_delete} onClick={() => deleteMutation.mutate()}>
-                                        DELETE
-                                    </button>
-                                </>
-                            )}
                         </div>
                     </div>
                 </div>

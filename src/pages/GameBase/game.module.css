@@ -216,11 +216,17 @@
 }
 
 /* â”€â”€ COPY META â”€â”€ */
+.section_divider {
+  height: 1px;
+  background: linear-gradient(to right, var(--color-border-accent), var(--color-border-mid) 50%, transparent);
+  margin: -16px 0 24px;
+}
+
 .copy_meta {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 8px 24px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .copy_meta_row {

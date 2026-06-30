@@ -108,6 +108,14 @@
   line-height: 1;
 }
 
+.rank {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--color-teal);
+  text-transform: uppercase;
+}
+
 .meta {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -291,7 +299,7 @@
   max-width: 640px;
 }
 
-/* â”€â”€ TABS â”€â”€ */
+/* ── TABS ── */
 .tabs {
   display: flex;
   gap: 0;
@@ -300,25 +308,53 @@
 }
 
 .tab_btn {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
   background: transparent;
   border: none;
-  border-bottom: 2px solid transparent;
+  border-top: 2px solid transparent;
   color: var(--color-text-muted);
-  padding: 10px 20px;
   cursor: pointer;
-  transition: color .15s, border-color .15s;
-  margin-bottom: -1px;
+  transition: color .15s, border-color .15s, background .15s;
+  flex: 1;
 }
 
-.tab_btn:hover { color: var(--color-text-secondary); }
+.tab_btn:hover {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--color-text-secondary);
+}
 
 .tab_btn_active {
+  border-top-color: var(--color-purple);
+  background: rgba(176, 38, 255, 0.04);
+  color: var(--color-text-primary);
+}
+
+.tab_label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.tab_count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-dark);
+  padding: 2px 7px;
+  flex: none;
+}
+
+.tab_btn_active .tab_count {
+  border-color: var(--color-purple);
   color: var(--color-purple);
-  border-bottom-color: var(--color-purple);
 }
 
 /* â”€â”€ PASSWORD FORM â”€â”€ */

@@ -1,49 +1,20 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getGames, createGame } from '../../api/games';
-import { getGenres } from '../../api/genres';
-import { useAuth } from "../../Context/AuthContext";
+import { useQuery } from '@tanstack/react-query';
+import { getGames } from '../../api/games';
 import { PageTransition } from '../../components/PageTransition';
-import Popup from '../../components/Popup/Popup';
 import { Pagination } from '../../components/Pagination/Pagination';
-import GameForm from './GameForm';
 import GameList from './GameList';
 import styles from './game.module.css';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
 export function GameBase() {
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [page, setPage] = useState(1);
-  const [mutationError, setMutationError] = useState('');
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
 
   const { data: gamesData, isLoading, isError } = useQuery({
     queryKey: ['games', page],
     queryFn: () => getGames(page).then(r => r.data),
     staleTime: FIVE_MINUTES,
-  });
-
-  const { data: genres = [] } = useQuery({
-    queryKey: ['genres'],
-    queryFn: () => getGenres().then(r => r.data),
-    staleTime: FIVE_MINUTES,
-    enabled: isFormOpen,
-  });
-
-  const createMutation = useMutation({
-    mutationFn: createGame,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['games'] });
-      setIsFormOpen(false);
-      setMutationError('');
-    },
-    onError: (err: unknown) => {
-      const msg = (err as { response?: { data?: { message?: string } } })
-        ?.response?.data?.message ?? 'Failed to create game.';
-      setMutationError(msg);
-    },
   });
 
   if (isLoading) return <div className={styles.status}>LOADING...</div>;
@@ -62,27 +33,11 @@ export function GameBase() {
             <h1 className={styles.list_title}>GAME BASE</h1>
             <div className={styles.list_meta}>{String(total).padStart(2, '0')} TITLES INDEXED</div>
           </div>
-          {user && (
-            <button className={styles.action_btn} onClick={() => setIsFormOpen(true)}>
-              + ADD GAME
-            </button>
-          )}
         </div>
 
         <GameList games={games} />
 
         <Pagination currentPage={page} lastPage={lastPage} onPageChange={setPage} />
-
-        {user && (
-          <Popup open={isFormOpen} onClose={() => { setIsFormOpen(false); setMutationError(''); }}>
-            {mutationError && <div className="ui-error">{mutationError}</div>}
-            <GameForm
-              genres={genres}
-              onSubmit={createMutation.mutateAsync}
-              submitLabel="Create"
-            />
-          </Popup>
-        )}
       </div>
     </PageTransition>
   );

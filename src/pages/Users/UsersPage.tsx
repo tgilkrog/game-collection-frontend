@@ -66,6 +66,7 @@ export default function UsersPage() {
                   }
                 </div>
                 <div className={styles.card_name}>{u.name}</div>
+                {u.rank && <div className={styles.card_rank}>{u.rank}</div>}
                 <div className={styles.card_meta}>{String(u.copy_count).padStart(2, '0')} COPIES</div>
               </Link>
             ))}

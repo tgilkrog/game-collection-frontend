@@ -18,7 +18,7 @@
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 3px;
-  color: var(--color-teal);
+  color: var(--color-purple);
   margin-bottom: 6px;
 }
 
@@ -55,7 +55,7 @@
   flex: none;
 }
 
-.search:focus { border-color: var(--color-teal); }
+.search:focus { border-color: var(--color-purple); }
 .search::placeholder { color: var(--color-text-muted); }
 
 .grid {
@@ -78,7 +78,7 @@
   transition: border-color .15s;
 }
 
-.card:hover { border-color: var(--color-teal); }
+.card:hover { border-color: var(--color-purple); }
 
 .card_avatar {
   width: 72px;
@@ -104,7 +104,7 @@
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 28px;
-  color: var(--color-teal);
+  color: var(--color-purple);
   line-height: 1;
 }
 
@@ -114,6 +114,15 @@
   font-size: 16px;
   letter-spacing: 2px;
   color: var(--color-text-primary);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.card_rank {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--color-teal);
   text-transform: uppercase;
   text-align: center;
 }

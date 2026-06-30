@@ -23,8 +23,8 @@ export default function Topbar() {
 
     const timeout = setTimeout(async () => {
       try {
-        const res = await searchGame(search);
-        setGames(res.data.filter(g => g.source === 'local'));
+        const res = await searchGame(search, 'local');
+        setGames(res.data);
         setIsOpen(true);
       } catch {
         setIsOpen(false);

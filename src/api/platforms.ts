@@ -1,6 +1,4 @@
 import api from './axios';
+import type { Platform } from '../types/platform';
 
-const BASE_URL = '/platforms';
-
-export const getPlatforms = () =>
-  api.get(BASE_URL);
+export const getPlatforms = () => api.get<Platform[]>('/platforms');

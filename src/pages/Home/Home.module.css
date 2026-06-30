@@ -166,7 +166,7 @@
 }
 
 .search {
-  width: 300px;
+  width: 600px;
   background: #0e141b;
   border: 1px solid var(--color-border-accent);
   color: #dfe6ec;
@@ -280,11 +280,11 @@
   transition: border-color .15s, color .15s;
 }
 
-.feed_btn:hover { color: var(--color-text-primary); border-color: var(--color-teal); }
+.feed_btn:hover { color: var(--color-text-primary); border-color: var(--color-purple); }
 
 .feed_btn_active {
-  border-color: var(--color-teal);
-  color: var(--color-teal);
+  border-color: var(--color-purple);
+  color: var(--color-purple);
 }
 
 .copy_card_wrapper {

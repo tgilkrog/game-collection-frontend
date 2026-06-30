@@ -34,7 +34,7 @@ export function Home() {
   });
 
   const feed = feedData?.data ?? [];
-  const totalCopies: number = homeData?.total_copies ?? 0;
+  const totalCopies: number = feedData?.meta?.total ?? 0;
 
   useEffect(() => {
     if (search.length < 3) {
@@ -119,39 +119,39 @@ export function Home() {
               </div>
             </div>
 
-            <div className={styles.header_right}>
-              {/* Search */}
-              <div className={styles.search_wrap} ref={searchRef}>
-                <span className={styles.search_icon}>⌕</span>
-                <input
-                  className={styles.search}
-                  placeholder="SEARCH ARCHIVE…"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  onFocus={() => { if (search.length >= 3 && searchResults.length > 0) setSearchOpen(true); }}
-                />
-                {searchOpen && searchResults.length > 0 && (
-                  <div className={styles.search_popup}>
-                    {searchResults.map(game => (
-                      <Link
-                        key={game.id}
-                        to={`/gamebase/${game.id!}`}
-                        className={styles.search_item}
-                        onClick={closeSearch}
-                      >
-                        <img
-                          src={getAssetUrl(game.cover_image)}
-                          className={styles.search_img}
-                          alt={game.title}
-                          loading="lazy"
-                        />
-                        <span className={styles.search_item_title}>{game.title}</span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+            {/* Search */}
+            <div className={styles.search_wrap} ref={searchRef}>
+              <span className={styles.search_icon}>⌕</span>
+              <input
+                className={styles.search}
+                placeholder="SEARCH ARCHIVE…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onFocus={() => { if (search.length >= 3 && searchResults.length > 0) setSearchOpen(true); }}
+              />
+              {searchOpen && searchResults.length > 0 && (
+                <div className={styles.search_popup}>
+                  {searchResults.map(game => (
+                    <Link
+                      key={game.id}
+                      to={`/gamebase/${game.id!}`}
+                      className={styles.search_item}
+                      onClick={closeSearch}
+                    >
+                      <img
+                        src={getAssetUrl(game.cover_image)}
+                        className={styles.search_img}
+                        alt={game.title}
+                        loading="lazy"
+                      />
+                      <span className={styles.search_item_title}>{game.title}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
+            <div className={styles.header_right}>
               {user && (
                 <Link to={`/profile/${user.name}`} className={styles.profile_link}>
                   {user.name}

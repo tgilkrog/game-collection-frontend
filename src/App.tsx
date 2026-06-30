@@ -13,6 +13,7 @@ import GameCopyPage from "./pages/GameCopy/GameCopyPage";
 import GameCopyDetailPage from "./pages/GameCopy/GameCopyDetailPage";
 import Profile from "./pages/Profile/Profile";
 import UsersPage from "./pages/Users/UsersPage";
+import PlatformsPage from "./pages/Platforms/PlatformsPage";
 
 function App() {
   const location = useLocation();
@@ -36,6 +37,7 @@ function App() {
           <Route path="/gamecopy/:id" element={<GameCopyDetailPage />} />
           <Route path="/profile/:username" element={<Profile />} />
           <Route path="/users" element={<UsersPage />} />
+          <Route path="/platforms" element={<PlatformsPage />} />
         </Routes>
       </AnimatePresence>
     </>

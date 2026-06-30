@@ -169,7 +169,7 @@ export default function Profile() {
 
   const stats = profileUser ? [
     { label: 'COPIES',      value: String(profileUser.copy_count ?? 0).padStart(2, '0') },
-    { label: 'TOTAL VALUE', value: Number(profileUser.total_value ?? 0).toFixed(2) + ' DKK.' },
+    { label: 'TOTAL VALUE', value: Number(profileUser.total_value ?? 0).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' DKK.' },
     { label: 'PLATFORMS',   value: String(profileUser.platform_count ?? 0).padStart(2, '0') },
   ] : [];
 
@@ -203,6 +203,9 @@ export default function Profile() {
             <div className={styles.header_left}>
               <div className={styles.eyebrow}>// USER PROFILE</div>
               <div className={styles.name}>{profileUser.name}</div>
+              {profileUser.rank && (
+                <div className={styles.rank}>// {profileUser.rank}</div>
+              )}
               <div className={styles.meta}>
                 {`${String(profileUser.copy_count ?? 0).padStart(2, '0')} ENTRIES IN COLLECTION`}
               </div>
@@ -263,19 +266,23 @@ export default function Profile() {
             className={`${styles.tab_btn} ${tab === 'collection' ? styles.tab_btn_active : ''}`}
             onClick={() => setTab('collection')}
           >
-            COLLECTION {!copiesLoading && <span>({copiesTotal})</span>}
+            <span className={styles.tab_label}>Collection</span>
+            {!copiesLoading && (
+              <span className={styles.tab_count}>{copiesTotal}</span>
+            )}
           </button>
           <button
             className={`${styles.tab_btn} ${tab === 'wishlist' ? styles.tab_btn_active : ''}`}
             onClick={() => setTab('wishlist')}
           >
-            WISHLIST {!wishlistLoading && tab === 'wishlist' && <span>({wishlistTotal})</span>}
+            <span className={styles.tab_label}>Wishlist</span>
+            <span className={styles.tab_count}>{profileUser.wishlist_count ?? 0}</span>
           </button>
           <button
             className={`${styles.tab_btn} ${tab === 'stats' ? styles.tab_btn_active : ''}`}
             onClick={() => setTab('stats')}
           >
-            STATS
+            <span className={styles.tab_label}>Stats</span>
           </button>
         </div>
 
@@ -287,7 +294,7 @@ export default function Profile() {
                 {copies.filter(c => c.game).map(copy => (
                   <GameCard
                     key={copy.id}
-                    href={`/gamebase/${copy.game.id}`}
+                    href={`/gamecopy/${copy.id}`}
                     image={getAssetUrl(copy.game.cover_image)}
                     title={copy.game.title}
                     badge={copy.platform?.name}
