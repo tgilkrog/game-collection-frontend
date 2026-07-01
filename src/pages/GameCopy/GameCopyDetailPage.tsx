@@ -112,13 +112,24 @@ export default function GameCopyDetailPage() {
             </div>
 
             <div className={styles.section_divider} />
+            <h2>COPY DETAILS</h2>
 
             <div className={styles.game_copy_wrapper}>
+                {isOwner && (
+                    <div className={styles.actions}>
+                        <button className={styles.btn} onClick={() => setEditOpen(true)}>
+                            EDIT
+                        </button>
+                        <button className={styles.btn_delete} onClick={() => deleteMutation.mutate()}>
+                            DELETE
+                        </button>
+                    </div>
+                )}
                 <div className={styles.copy_title}>{copy.platform?.name ?? '—'}</div>
                 <div className={styles.copy_meta}>
                     {copy.purchase_price != null && (
                         <div className={styles.copy_meta_row}>
-                            <span className={styles.copy_meta_label}>PRICE</span>
+                            <span className={styles.copy_meta_label}>PURCHASE PRICE</span>
                             <span className={styles.copy_meta_value}>
                                 {Number(copy.purchase_price).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} DKK
                             </span>
@@ -126,7 +137,7 @@ export default function GameCopyDetailPage() {
                     )}
                     {copy.purchase_date && (
                         <div className={styles.copy_meta_row}>
-                            <span className={styles.copy_meta_label}>PURCHASED</span>
+                            <span className={styles.copy_meta_label}>PURCHASE DATE</span>
                             <span className={styles.copy_meta_value}>
                                 {new Date(copy.purchase_date).toLocaleDateString('da-DK')}
                             </span>
@@ -145,17 +156,6 @@ export default function GameCopyDetailPage() {
                         </div>
                     )}
                 </div>
-
-                {isOwner && (
-                    <div className={styles.actions}>
-                        <button className={styles.btn} onClick={() => setEditOpen(true)}>
-                            EDIT
-                        </button>
-                        <button className={styles.btn_delete} onClick={() => deleteMutation.mutate()}>
-                            DELETE
-                        </button>
-                    </div>
-                )}
             </div>
 
             {copy.parts?.length > 0 && (

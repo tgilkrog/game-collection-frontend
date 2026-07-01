@@ -22,15 +22,20 @@ export function AuthProvider({
     children: React.ReactNode;
 }) {
     const [user, setUser] = useState<User | null>(() => {
-        const stored = localStorage.getItem("user");
-        return stored ? JSON.parse(stored) : null;
+        try {
+            const stored = localStorage.getItem("user");
+            return stored ? JSON.parse(stored) : null;
+        } catch {
+            localStorage.removeItem("user");
+            return null;
+        }
     });
 
     // Ensure CSRF cookie is set on every app load
     useEffect(() => { getCsrfCookie(); }, []);
 
     function loginUser(user: User) {
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify({ id: user.id, name: user.name }));
         setUser(user);
     }
 

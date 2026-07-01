@@ -6,6 +6,7 @@ import Login from '../Login/Login';
 import { useAuth } from '../../Context/AuthContext';
 import { searchGame } from '../../api/games';
 import type { GameSearchResult } from '../../types/game';
+import { getAssetUrl } from '../../utils/assetUrl';
 
 export default function Topbar() {
   const [search, setSearch] = useState('');
@@ -84,7 +85,7 @@ export default function Topbar() {
                 onClick={closeSearch}
               >
                 <img
-                  src={`${game.cover_image}`}
+                  src={getAssetUrl(game.cover_image)}
                   className={styles.search_img}
                   alt={game.title}
                   loading="lazy"
