@@ -1,7 +1,9 @@
 :root {
   /* Accent colors */
-  --color-purple: #b026ff;
-  --color-teal:   #5ce1e0;
+  --color-purple:     #b026ff;
+  --color-teal:       #5ce1e0;
+  --color-purple-rgb: 176, 38, 255;
+  --color-teal-rgb:   92, 225, 224;
 
   /* Text scale */
   --color-text-primary:   #f1f5f8;

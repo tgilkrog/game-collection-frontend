@@ -31,7 +31,7 @@
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 1px;
-  color: #ff4d4d;
+  color: var(--color-error);
   margin-bottom: 14px;
 }
 
@@ -68,7 +68,7 @@
 
 .login_input:focus {
   border-left-color: var(--color-purple);
-  box-shadow: 0 0 8px rgba(176,38,255,.2);
+  box-shadow: 0 0 8px rgba(var(--color-purple-rgb),.2);
 }
 
 /* ── SUBMIT ── */
@@ -89,7 +89,7 @@
 }
 
 .close:hover:not(:disabled) {
-  background: rgba(176,38,255,.12);
+  background: rgba(var(--color-purple-rgb),.12);
 }
 
 .close:disabled {

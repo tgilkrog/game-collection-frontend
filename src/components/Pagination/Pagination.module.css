@@ -22,7 +22,7 @@
 
 .btn:hover:not(:disabled) {
   background: var(--color-purple);
-  color: #0a0e14;
+  color: var(--color-bg-dark);
 }
 
 .btn:disabled {
@@ -31,7 +31,7 @@
 }
 
 .info {
-  color: #8b96a0;
+  color: var(--color-text-secondary);
   font-size: 11px;
   letter-spacing: 2px;
   min-width: 60px;

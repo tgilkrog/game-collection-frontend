@@ -1,10 +1,11 @@
-﻿.title {
+.title {
+  font-family: var(--font-display);
   font-size: 20px;
   letter-spacing: 3px;
-  color: #00f0ff;
+  color: var(--color-teal);
   margin-bottom: 20px;
   text-transform: uppercase;
-  text-shadow: 0 0 10px rgba(0,240,255,0.3);
+  text-shadow: 0 0 10px rgba(var(--color-teal-rgb), 0.3);
 }
 
 /* GRID */
@@ -18,30 +19,28 @@
 /* CARD */
 .card {
   position: relative;
-  background: rgba(16, 19, 26, 0.85);
-  border: 1px solid rgba(0, 240, 255, 0.15);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-mid);
   padding: 12px;
-
   box-shadow:
-    0 0 10px rgba(0, 240, 255, 0.05),
-    inset 0 0 10px rgba(255, 42, 109, 0.05);
+    0 0 10px rgba(var(--color-teal-rgb), 0.05),
+    inset 0 0 10px rgba(var(--color-purple-rgb), 0.05);
 }
 
 .cardTitle {
-  color: #ff2bd6;
+  color: var(--color-purple);
   font-weight: bold;
   letter-spacing: 1px;
 }
 
 .cardSlug {
   font-size: 12px;
-  color: #8b93a7;
+  color: var(--color-text-secondary);
 }
 
 .icon {
   position: absolute;
   bottom: 10px;
   right: 10px;
-
   cursor: pointer;
 }

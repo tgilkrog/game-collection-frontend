@@ -1,8 +1,8 @@
-﻿/* FORM CONTAINER */
+/* FORM CONTAINER */
 .ui-form {
   padding: 16px;
-  background: rgba(16, 19, 26, 0.9);
-  border: 1px solid rgba(255, 0, 128, 0.15);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-mid);
   width: 400px;
 }
 
@@ -11,7 +11,7 @@
   margin-bottom: 10px;
   font-size: 20px;
   letter-spacing: 2px;
-  color: #ffd000;
+  color: var(--color-purple);
 }
 
 /* INPUT */
@@ -19,105 +19,37 @@
   width: 100%;
   margin-bottom: 10px;
   padding: 10px;
-
-  background: #0b0c10;
-  border: 1px solid rgba(0, 240, 255, 0.2);
-  color: #e6e6e6;
-
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border-mid);
+  color: var(--color-text-primary);
   outline: none;
 }
 
 .ui-input:focus {
-  border-color: #00f0ff;
-  box-shadow: 0 0 8px rgba(0,240,255,0.2);
+  border-color: var(--color-purple);
+  box-shadow: 0 0 8px rgba(var(--color-purple-rgb), 0.2);
 }
 
 /* BUTTON */
 .ui-button {
   padding: 10px;
-
-  background: linear-gradient(90deg, #ff2a6d, #00f0ff);
+  background: var(--color-purple);
   border: none;
-  color: black;
-
+  color: var(--color-bg-dark);
   font-weight: bold;
   letter-spacing: 2px;
-
   cursor: pointer;
   transition: 0.2s;
 }
 
 .ui-button:hover {
-  filter: brightness(1.2);
+  filter: brightness(1.15);
 }
-
-/* wrapper */
-.ui-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-
-/* hide native checkbox */
-.ui-checkbox input {
-  display: none;
-}
-
-/* custom box */
-.ui-checkbox-box {
-  width: 16px;
-  height: 16px;
-  border: 1px solid rgba(0, 240, 255, 0.4);
-  background: #0b0c10;
-  position: relative;
-  transition: 0.2s;
-}
-
-/* hover effect */
-.ui-checkbox:hover .ui-checkbox-box {
-  border-color: #00f0ff;
-  box-shadow: 0 0 6px rgba(0,240,255,0.3);
-}
-
-/* checked state */
-.ui-checkbox input:checked + .ui-checkbox-box {
-  border-color: #ff2a6d;
-  box-shadow:
-    0 0 6px #ff2a6d,
-    inset 0 0 6px #ff2a6d;
-}
-
-/* inner "tick" (cyber style = square fill) */
-.ui-checkbox input:checked + .ui-checkbox-box::after {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  background: linear-gradient(90deg, #ff2a6d, #00f0ff);
-}
-
-/* label */
-.ui-checkbox-label {
-  color: #e6e6e6;
-  transition: 0.2s;
-}
-
-/* glow label when checked */
-.ui-checkbox input:checked ~ .ui-checkbox-label {
-  color: #00f0ff;
-  text-shadow: 0 0 6px rgba(0,240,255,0.6);
-}
-
-
-
-
 
 .ui-error {
-  color: #ff2a6d;
+  color: var(--color-error);
   font-size: 13px;
-  border-left: 3px solid #ff2a6d;
+  border-left: 3px solid var(--color-error);
   padding-left: 8px;
   margin-bottom: 10px;
   font-family: var(--font-mono);
@@ -143,7 +75,6 @@
   animation: popIn 0.25s ease-out forwards;
 }
 
-/* cyberpunk glow entrance */
 @keyframes popIn {
   from {
     transform: scale(0.8) translateY(20px);

@@ -90,7 +90,7 @@
   margin: 20px 0;
   line-height: 1.7;
   font-size: 14px;
-  color: #8a95a3;
+  color: var(--color-text-secondary);
   border-top: 1px solid var(--color-border-dark);
   padding-top: 16px;
 }
@@ -173,7 +173,7 @@
 
 .btn_delete:hover {
   border-color: var(--color-error);
-  color: #e05a4e;
+  color: var(--color-error);
 }
 
 /* â”€â”€ GAME COPIES â”€â”€ */
@@ -210,7 +210,7 @@
   font-weight: 600;
   font-size: 20px;
   letter-spacing: 2px;
-  color: #dfe6ec;
+  color: var(--color-text-primary);
   text-transform: uppercase;
   margin: 0 0 16px;
 }
@@ -285,7 +285,7 @@
 .highlight {
   color: var(--color-purple);
   border-color: var(--color-purple);
-  background: rgba(176,38,255,.06);
+  background: rgba(var(--color-purple-rgb),.06);
 }
 
 /* â”€â”€ LOADING / ERROR â”€â”€ */

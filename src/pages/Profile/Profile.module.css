@@ -16,9 +16,9 @@
   clip-path: var(--clip-lg);
   overflow: hidden;
   margin-bottom: 40px;
-  background-color: #0d1117;
+  background-color: var(--color-bg-surface);
   background-image:
-    radial-gradient(ellipse at 30% 60%, rgba(176,38,255,.05), transparent 55%),
+    radial-gradient(ellipse at 30% 60%, rgba(var(--color-purple-rgb),.05), transparent 55%),
     linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
   background-size: auto, 46px 46px, 46px 46px;
@@ -259,7 +259,7 @@
   flex: none;
 }
 
-.follow_btn:hover { background: rgba(92,225,224,.1); }
+.follow_btn:hover { background: rgba(var(--color-teal-rgb),.1); }
 
 .follow_btn_active {
   border-color: var(--color-border-mid);
@@ -268,7 +268,7 @@
 
 .follow_btn_active:hover {
   border-color: var(--color-error);
-  color: #e05a4e;
+  color: var(--color-error);
 }
 
 /* â”€â”€ SOCIAL COUNTS â”€â”€ */
@@ -294,7 +294,7 @@
 .bio {
   font-size: 14px;
   line-height: 1.7;
-  color: #8a95a3;
+  color: var(--color-text-secondary);
   margin-bottom: 28px;
   max-width: 640px;
 }
@@ -329,7 +329,7 @@
 
 .tab_btn_active {
   border-top-color: var(--color-purple);
-  background: rgba(176, 38, 255, 0.04);
+  background: rgba(var(--color-purple-rgb), 0.04);
   color: var(--color-text-primary);
 }
 
@@ -410,7 +410,7 @@
   margin-top: 4px;
 }
 
-.pw_submit:hover:not(:disabled) { background: rgba(176,38,255,.12); }
+.pw_submit:hover:not(:disabled) { background: rgba(var(--color-purple-rgb),.12); }
 .pw_submit:disabled { opacity: .5; cursor: not-allowed; }
 
 /* ── Stats tab ── */
@@ -455,7 +455,7 @@
 
 .bar_track {
   height: 6px;
-  background: #0d1117;
+  background: var(--color-bg-surface);
   border: 1px solid var(--color-border-dark);
   position: relative;
   overflow: hidden;
