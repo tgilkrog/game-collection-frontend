@@ -353,9 +353,9 @@
   color: var(--color-text-dim);
   padding: 10px 22px;
   cursor: pointer;
+  flex: none;
   clip-path: var(--clip-sm);
   transition: border-color .15s, color .15s;
-  flex: none;
 }
 
 .action_btn:hover {

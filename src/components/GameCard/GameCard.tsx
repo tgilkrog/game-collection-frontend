@@ -13,10 +13,12 @@ type Props = {
 export function GameCard({ href, image, title, badge, subtext, price }: Props) {
   return (
     <Link to={href} className={styles.link}>
-      <div className={styles.cover}>
-        {/*badge && <span className={styles.badge}>{badge}</span>*/}
-        <img src={image} alt={title} className={styles.img} loading="lazy" />
-        {/*price != null && <div className={styles.price}>${price}</div>*/}
+      <div className={styles.cover_frame}>
+        <div className={styles.cover}>
+          {/*badge && <span className={styles.badge}>{badge}</span>*/}
+          <img src={image} alt={title} className={styles.img} loading="lazy" />
+          {/*price != null && <div className={styles.price}>${price}</div>*/}
+        </div>
       </div>
     </Link>
   );
