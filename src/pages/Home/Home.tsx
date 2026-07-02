@@ -22,7 +22,7 @@ export function Home() {
   const [feedMode, setFeedMode] = useState<'global' | 'following'>('global');
   const searchRef = useRef<HTMLDivElement>(null);
 
-  const { data: homeData } = useQuery({
+  useQuery({
     queryKey: ['home'],
     queryFn: () => getHome().then(r => r.data),
     enabled: !!user,

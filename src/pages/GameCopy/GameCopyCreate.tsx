@@ -18,7 +18,7 @@ type FormState = {
 type Props = {
   conditions: Condition[];
   platforms: Platform[];
-  onSubmit: (data: FormData) => Promise<void>;
+  onSubmit: (data: FormData) => Promise<unknown>;
 };
 
 export default function GameCopyCreate({ conditions, platforms, onSubmit }: Props) {

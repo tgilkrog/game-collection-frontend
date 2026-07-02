@@ -165,8 +165,6 @@ export default function Profile() {
   const copiesTotal = copiesData?.meta.total ?? 0;
   const wishlistItems = wishlistData?.data ?? [];
   const wishlistLastPage = wishlistData?.meta.last_page ?? 1;
-  const wishlistTotal = wishlistData?.meta.total ?? 0;
-
   const stats = profileUser ? [
     { label: 'COPIES',      value: String(profileUser.copy_count ?? 0).padStart(2, '0') },
     { label: 'TOTAL VALUE', value: Number(profileUser.total_value ?? 0).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' DKK.' },

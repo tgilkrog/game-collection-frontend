@@ -18,7 +18,7 @@ type Props = {
   copy: GameCopy;
   conditions: Condition[];
   platforms: Platform[];
-  onSubmit: (data: object) => Promise<void>;
+  onSubmit: (data: object) => Promise<unknown>;
 };
 
 export default function GameCopyEdit({ copy, conditions, platforms, onSubmit }: Props) {

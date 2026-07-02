@@ -10,7 +10,7 @@ type Props = {
   price?: number | string | null;
 };
 
-export function GameCard({ href, image, title, badge, subtext, price }: Props) {
+export function GameCard({ href, image, title }: Props) {
   return (
     <Link to={href} className={styles.link}>
       <div className={styles.cover_frame}>

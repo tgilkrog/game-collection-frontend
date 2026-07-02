@@ -5,7 +5,7 @@ import styles from './EditProfileForm.module.css';
 
 type Props = {
   current: User;
-  onSubmit: (data: FormData) => Promise<void>;
+  onSubmit: (data: FormData) => Promise<unknown>;
   loading: boolean;
   error: string;
 };
@@ -52,13 +52,13 @@ export default function EditProfileForm({ current, onSubmit, loading, error }: P
       if (!isDragging.current || !wrapRef.current) return;
       const h = wrapRef.current.getBoundingClientRect().height;
       const delta = (dragStart.current.y - e.clientY) / h * 100;
-      setBannerPosition(p => Math.min(100, Math.max(0, dragStart.current.pos + delta)));
+      setBannerPosition(_p => Math.min(100, Math.max(0, dragStart.current.pos + delta)));
     }
     function onTouchMove(e: TouchEvent) {
       if (!isDragging.current || !wrapRef.current) return;
       const h = wrapRef.current.getBoundingClientRect().height;
       const delta = (dragStart.current.y - e.touches[0].clientY) / h * 100;
-      setBannerPosition(p => Math.min(100, Math.max(0, dragStart.current.pos + delta)));
+      setBannerPosition(_p => Math.min(100, Math.max(0, dragStart.current.pos + delta)));
     }
     function onUp() { isDragging.current = false; }
 

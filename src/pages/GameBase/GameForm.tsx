@@ -11,7 +11,7 @@ type FormState = {
 };
 
 type GameFormProps = {
-  onSubmit: (data: FormData) => Promise<void>;
+  onSubmit: (data: FormData) => Promise<unknown>;
   initialData?: {
     id?: number;
     title?: string;

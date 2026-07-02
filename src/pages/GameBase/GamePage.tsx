@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getAssetUrl } from '../../utils/assetUrl';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getGame, deleteGame, updateGame } from '../../api/games';
+import { getGame, updateGame } from '../../api/games';
 import { getConditions } from '../../api/conditions';
 import { addToWishlist, removeFromWishlist } from '../../api/wishlist';
 import { useAuth } from '../../Context/AuthContext';
@@ -17,7 +17,6 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 
 export default function GamePage() {
     const { id } = useParams();
-    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [mutationError, setMutationError] = useState('');
@@ -50,17 +49,7 @@ export default function GamePage() {
         },
     });
 
-    const deleteMutation = useMutation({
-        mutationFn: () => deleteGame(game!.id),
-        onSuccess: () => navigate('/gamebase'),
-        onError: (err: unknown) => {
-            const msg = (err as { response?: { data?: { message?: string } } })
-                ?.response?.data?.message ?? 'Failed to delete game.';
-            setMutationError(msg);
-        },
-    });
-
-    const wishlistMutation = useMutation({
+const wishlistMutation = useMutation({
         mutationFn: () => game?.is_wishlisted
             ? removeFromWishlist(game!.id)
             : addToWishlist(game!.id),
@@ -139,14 +128,14 @@ export default function GamePage() {
             </div>
 
             {/* ── Game copies ── */}
-            {game.game_copies?.length > 0 && (
+            {(game.game_copies?.length ?? 0) > 0 && (
                 <>
                     <h2 className={styles.copies_heading}>
                         COPIES
-                        <span>{String(game.game_copies.length).padStart(2, '0')} ENTRIES</span>
+                        <span>{String(game.game_copies?.length ?? 0).padStart(2, '0')} ENTRIES</span>
                     </h2>
 
-                    {game.game_copies.map((g: GameCopy) => (
+                    {game.game_copies?.map((g: GameCopy) => (
                         <div className={styles.game_copy_wrapper} key={g.id}>
                             <div className={styles.copy_title}>{g.platform?.name ?? '—'}</div>
 
