@@ -27,3 +27,9 @@ export const updateGameCopy = (id: number, data: object) =>
 
 export const deleteGameCopy = (id: number) =>
   api.delete(`${BASE_URL}/${id}`);
+
+export const exportGameCopies = (columns: string[], format: 'xlsx' | 'csv') =>
+  api.get(`${BASE_URL}/export`, {
+    params: { columns, format },
+    responseType: 'blob',
+  });

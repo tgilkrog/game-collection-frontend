@@ -7,7 +7,7 @@ import {
   getUser, getUserCopies, updateUser, changePassword,
   followUser, unfollowUser, getUserWishlist, getUserStats,
 } from '../../api/users';
-import { createGameCopy } from '../../api/gameCopy';
+import { createGameCopy, exportGameCopies } from '../../api/gameCopy';
 import { getConditions } from '../../api/conditions';
 import { getPlatforms } from '../../api/platforms';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
@@ -15,7 +15,9 @@ import Popup from '../../components/Popup/Popup';
 import { Pagination } from '../../components/Pagination/Pagination';
 import GameCopyCreate from '../GameCopy/GameCopyCreate';
 import EditProfileForm from './EditProfileForm';
+import ExportCollectionForm from './ExportCollectionForm';
 import { getAssetUrl } from '../../utils/assetUrl';
+import { downloadBlob } from '../../utils/download';
 import styles from './Profile.module.css';
 import type { GameListItem } from '../../types/game';
 import type { PlatformStat, GenreStat, DecadeStat } from '../../types/user';
@@ -57,8 +59,10 @@ export default function Profile() {
   const [formOpen, setFormOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
   const [editError, setEditError] = useState('');
   const [copyError, setCopyError] = useState('');
+  const [exportError, setExportError] = useState('');
   const [copiesPage, setCopiesPage] = useState(1);
   const [wishlistPage, setWishlistPage] = useState(1);
   const [pwData, setPwData] = useState({ current_password: '', password: '', password_confirmation: '' });
@@ -142,6 +146,30 @@ export default function Profile() {
     },
   });
 
+  const exportMutation = useMutation({
+    mutationFn: async ({ columns, format }: { columns: string[]; format: 'xlsx' | 'csv' }) => {
+      const response = await exportGameCopies(columns, format);
+      downloadBlob(response.data, `collection.${format}`);
+    },
+    onSuccess: () => {
+      setExportOpen(false);
+      setExportError('');
+    },
+    onError: async (err: unknown) => {
+      const data = (err as { response?: { data?: Blob } })?.response?.data;
+      let msg = 'Export failed.';
+      if (data instanceof Blob) {
+        try {
+          const parsed = JSON.parse(await data.text());
+          msg = parsed.message ?? msg;
+        } catch {
+          // response wasn't JSON; keep the default message
+        }
+      }
+      setExportError(msg);
+    },
+  });
+
   const passwordMutation = useMutation({
     mutationFn: () => changePassword(username!, pwData),
     onSuccess: () => {
@@ -220,6 +248,9 @@ export default function Profile() {
                   </button>
                   <button className={styles.add_btn} onClick={() => setFormOpen(true)}>
                     + ADD COPY
+                  </button>
+                  <button className={styles.edit_btn} onClick={() => { setExportError(''); setExportOpen(true); }}>
+                    EXPORT COLLECTION
                   </button>
                 </>
               ) : user && (
@@ -382,6 +413,17 @@ export default function Profile() {
               onSubmit={editMutation.mutateAsync}
               loading={editMutation.isPending}
               error={editError}
+            />
+          </Popup>
+        )}
+
+        {/* ── Export collection modal ── */}
+        {isOwner && (
+          <Popup open={exportOpen} onClose={() => setExportOpen(false)}>
+            <ExportCollectionForm
+              onSubmit={(columns, format) => exportMutation.mutateAsync({ columns, format })}
+              loading={exportMutation.isPending}
+              error={exportError}
             />
           </Popup>
         )}
