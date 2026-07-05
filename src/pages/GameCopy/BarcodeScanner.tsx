@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { BrowserMultiFormatReader } from '@zxing/browser';
 import type { IScannerControls } from '@zxing/browser';
-import { BarcodeFormat, DecodeHintType } from '@zxing/library';
+import {
+  BarcodeFormat,
+  ChecksumException,
+  DecodeHintType,
+  FormatException,
+  NotFoundException,
+} from '@zxing/library';
 import styles from './BarcodeScanner.module.css';
 
 type Props = {
@@ -32,8 +38,13 @@ export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
           controls?.stop();
           onDecoded(result.getText());
         }
-        // NotFoundException fires continuously while no barcode is in frame — ignore it.
-        if (err && err.name !== 'NotFoundException' && !cancelled) {
+        // These fire continuously on every unsuccessful decode attempt while scanning
+        // (no barcode in frame, blurry/partial read, still focusing) — all expected, not errors.
+        const isExpectedMiss =
+          err instanceof NotFoundException ||
+          err instanceof ChecksumException ||
+          err instanceof FormatException;
+        if (err && !isExpectedMiss && !cancelled) {
           setError('COULD NOT ACCESS CAMERA. TRY AGAIN OR SEARCH MANUALLY.');
         }
       })
