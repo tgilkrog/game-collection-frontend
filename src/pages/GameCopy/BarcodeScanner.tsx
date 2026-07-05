@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { BrowserMultiFormatReader } from '@zxing/browser';
-import type { IScannerControls } from '@zxing/browser';
-import {
-  BarcodeFormat,
-  ChecksumException,
-  DecodeHintType,
-  FormatException,
-  NotFoundException,
-} from '@zxing/library';
+import { readBarcodes } from 'zxing-wasm/reader';
+import type { ReaderOptions } from 'zxing-wasm/reader';
 import styles from './BarcodeScanner.module.css';
 
 type Props = {
@@ -15,78 +8,83 @@ type Props = {
   onCancel: () => void;
 };
 
-function buildHints() {
-  const hints = new Map();
-  hints.set(DecodeHintType.POSSIBLE_FORMATS, [
-    BarcodeFormat.UPC_A,
-    BarcodeFormat.UPC_E,
-    BarcodeFormat.EAN_13,
-    BarcodeFormat.EAN_8,
-  ]);
-  // Default decoding is tuned for speed over accuracy — tries fewer scan angles/passes
-  // per frame. Dedicated scanner apps always run the thorough mode; match that here.
-  hints.set(DecodeHintType.TRY_HARDER, true);
-  return hints;
-}
+const READER_OPTIONS: ReaderOptions = {
+  formats: ['EAN13', 'EAN8', 'UPCA', 'UPCE'],
+  maxNumberOfSymbols: 1,
+};
+
+const SCAN_INTERVAL_MS = 150;
 
 export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [error, setError] = useState('');
   const [photoError, setPhotoError] = useState('');
   const [decodingPhoto, setDecodingPhoto] = useState(false);
-  const readerRef = useRef<BrowserMultiFormatReader | null>(null);
-
-  if (!readerRef.current) {
-    // Default is 500ms between decode attempts (~2/sec) — each attempt is a snapshot of a
-    // single instant, so a bad moment (motion blur, still focusing) costs a full half-second
-    // retry. Tightening this closer to native scanner-app frame rates gives it far more chances.
-    readerRef.current = new BrowserMultiFormatReader(buildHints(), { delayBetweenScanAttempts: 100 });
-  }
 
   useEffect(() => {
-    const reader = readerRef.current!;
-    let controls: IScannerControls | null = null;
     let cancelled = false;
+    let stream: MediaStream | null = null;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-    const constraints: MediaStreamConstraints = {
-      video: {
-        facingMode: 'environment',
-        width: { ideal: 1920 },
-        height: { ideal: 1080 },
-        // Non-standard but widely supported on mobile Chrome/Safari — barcodes need
-        // close-focus, and the default stream from facingMode alone is often fixed-focus.
-        advanced: [{ focusMode: 'continuous' } as unknown as MediaTrackConstraintSet],
-      },
-    };
+    async function tick() {
+      const video = videoRef.current;
+      if (cancelled) return;
+      if (!video || !ctx || video.readyState < video.HAVE_CURRENT_DATA) {
+        timeoutId = setTimeout(tick, SCAN_INTERVAL_MS);
+        return;
+      }
 
-    reader
-      .decodeFromConstraints(constraints, videoRef.current ?? undefined, (result, err) => {
-        if (result && !cancelled) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      try {
+        const results = await readBarcodes(imageData, READER_OPTIONS);
+        if (!cancelled && results.length > 0) {
           cancelled = true;
-          controls?.stop();
-          onDecoded(result.getText());
+          onDecoded(results[0].text);
+          return;
         }
-        // These fire continuously on every unsuccessful decode attempt while scanning
-        // (no barcode in frame, blurry/partial read, still focusing) — all expected, not errors.
-        const isExpectedMiss =
-          err instanceof NotFoundException ||
-          err instanceof ChecksumException ||
-          err instanceof FormatException;
-        if (err && !isExpectedMiss && !cancelled) {
-          setError('COULD NOT ACCESS CAMERA. TRY AGAIN OR SEARCH MANUALLY.');
+      } catch {
+        // Transient decode failure on this frame — just retry on the next tick.
+      }
+
+      if (!cancelled) timeoutId = setTimeout(tick, SCAN_INTERVAL_MS);
+    }
+
+    (async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'environment',
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+            // Non-standard but widely supported on mobile Chrome/Safari — barcodes need
+            // close-focus, and the default stream from facingMode alone is often fixed-focus.
+            advanced: [{ focusMode: 'continuous' } as unknown as MediaTrackConstraintSet],
+          },
+        });
+        if (cancelled) {
+          stream.getTracks().forEach(t => t.stop());
+          return;
         }
-      })
-      .then(c => {
-        controls = c;
-        if (cancelled) controls.stop();
-      })
-      .catch(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          await videoRef.current.play();
+        }
+        tick();
+      } catch {
         setError('CAMERA ACCESS DENIED OR UNAVAILABLE. SEARCH MANUALLY BELOW.');
-      });
+      }
+    })();
 
     return () => {
       cancelled = true;
-      controls?.stop();
+      if (timeoutId) clearTimeout(timeoutId);
+      stream?.getTracks().forEach(t => t.stop());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -98,14 +96,16 @@ export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
 
     setPhotoError('');
     setDecodingPhoto(true);
-    const url = URL.createObjectURL(file);
     try {
-      const result = await readerRef.current!.decodeFromImageElement(url);
-      onDecoded(result.getText());
+      const results = await readBarcodes(file, READER_OPTIONS);
+      if (results.length > 0) {
+        onDecoded(results[0].text);
+      } else {
+        setPhotoError('NO BARCODE FOUND IN THAT PHOTO. TRY AGAIN OR SEARCH MANUALLY.');
+      }
     } catch {
       setPhotoError('NO BARCODE FOUND IN THAT PHOTO. TRY AGAIN OR SEARCH MANUALLY.');
     } finally {
-      URL.revokeObjectURL(url);
       setDecodingPhoto(false);
     }
   }
