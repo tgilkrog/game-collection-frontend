@@ -27,6 +27,9 @@ export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
       BarcodeFormat.EAN_13,
       BarcodeFormat.EAN_8,
     ]);
+    // Default decoding is tuned for speed over accuracy — tries fewer scan angles/passes
+    // per frame. Dedicated scanner apps always run the thorough mode; match that here.
+    hints.set(DecodeHintType.TRY_HARDER, true);
     const reader = new BrowserMultiFormatReader(hints);
     let controls: IScannerControls | null = null;
     let cancelled = false;
