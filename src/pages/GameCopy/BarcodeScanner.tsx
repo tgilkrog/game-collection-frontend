@@ -15,25 +15,36 @@ type Props = {
   onCancel: () => void;
 };
 
+function buildHints() {
+  const hints = new Map();
+  hints.set(DecodeHintType.POSSIBLE_FORMATS, [
+    BarcodeFormat.UPC_A,
+    BarcodeFormat.UPC_E,
+    BarcodeFormat.EAN_13,
+    BarcodeFormat.EAN_8,
+  ]);
+  // Default decoding is tuned for speed over accuracy — tries fewer scan angles/passes
+  // per frame. Dedicated scanner apps always run the thorough mode; match that here.
+  hints.set(DecodeHintType.TRY_HARDER, true);
+  return hints;
+}
+
 export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [error, setError] = useState('');
+  const [photoError, setPhotoError] = useState('');
+  const [decodingPhoto, setDecodingPhoto] = useState(false);
+  const readerRef = useRef<BrowserMultiFormatReader | null>(null);
 
-  useEffect(() => {
-    const hints = new Map();
-    hints.set(DecodeHintType.POSSIBLE_FORMATS, [
-      BarcodeFormat.UPC_A,
-      BarcodeFormat.UPC_E,
-      BarcodeFormat.EAN_13,
-      BarcodeFormat.EAN_8,
-    ]);
-    // Default decoding is tuned for speed over accuracy — tries fewer scan angles/passes
-    // per frame. Dedicated scanner apps always run the thorough mode; match that here.
-    hints.set(DecodeHintType.TRY_HARDER, true);
+  if (!readerRef.current) {
     // Default is 500ms between decode attempts (~2/sec) — each attempt is a snapshot of a
     // single instant, so a bad moment (motion blur, still focusing) costs a full half-second
     // retry. Tightening this closer to native scanner-app frame rates gives it far more chances.
-    const reader = new BrowserMultiFormatReader(hints, { delayBetweenScanAttempts: 100 });
+    readerRef.current = new BrowserMultiFormatReader(buildHints(), { delayBetweenScanAttempts: 100 });
+  }
+
+  useEffect(() => {
+    const reader = readerRef.current!;
     let controls: IScannerControls | null = null;
     let cancelled = false;
 
@@ -80,6 +91,25 @@ export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    setPhotoError('');
+    setDecodingPhoto(true);
+    const url = URL.createObjectURL(file);
+    try {
+      const result = await readerRef.current!.decodeFromImageElement(url);
+      onDecoded(result.getText());
+    } catch {
+      setPhotoError('NO BARCODE FOUND IN THAT PHOTO. TRY AGAIN OR SEARCH MANUALLY.');
+    } finally {
+      URL.revokeObjectURL(url);
+      setDecodingPhoto(false);
+    }
+  }
+
   if (error) {
     return (
       <div className={styles.error_box}>
@@ -92,12 +122,26 @@ export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
   }
 
   return (
-    <div className={styles.scanner}>
-      <video ref={videoRef} className={styles.video} muted playsInline />
-      <div className={styles.scan_line} />
-      <button type="button" className={styles.cancel_btn} onClick={onCancel}>
-        × CANCEL SCAN
-      </button>
+    <div>
+      <div className={styles.scanner}>
+        <video ref={videoRef} className={styles.video} muted playsInline />
+        <div className={styles.scan_line} />
+        <button type="button" className={styles.cancel_btn} onClick={onCancel}>
+          × CANCEL SCAN
+        </button>
+      </div>
+      <label className={styles.photo_label}>
+        {decodingPhoto ? 'DECODING…' : '📸 OR TAKE A PHOTO INSTEAD'}
+        <input
+          className={styles.file_hidden}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          disabled={decodingPhoto}
+          onChange={handlePhotoChange}
+        />
+      </label>
+      {photoError && <div className={styles.error_text}>{photoError}</div>}
     </div>
   );
 }

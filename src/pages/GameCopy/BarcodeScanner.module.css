@@ -25,6 +25,28 @@
   pointer-events: none;
 }
 
+.photo_label {
+  display: block;
+  text-align: center;
+  padding: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--color-text-muted);
+  border: 1px dashed var(--color-border-mid);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+
+.photo_label:hover {
+  border-color: var(--color-purple);
+  color: var(--color-purple);
+}
+
+.file_hidden {
+  display: none;
+}
+
 .error_box {
   display: flex;
   flex-direction: column;
