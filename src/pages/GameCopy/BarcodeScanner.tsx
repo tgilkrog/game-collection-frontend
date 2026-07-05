@@ -31,8 +31,19 @@ export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
     let controls: IScannerControls | null = null;
     let cancelled = false;
 
+    const constraints: MediaStreamConstraints = {
+      video: {
+        facingMode: 'environment',
+        width: { ideal: 1920 },
+        height: { ideal: 1080 },
+        // Non-standard but widely supported on mobile Chrome/Safari — barcodes need
+        // close-focus, and the default stream from facingMode alone is often fixed-focus.
+        advanced: [{ focusMode: 'continuous' } as unknown as MediaTrackConstraintSet],
+      },
+    };
+
     reader
-      .decodeFromVideoDevice(undefined, videoRef.current ?? undefined, (result, err) => {
+      .decodeFromConstraints(constraints, videoRef.current ?? undefined, (result, err) => {
         if (result && !cancelled) {
           cancelled = true;
           controls?.stop();
