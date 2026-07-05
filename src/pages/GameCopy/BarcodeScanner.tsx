@@ -30,7 +30,10 @@ export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
     // Default decoding is tuned for speed over accuracy — tries fewer scan angles/passes
     // per frame. Dedicated scanner apps always run the thorough mode; match that here.
     hints.set(DecodeHintType.TRY_HARDER, true);
-    const reader = new BrowserMultiFormatReader(hints);
+    // Default is 500ms between decode attempts (~2/sec) — each attempt is a snapshot of a
+    // single instant, so a bad moment (motion blur, still focusing) costs a full half-second
+    // retry. Tightening this closer to native scanner-app frame rates gives it far more chances.
+    const reader = new BrowserMultiFormatReader(hints, { delayBetweenScanAttempts: 100 });
     let controls: IScannerControls | null = null;
     let cancelled = false;
 
