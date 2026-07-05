@@ -94,3 +94,9 @@
   border-color: var(--color-purple);
   color: var(--color-purple);
 }
+
+@media (max-width: 480px) {
+  .title { font-size: 9px; margin-bottom: 18px; }
+  .link { font-size: 22px; letter-spacing: 2px; }
+  .close { padding: 9px 16px; margin-top: 20px; }
+}

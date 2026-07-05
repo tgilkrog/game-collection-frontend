@@ -5,6 +5,10 @@
   min-width: 320px;
 }
 
+@media (max-width: 480px) {
+  .form { min-width: 0; width: 100%; }
+}
+
 .title {
   font-family: var(--font-mono);
   font-size: 11px;

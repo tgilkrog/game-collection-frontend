@@ -27,6 +27,17 @@
   background: rgba(0, 0, 0, 0.4);
 
   min-width: 400px;
+  max-width: 90vw;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .console {
+    min-width: 0;
+    width: 90vw;
+    padding: 24px;
+    font-size: 13px;
+  }
 }
 
 /* each line */

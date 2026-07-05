@@ -5,6 +5,18 @@
   min-width: 320px;
 }
 
+@media (max-width: 480px) {
+  .form { min-width: 0; width: 100%; }
+
+  .top_row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .preview_avatar { width: 120px; height: 120px; }
+  .name_col { width: 100%; }
+}
+
 .title {
   font-family: var(--font-mono);
   font-size: 11px;

@@ -6,6 +6,24 @@
   min-height: 100vh;
 }
 
+@media (max-width: 1024px) {
+  .page { padding: 80px 32px 48px; }
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .title { font-size: 26px; }
+}
+
+@media (max-width: 480px) {
+  .page { padding: 76px 16px 40px; }
+}
+
 .header {
   display: flex;
   align-items: flex-end;

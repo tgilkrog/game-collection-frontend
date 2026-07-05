@@ -325,3 +325,10 @@
   opacity: .45;
   cursor: not-allowed;
 }
+
+@media (max-width: 480px) {
+  .field_row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

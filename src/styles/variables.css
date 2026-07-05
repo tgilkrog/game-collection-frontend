@@ -37,3 +37,13 @@
   --clip-md: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
   --clip-lg: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
 }
+
+/*
+ * Responsive breakpoint convention (used as literal values in @media queries —
+ * custom properties can't be referenced inside a media condition):
+ *   Mobile:  max-width: 480px
+ *   Tablet:  max-width: 1024px  (also covers mobile since queries stack)
+ *   Desktop: > 1024px (default/base styles)
+ * Keep new breakpoints aligned to these two values unless a component's own
+ * content genuinely needs a different reflow point.
+ */
