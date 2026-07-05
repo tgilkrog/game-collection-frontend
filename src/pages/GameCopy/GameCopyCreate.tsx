@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { searchGame } from '../../api/games';
+import { lookupBarcode } from '../../api/barcode';
+import BarcodeScanner from './BarcodeScanner';
 import type { GameSearchResult } from '../../types/game';
 import type { CopyPart } from '../../types/copypart';
 import type { Condition } from '../../types/condition';
@@ -39,6 +41,7 @@ export default function GameCopyCreate({ conditions, platforms, onSubmit }: Prop
   const [selectedGame, setSelectedGame] = useState<GameSearchResult | null>(null);
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
+  const [scanMode, setScanMode] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -69,6 +72,27 @@ export default function GameCopyCreate({ conditions, platforms, onSubmit }: Prop
     setSelectedGame(null);
     setGameQuery('');
     setGameResults([]);
+  }
+
+  async function handleDecoded(barcode: string) {
+    setScanMode(false);
+    setSearching(true);
+    try {
+      const { data } = await lookupBarcode(barcode);
+      if (data.matched && data.result?.title) {
+        setGameQuery(data.result.title);
+      } else {
+        setGameQuery('');
+        setGameResults([]);
+        setSearchError('NO MATCH FOR THIS BARCODE. SEARCH MANUALLY BELOW.');
+      }
+    } catch {
+      setGameQuery('');
+      setGameResults([]);
+      setSearchError('BARCODE LOOKUP FAILED. SEARCH MANUALLY BELOW.');
+    } finally {
+      setSearching(false);
+    }
   }
 
   const numericFields = new Set(['platform_id', 'purchase_price']);
@@ -136,14 +160,21 @@ export default function GameCopyCreate({ conditions, platforms, onSubmit }: Prop
             </span>
             <button type="button" className={styles.clear_btn} onClick={clearGame}>×</button>
           </div>
+        ) : scanMode ? (
+          <BarcodeScanner onDecoded={handleDecoded} onCancel={() => setScanMode(false)} />
         ) : (
-          <input
-            className={styles.input}
-            placeholder="Search for a game…"
-            value={gameQuery}
-            onChange={e => setGameQuery(e.target.value)}
-            autoComplete="off"
-          />
+          <>
+            <input
+              className={styles.input}
+              placeholder="Search for a game…"
+              value={gameQuery}
+              onChange={e => setGameQuery(e.target.value)}
+              autoComplete="off"
+            />
+            <button type="button" className={styles.scan_btn} onClick={() => setScanMode(true)}>
+              📷 SCAN BARCODE
+            </button>
+          </>
         )}
 
         {gameResults.length > 0 && (

@@ -1,0 +1,68 @@
+.scanner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #000;
+  border: 1px solid var(--color-border-dark);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scan_line {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 50%;
+  height: 2px;
+  background: var(--color-purple);
+  box-shadow: 0 0 8px rgba(var(--color-purple-rgb), .8);
+  pointer-events: none;
+}
+
+.error_box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--color-border-dark);
+  background: rgba(10, 14, 19, .6);
+  margin-bottom: 8px;
+}
+
+.error_text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--color-text-muted);
+}
+
+.cancel_btn {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: rgba(10, 14, 19, .75);
+  border: 1px solid var(--color-border-mid);
+  color: var(--color-text-muted);
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+
+.cancel_btn:hover {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.scanner .cancel_btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+}
