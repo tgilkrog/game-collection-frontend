@@ -110,7 +110,7 @@
 
 .title {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 42px;
   letter-spacing: 4px;
   color: var(--color-text-primary);
@@ -395,7 +395,7 @@
 
 .list_title {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 36px;
   letter-spacing: 4px;
   color: var(--color-text-primary);
@@ -431,3 +431,19 @@
   color: var(--color-purple);
 }
 
+@media (max-width: 768px) { 
+
+  .conditions_row {
+    align-items: normal;
+  }
+
+  .condition_type {
+    font-size: 14px;
+  }
+
+  .conditions {
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 4px 8px;
+  }
+}

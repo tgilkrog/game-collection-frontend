@@ -7,6 +7,7 @@ import {
   getUser, getUserCopies, updateUser, changePassword,
   followUser, unfollowUser, getUserWishlist, getUserStats,
 } from '../../api/users';
+import type { PasswordPayload } from '../../api/users';
 import { createGameCopy, exportGameCopies } from '../../api/gameCopy';
 import { getConditions } from '../../api/conditions';
 import { getPlatforms } from '../../api/platforms';
@@ -58,16 +59,13 @@ export default function Profile() {
   const [tab, setTab] = useState<Tab>('collection');
   const [formOpen, setFormOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [passwordOpen, setPasswordOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [editError, setEditError] = useState('');
   const [copyError, setCopyError] = useState('');
   const [exportError, setExportError] = useState('');
   const [copiesPage, setCopiesPage] = useState(1);
   const [wishlistPage, setWishlistPage] = useState(1);
-  const [pwData, setPwData] = useState({ current_password: '', password: '', password_confirmation: '' });
   const [pwError, setPwError] = useState('');
-  const [pwSuccess, setPwSuccess] = useState(false);
 
   useEffect(() => {
     setCopiesPage(1);
@@ -136,8 +134,6 @@ export default function Profile() {
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ['user', username] });
       loginUser(updated);
-      setEditOpen(false);
-      setEditError('');
       if (updated.name !== username) navigate(`/profile/${updated.name}`);
     },
     onError: (err: unknown) => {
@@ -145,6 +141,24 @@ export default function Profile() {
       setEditError(msg);
     },
   });
+
+  const passwordMutation = useMutation({
+    mutationFn: (data: PasswordPayload) => changePassword(username!, data),
+    onError: (err: unknown) => {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Password change failed.';
+      setPwError(msg);
+    },
+  });
+
+  async function handleProfileSubmit(profileData: FormData, passwordData: PasswordPayload | null) {
+    setEditError('');
+    setPwError('');
+    await editMutation.mutateAsync(profileData);
+    if (passwordData) {
+      await passwordMutation.mutateAsync(passwordData);
+    }
+    setEditOpen(false);
+  }
 
   const exportMutation = useMutation({
     mutationFn: async ({ columns, format }: { columns: string[]; format: 'xlsx' | 'csv' }) => {
@@ -167,19 +181,6 @@ export default function Profile() {
         }
       }
       setExportError(msg);
-    },
-  });
-
-  const passwordMutation = useMutation({
-    mutationFn: () => changePassword(username!, pwData),
-    onSuccess: () => {
-      setPwSuccess(true);
-      setPwError('');
-      setPwData({ current_password: '', password: '', password_confirmation: '' });
-    },
-    onError: (err: unknown) => {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Password change failed.';
-      setPwError(msg);
     },
   });
 
@@ -240,13 +241,10 @@ export default function Profile() {
             <div className={styles.header_actions}>
               {isOwner ? (
                 <>
-                  <button className={styles.edit_btn} onClick={() => { setEditError(''); setEditOpen(true); }}>
+                  <button className={styles.edit_btn} onClick={() => { setEditError(''); setPwError(''); setEditOpen(true); }}>
                     EDIT PROFILE
                   </button>
-                  <button className={styles.edit_btn} onClick={() => { setPwError(''); setPwSuccess(false); setPasswordOpen(true); }}>
-                    PASSWORD
-                  </button>
-                  <button className={styles.add_btn} onClick={() => setFormOpen(true)}>
+                  <button className={styles.edit_btn} onClick={() => setFormOpen(true)}>
                     + ADD COPY
                   </button>
                   <button className={styles.edit_btn} onClick={() => { setExportError(''); setExportOpen(true); }}>
@@ -405,14 +403,15 @@ export default function Profile() {
           </Popup>
         )}
 
-        {/* ── Edit profile modal ── */}
+        {/* ── Edit profile modal (includes optional password change) ── */}
         {isOwner && (
           <Popup open={editOpen} onClose={() => setEditOpen(false)}>
             <EditProfileForm
               current={profileUser}
-              onSubmit={editMutation.mutateAsync}
-              loading={editMutation.isPending}
+              onSubmit={handleProfileSubmit}
+              loading={editMutation.isPending || passwordMutation.isPending}
               error={editError}
+              passwordError={pwError}
             />
           </Popup>
         )}
@@ -425,38 +424,6 @@ export default function Profile() {
               loading={exportMutation.isPending}
               error={exportError}
             />
-          </Popup>
-        )}
-
-        {/* ── Password change modal ── */}
-        {isOwner && (
-          <Popup open={passwordOpen} onClose={() => setPasswordOpen(false)}>
-            <form
-              className={styles.pw_form}
-              onSubmit={e => { e.preventDefault(); setPwSuccess(false); passwordMutation.mutate(); }}
-            >
-              <div className={styles.pw_title}>// CHANGE PASSWORD</div>
-              {pwError && <div className="ui-error">{pwError}</div>}
-              {pwSuccess && <div style={{ color: '#5ce1e0', fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: 1 }}>PASSWORD UPDATED.</div>}
-              {(['current_password', 'password', 'password_confirmation'] as const).map(field => (
-                <div key={field}>
-                  <label className={styles.pw_label}>
-                    {field === 'current_password' ? 'CURRENT PASSWORD' : field === 'password' ? 'NEW PASSWORD' : 'CONFIRM NEW PASSWORD'}
-                  </label>
-                  <input
-                    className={styles.pw_input}
-                    type="password"
-                    required
-                    minLength={field !== 'current_password' ? 8 : undefined}
-                    value={pwData[field]}
-                    onChange={e => setPwData(d => ({ ...d, [field]: e.target.value }))}
-                  />
-                </div>
-              ))}
-              <button className={styles.pw_submit} type="submit" disabled={passwordMutation.isPending}>
-                {passwordMutation.isPending ? 'SAVING...' : 'UPDATE PASSWORD'}
-              </button>
-            </form>
           </Popup>
         )}
 

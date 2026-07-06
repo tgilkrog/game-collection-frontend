@@ -14,11 +14,14 @@ export const getUserCopies = (username: string, page = 1) =>
 export const updateUser = (username: string, data: FormData) =>
   api.post<User>(`/users/${username}`, data);
 
-export const changePassword = (username: string, data: {
+export type PasswordPayload = {
   current_password: string;
   password: string;
   password_confirmation: string;
-}) => api.put(`/users/${username}/password`, data);
+};
+
+export const changePassword = (username: string, data: PasswordPayload) =>
+  api.put(`/users/${username}/password`, data);
 
 export const followUser = (username: string) =>
   api.post(`/users/${username}/follow`);

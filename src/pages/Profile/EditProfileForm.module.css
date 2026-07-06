@@ -32,6 +32,24 @@
   color: var(--color-error);
 }
 
+.section_title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--color-purple);
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border-dark);
+}
+
+.hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  margin-top: -4px;
+}
+
 .label {
   font-family: var(--font-mono);
   font-size: 9px;
@@ -104,7 +122,7 @@
 
 .preview_avatar span {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 32px;
   color: var(--color-purple);
   line-height: 1;
