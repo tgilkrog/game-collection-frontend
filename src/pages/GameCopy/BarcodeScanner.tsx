@@ -25,24 +25,41 @@ export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
     let cancelled = false;
     let stream: MediaStream | null = null;
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let imageCapture: ImageCapture | null = null;
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-    async function tick() {
+    // ImageCapture.takePhoto() triggers the camera's real still-photo pipeline (full
+    // sensor resolution, proper focus-lock-then-shutter) instead of a raw video frame —
+    // the same quality boost as the manual "take a photo" button, but automatic and without
+    // leaving the page. Falls back to grabbing a plain video frame where it's unsupported
+    // (notably iOS Safari) or if a given capture attempt fails (camera briefly busy).
+    async function grabInput(): Promise<Blob | ImageData | null> {
+      if (imageCapture) {
+        try {
+          return await imageCapture.takePhoto();
+        } catch {
+          // fall through to the video-frame method for this attempt
+        }
+      }
       const video = videoRef.current;
+      if (!video || !ctx || video.readyState < video.HAVE_CURRENT_DATA) return null;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      return ctx.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    async function tick() {
       if (cancelled) return;
-      if (!video || !ctx || video.readyState < video.HAVE_CURRENT_DATA) {
+      const input = await grabInput();
+      if (!input) {
         timeoutId = setTimeout(tick, SCAN_INTERVAL_MS);
         return;
       }
 
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      ctx.drawImage(video, 0, 0);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
       try {
-        const results = await readBarcodes(imageData, READER_OPTIONS);
+        const results = await readBarcodes(input, READER_OPTIONS);
         if (!cancelled && results.length > 0) {
           cancelled = true;
           onDecoded(results[0].text);
@@ -74,6 +91,14 @@ export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           await videoRef.current.play();
+        }
+        const [track] = stream.getVideoTracks();
+        if (typeof ImageCapture !== 'undefined' && track) {
+          try {
+            imageCapture = new ImageCapture(track);
+          } catch {
+            imageCapture = null;
+          }
         }
         tick();
       } catch {
