@@ -3,6 +3,26 @@ import { readBarcodes } from 'zxing-wasm/reader';
 import type { ReaderOptions } from 'zxing-wasm/reader';
 import styles from './BarcodeScanner.module.css';
 
+// Not yet in TypeScript's bundled DOM lib. Minimal ambient typing for the W3C Shape
+// Detection API's BarcodeDetector, matching the shape lib.dom.d.ts uses for ImageCapture.
+declare global {
+  interface DetectedBarcode {
+    readonly rawValue: string;
+    readonly format: string;
+  }
+  interface BarcodeDetectorOptions {
+    formats?: string[];
+  }
+  interface BarcodeDetector {
+    detect(image: ImageBitmapSource): Promise<DetectedBarcode[]>;
+  }
+  var BarcodeDetector: {
+    prototype: BarcodeDetector;
+    new (options?: BarcodeDetectorOptions): BarcodeDetector;
+    getSupportedFormats(): Promise<string[]>;
+  };
+}
+
 type Props = {
   onDecoded: (barcode: string) => void;
   onCancel: () => void;
@@ -25,45 +45,39 @@ export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
     let cancelled = false;
     let stream: MediaStream | null = null;
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    let imageCapture: ImageCapture | null = null;
+    let detector: BarcodeDetector | null = null;
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-    // ImageCapture.takePhoto() triggers the camera's real still-photo pipeline (full
-    // sensor resolution, proper focus-lock-then-shutter) instead of a raw video frame —
-    // the same quality boost as the manual "take a photo" button, but automatic and without
-    // leaving the page. Falls back to grabbing a plain video frame where it's unsupported
-    // (notably iOS Safari) or if a given capture attempt fails (camera briefly busy).
-    async function grabInput(): Promise<Blob | ImageData | null> {
-      if (imageCapture) {
-        try {
-          return await imageCapture.takePhoto();
-        } catch {
-          // fall through to the video-frame method for this attempt
-        }
-      }
-      const video = videoRef.current;
-      if (!video || !ctx || video.readyState < video.HAVE_CURRENT_DATA) return null;
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      ctx.drawImage(video, 0, 0);
-      return ctx.getImageData(0, 0, canvas.width, canvas.height);
-    }
-
     async function tick() {
       if (cancelled) return;
-      const input = await grabInput();
-      if (!input) {
+      const video = videoRef.current;
+      if (!video || video.readyState < video.HAVE_CURRENT_DATA) {
         timeoutId = setTimeout(tick, SCAN_INTERVAL_MS);
         return;
       }
 
       try {
-        const results = await readBarcodes(input, READER_OPTIONS);
-        if (!cancelled && results.length > 0) {
-          cancelled = true;
-          onDecoded(results[0].text);
-          return;
+        if (detector) {
+          // Native, OS/browser-accelerated detection running directly on the live <video>
+          // element — no per-frame canvas copy or WASM data marshaling, so it stays fast.
+          const detections = await detector.detect(video);
+          if (!cancelled && detections.length > 0) {
+            cancelled = true;
+            onDecoded(detections[0].rawValue);
+            return;
+          }
+        } else if (ctx) {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          ctx.drawImage(video, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const results = await readBarcodes(imageData, READER_OPTIONS);
+          if (!cancelled && results.length > 0) {
+            cancelled = true;
+            onDecoded(results[0].text);
+            return;
+          }
         }
       } catch {
         // Transient decode failure on this frame — just retry on the next tick.
@@ -92,12 +106,11 @@ export default function BarcodeScanner({ onDecoded, onCancel }: Props) {
           videoRef.current.srcObject = stream;
           await videoRef.current.play();
         }
-        const [track] = stream.getVideoTracks();
-        if (typeof ImageCapture !== 'undefined' && track) {
+        if (typeof BarcodeDetector !== 'undefined') {
           try {
-            imageCapture = new ImageCapture(track);
+            detector = new BarcodeDetector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e'] });
           } catch {
-            imageCapture = null;
+            detector = null;
           }
         }
         tick();
