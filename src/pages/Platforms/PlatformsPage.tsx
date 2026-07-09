@@ -35,7 +35,7 @@ export default function PlatformsPage() {
 
   const { data: copiesData, isLoading } = useQuery({
     queryKey: ['gameCopies', platformId, page],
-    queryFn: () => getGameCopies(page, platformId).then(r => r.data),
+    queryFn: () => getGameCopies(page, platformId ? { platform_id: [platformId] } : {}).then(r => r.data),
     staleTime: FIVE_MINUTES,
   });
 

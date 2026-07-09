@@ -1,8 +1,19 @@
 import api from './axios';
 import type { GameCopy } from '../types/gamecopy';
 import type { Paginated } from '../types/pagination';
+import { appendArrayParams } from '../utils/queryParams';
 
 const BASE_URL = '/game-copies';
+
+export interface GameCopyFilters {
+  platform_id?: number[];
+  condition_id?: number[];
+  genre_id?: number[];
+  theme_id?: number[];
+  game_mode_id?: number[];
+  player_perspective_id?: number[];
+  [key: string]: number[] | undefined;
+}
 
 export const getFeed = (following = false, page = 1) => {
   const params = new URLSearchParams({ page: String(page) });
@@ -10,9 +21,9 @@ export const getFeed = (following = false, page = 1) => {
   return api.get<Paginated<GameCopy>>(`/feed?${params}`);
 };
 
-export const getGameCopies = (page = 1, platformId?: number) => {
+export const getGameCopies = (page = 1, filters: GameCopyFilters = {}) => {
   const params = new URLSearchParams({ page: String(page) });
-  if (platformId) params.set('platform_id', String(platformId));
+  appendArrayParams(params, filters);
   return api.get<Paginated<GameCopy>>(`${BASE_URL}?${params}`);
 };
 

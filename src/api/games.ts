@@ -1,9 +1,22 @@
 import api from './axios';
 import type { Game, GameListItem, GameSearchResult } from '../types/game';
 import type { Paginated } from '../types/pagination';
+import { appendArrayParams } from '../utils/queryParams';
 
-export const getGames = (page = 1) =>
-  api.get<Paginated<GameListItem>>(`/game-base?page=${page}`);
+export interface GameBaseFilters {
+  genre_id?: number[];
+  theme_id?: number[];
+  game_mode_id?: number[];
+  player_perspective_id?: number[];
+  platform_id?: number[];
+  [key: string]: number[] | undefined;
+}
+
+export const getGames = (page = 1, filters: GameBaseFilters = {}) => {
+  const params = new URLSearchParams({ page: String(page) });
+  appendArrayParams(params, filters);
+  return api.get<Paginated<GameListItem>>(`/game-base?${params}`);
+};
 
 export const getGame = (id: number) =>
   api.get<Game>(`/game-base/${id}`);
