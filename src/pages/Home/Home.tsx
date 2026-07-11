@@ -162,6 +162,8 @@ export function Home() {
             </div>
           </header>
 
+          <div>test</div>
+
           {/* Game grid */}
           {isLoading ? (
             <div className={styles.loading}>LOADING ARCHIVE...</div>
