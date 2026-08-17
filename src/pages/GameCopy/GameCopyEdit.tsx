@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import PartsInput from './PartsInput';
 import type { GameCopy } from '../../types/gamecopy';
+import { resolvePartsForSubmit } from '../../types/copypart';
 import type { CopyPart } from '../../types/copypart';
 import type { Condition } from '../../types/condition';
 import type { Platform } from '../../types/platform';
@@ -48,15 +50,6 @@ export default function GameCopyEdit({ copy, conditions, platforms, onSubmit }: 
     }));
   };
 
-  const addPart = () =>
-    setParts(prev => [...prev, { type: '', condition: conditions[0], notes: '' }]);
-
-  const removePart = (i: number) =>
-    setParts(prev => prev.filter((_, idx) => idx !== i));
-
-  const updatePart = (i: number, field: keyof CopyPart, value: CopyPart[keyof CopyPart]) =>
-    setParts(prev => prev.map((p, idx) => idx === i ? { ...p, [field]: value } : p));
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -64,7 +57,7 @@ export default function GameCopyEdit({ copy, conditions, platforms, onSubmit }: 
       await onSubmit({
         ...form,
         purchase_price: form.purchase_price === '' ? null : form.purchase_price,
-        parts: parts.map(p => ({
+        parts: resolvePartsForSubmit(parts, conditions).map(p => ({
           type: p.type,
           condition_id: p.condition.id,
           notes: p.notes ?? '',
@@ -128,59 +121,7 @@ export default function GameCopyEdit({ copy, conditions, platforms, onSubmit }: 
         <input className={styles.input} name="notes" placeholder="Optional notes" value={form.notes} onChange={handleChange} />
       </div>
 
-      <hr className={styles.divider} />
-      <div className={styles.section_label}>// Parts</div>
-
-      {parts.map((part, i) => (
-        <div key={i} className={styles.part_card}>
-          <div className={styles.part_header}>
-            <span className={styles.part_index}>PART {String(i + 1).padStart(2, '0')}</span>
-            <button type="button" className={styles.part_remove} onClick={() => removePart(i)}>
-              × REMOVE
-            </button>
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label}>Type</label>
-            <input
-              className={styles.input}
-              placeholder="disc, case, manual…"
-              value={part.type}
-              onChange={e => updatePart(i, 'type', e.target.value)}
-            />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label}>Condition</label>
-            <div className={styles.condition_pills}>
-              {conditions.map(c => (
-                <button
-                  key={c.id}
-                  type="button"
-                  className={`${styles.pill} ${part.condition.id === c.id ? styles.pill_active : ''}`}
-                  onClick={() => updatePart(i, 'condition', c)}
-                >
-                  {c.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label}>Notes</label>
-            <input
-              className={styles.input}
-              placeholder="Optional"
-              value={part.notes ?? ''}
-              onChange={e => updatePart(i, 'notes', e.target.value)}
-            />
-          </div>
-        </div>
-      ))}
-
-      <button type="button" className={styles.add_part_btn} onClick={addPart}>
-        + ADD PART
-      </button>
+      <PartsInput parts={parts} conditions={conditions} onChange={setParts} />
 
       <button type="submit" className={styles.submit_btn} disabled={submitting}>
         {submitting ? 'SAVING...' : 'SAVE CHANGES'}
