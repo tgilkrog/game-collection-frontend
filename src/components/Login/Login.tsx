@@ -7,7 +7,7 @@ import { login, register } from "../../api/login";
 type Mode = 'login' | 'register';
 
 export default function Login() {
-    const { loginUser, logoutUser, user } = useAuth();
+    const { loginUser, user } = useAuth();
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState<Mode>('login');
 
@@ -60,17 +60,13 @@ export default function Login() {
 
     return (
         <>
-            <div className={styles.menuWrapper}>
-                {!user ? (
+            {!user && (
+                <div className={styles.menuWrapper}>
                     <button className={styles.login} onClick={() => openAs('login')}>
                         Login
                     </button>
-                ) : (
-                    <button className={styles.login} onClick={() => void logoutUser()}>
-                        Terminate User
-                    </button>
-                )}
-            </div>
+                </div>
+            )}
 
             <Popup open={open} onClose={() => setOpen(false)}>
                 <div className={styles.title}>

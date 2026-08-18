@@ -162,21 +162,6 @@
   letter-spacing: .5px;
 }
 
-/* â”€â”€ PROFILE LINK â”€â”€ */
-.profile_link {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 1.5px;
-  color: var(--color-text-muted);
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: color .15s;
-}
-
-.profile_link:hover {
-  color: var(--color-purple);
-}
-
 /* â”€â”€ RIGHT SLOT â”€â”€ */
 .right {
   display: flex;
@@ -218,10 +203,4 @@
   .inner { padding: 0 12px; gap: 10px; }
   .logo_text { display: none; }
   .right { gap: 8px; }
-  .profile_link {
-    max-width: 70px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 }
