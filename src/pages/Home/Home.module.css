@@ -83,8 +83,8 @@
   position: absolute;
   inset: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  gap: 20px;
   padding: 0 34px;
 }
 
@@ -94,6 +94,15 @@
   letter-spacing: 3px;
   color: var(--color-purple);
   margin-bottom: 6px;
+}
+
+.hero_icon {
+  width: 60px;
+  height: 60px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 16px rgba(var(--color-purple-rgb),.5);
 }
 
 .hero_title {
@@ -380,6 +389,7 @@
   .hero_strip { height: 120px; }
   .hero_strip_content { padding: 0 20px; }
   .hero_title { font-size: 26px; letter-spacing: 3px; }
+  .hero_icon { width: 28px; height: 28px; }
   .hero_eyebrow { font-size: 9px; }
   .hero_meta { font-size: 10px; }
 

@@ -117,14 +117,6 @@
   line-height: 1;
 }
 
-.rank {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 3px;
-  color: var(--color-teal);
-  text-transform: uppercase;
-}
-
 .meta {
   font-family: var(--font-mono);
   font-size: 11px;

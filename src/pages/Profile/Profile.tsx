@@ -20,6 +20,7 @@ import ExportCollectionForm from './ExportCollectionForm';
 import { getAssetUrl } from '../../utils/assetUrl';
 import { downloadBlob } from '../../utils/download';
 import { PieChartCard } from '../../components/PieChartCard/PieChartCard';
+import RankInfo from '../../components/RankInfo/RankInfo';
 import styles from './Profile.module.css';
 import type { GameListItem } from '../../types/game';
 import type { PlatformStat, GenreStat, DecadeStat } from '../../types/user';
@@ -210,7 +211,7 @@ export default function Profile() {
               <div className={styles.eyebrow}>// USER PROFILE</div>
               <div className={styles.name}>{profileUser.name}</div>
               {profileUser.rank && (
-                <div className={styles.rank}>// {profileUser.rank}</div>
+                <RankInfo rank={profileUser.rank} copyCount={profileUser.copy_count ?? 0} />
               )}
               <div className={styles.meta}>
                 {`${String(profileUser.copy_count ?? 0).padStart(2, '0')} ENTRIES IN COLLECTION`}
