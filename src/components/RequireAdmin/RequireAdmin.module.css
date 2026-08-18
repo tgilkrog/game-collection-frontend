@@ -1,0 +1,7 @@
+.status {
+  padding: 80px 60px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--color-text-dim);
+}

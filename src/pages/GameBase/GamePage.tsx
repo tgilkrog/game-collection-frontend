@@ -201,6 +201,10 @@ const wishlistMutation = useMutation({
                                 description: game.description,
                                 release_year: game.release_year,
                                 cover_image: game.cover_image,
+                                genres: game.genres,
+                                themes: game.themes,
+                                game_modes: game.game_modes,
+                                player_perspectives: game.player_perspectives,
                             }}
                             onSubmit={updateMutation.mutateAsync}
                             submitLabel="Update"

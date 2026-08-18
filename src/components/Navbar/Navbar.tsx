@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Navbar.module.css";
 import Popup from "../Popup/Popup";
+import { useAuth } from "../../Context/AuthContext";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
 
   return (
     <>
@@ -43,6 +45,12 @@ export function Navbar() {
         <Link to="/platforms" className={styles.link} onClick={() => setOpen(false)}>
           PLATFORMS
         </Link>
+
+        {user?.is_admin && (
+          <Link to="/admin/game-bases" className={styles.link} onClick={() => setOpen(false)}>
+            ADMIN
+          </Link>
+        )}
 
         <button className={styles.close} onClick={() => setOpen(false)}>
           TERMINATE

@@ -11,6 +11,7 @@ import { getUser } from '../api/users';
 
 type AuthContextType = {
     user: User | null;
+    loading: boolean;
     loginUser: (user: User) => void;
     logoutUser: () => Promise<void>;
 };
@@ -32,17 +33,21 @@ export function AuthProvider({
         }
     });
 
+    const [loading, setLoading] = useState(() => !!user);
+
     // Ensure CSRF cookie is set on every app load
     useEffect(() => {
         getCsrfCookie();
 
         // localStorage only persists {id, name} (see loginUser below), so a page
-        // refresh rehydrates a user missing avatar/banner/rank/etc. Re-fetch the
-        // full profile once on mount to restore it.
+        // refresh rehydrates a user missing avatar/banner/is_admin/rank/etc. Re-fetch
+        // the full profile once on mount to restore it. `loading` lets consumers (e.g.
+        // an admin route guard) wait for this before making decisions off `user`.
         if (user) {
             getUser(user.name)
                 .then(res => setUser(res.data))
-                .catch(() => { /* stale/expired session; leave as-is until an authed call 401s */ });
+                .catch(() => { /* stale/expired session; leave as-is until an authed call 401s */ })
+                .finally(() => setLoading(false));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -62,6 +67,7 @@ export function AuthProvider({
         <AuthContext.Provider
             value={{
                 user,
+                loading,
                 loginUser,
                 logoutUser,
             }}
