@@ -7,6 +7,7 @@ import { getFeed } from '../../api/gameCopy';
 import { searchGame } from '../../api/games';
 import { Navbar } from '../../components/Navbar/Navbar';
 import Login from '../../components/Login/Login';
+import ProfileMenu from '../../components/ProfileMenu/ProfileMenu';
 import { useAuth } from '../../Context/AuthContext';
 import { getAssetUrl } from '../../utils/assetUrl';
 import styles from './Home.module.css';
@@ -152,11 +153,7 @@ export function Home() {
             </div>
 
             <div className={styles.header_right}>
-              {user && (
-                <Link to={`/profile/${user.name}`} className={styles.profile_link}>
-                  {user.name}
-                </Link>
-              )}
+              <ProfileMenu />
               <Login />
               <Navbar />
             </div>
