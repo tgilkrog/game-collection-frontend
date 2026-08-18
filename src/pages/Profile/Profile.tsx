@@ -19,6 +19,7 @@ import EditProfileForm from './EditProfileForm';
 import ExportCollectionForm from './ExportCollectionForm';
 import { getAssetUrl } from '../../utils/assetUrl';
 import { downloadBlob } from '../../utils/download';
+import { PieChartCard } from '../../components/PieChartCard/PieChartCard';
 import styles from './Profile.module.css';
 import type { GameListItem } from '../../types/game';
 import type { PlatformStat, GenreStat, DecadeStat } from '../../types/user';
@@ -26,28 +27,6 @@ import type { PlatformStat, GenreStat, DecadeStat } from '../../types/user';
 const FIVE_MINUTES = 5 * 60 * 1000;
 
 type Tab = 'collection' | 'wishlist' | 'stats';
-
-type StatRow = { label: string; count: number; meta?: string };
-
-function StatSection({ title, rows }: { title: string; rows: StatRow[] }) {
-  const max = Math.max(...rows.map(r => r.count), 1);
-  if (rows.length === 0) return null;
-  return (
-    <div className={styles.stats_section}>
-      <div className={styles.stats_heading}>{title}</div>
-      {rows.map(row => (
-        <div key={row.label} className={styles.bar_row}>
-          <span className={styles.bar_label}>{row.label}</span>
-          <div className={styles.bar_track}>
-            <div className={styles.bar_fill} style={{ width: `${(row.count / max) * 100}%` }} />
-          </div>
-          <span className={styles.bar_count}>{row.count}</span>
-          {row.meta && <span className={styles.bar_meta}>{row.meta}</span>}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
@@ -364,24 +343,24 @@ export default function Profile() {
               <div className={styles.status}>LOADING...</div>
             ) : (
               <>
-                <StatSection
+                <PieChartCard
                   title="PLATFORMS"
-                  rows={(statsData.byPlatform as PlatformStat[]).map(p => ({
+                  data={(statsData.byPlatform as PlatformStat[]).map(p => ({
                     label: p.name,
                     count: p.count,
                     meta: `${p.value.toFixed(2)} DKK`,
                   }))}
                 />
-                <StatSection
+                <PieChartCard
                   title="GENRES"
-                  rows={(statsData.byGenre as GenreStat[]).map(g => ({
+                  data={(statsData.byGenre as GenreStat[]).map(g => ({
                     label: g.name,
                     count: g.count,
                   }))}
                 />
-                <StatSection
+                <PieChartCard
                   title="DECADES"
-                  rows={(statsData.byDecade as DecadeStat[]).map(d => ({
+                  data={(statsData.byDecade as DecadeStat[]).map(d => ({
                     label: d.decade,
                     count: d.count,
                   }))}
