@@ -6,6 +6,7 @@ export type User = {
     banner?: string;
     banner_position?: number;
     bio?: string;
+    is_admin?: boolean;
     copy_count?: number;
     wishlist_count?: number;
     total_value?: number;

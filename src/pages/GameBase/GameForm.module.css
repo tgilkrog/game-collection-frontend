@@ -1,0 +1,213 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 500px;
+  max-width: 100%;
+}
+
+.form_title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--color-purple);
+  margin-bottom: 20px;
+}
+
+/* ── FIELD ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+
+.field_row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--color-bg-input);
+  border: none;
+  border-left: 2px solid var(--color-border-mid);
+  border-bottom: 1px solid var(--color-border-dark);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color .15s;
+  appearance: none;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.input:focus,
+.textarea:focus {
+  border-left-color: var(--color-purple);
+}
+
+/* ── COVER PREVIEW + UPLOAD ── */
+.cover_row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.cover_preview {
+  width: 90px;
+  height: 120px;
+  flex: none;
+  background: var(--color-bg-input);
+  border-left: 2px solid var(--color-border-mid);
+  border-bottom: 1px solid var(--color-border-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cover_preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cover_preview_empty {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 0 8px;
+}
+
+.file_input_wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.file_btn {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px dashed var(--color-border-mid);
+  color: var(--color-text-muted);
+  padding: 8px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: border-color .15s, color .15s;
+}
+
+.file_btn:hover {
+  border-color: var(--color-purple);
+  color: var(--color-purple);
+}
+
+.file_input {
+  display: none;
+}
+
+/* ── TAXONOMY PICKERS ── */
+.taxonomy_row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--color-border-mid);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  cursor: pointer;
+  clip-path: var(--clip-xs);
+  transition: border-color .15s, color .15s;
+  flex-shrink: 0;
+}
+
+.chip:hover {
+  border-color: var(--color-purple);
+  color: var(--color-text-primary);
+}
+
+.chip_active {
+  border-color: var(--color-purple);
+  color: var(--color-purple);
+}
+
+.chip_empty {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+}
+
+.submit_btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid var(--color-purple);
+  color: var(--color-purple);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  transition: background .15s;
+  margin-top: 4px;
+}
+
+.submit_btn:hover:not(:disabled) {
+  background: rgba(var(--color-purple-rgb),.1);
+}
+
+.submit_btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .field_row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .cover_row {
+    flex-direction: column;
+  }
+  .cover_preview {
+    width: 100%;
+    height: 140px;
+  }
+}
