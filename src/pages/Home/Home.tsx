@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { PageTransition } from "../../components/PageTransition";
 import { getHome } from '../../api/home';
 import { getFeed } from '../../api/gameCopy';
@@ -133,26 +134,34 @@ export function Home() {
                 onChange={(e) => setSearch(e.target.value)}
                 onFocus={() => { if (search.length >= 3 && searchResults.length > 0) setSearchOpen(true); }}
               />
-              {searchOpen && searchResults.length > 0 && (
-                <div className={styles.search_popup}>
-                  {searchResults.map(game => (
-                    <Link
-                      key={game.id}
-                      to={`/gamebase/${game.id!}`}
-                      className={styles.search_item}
-                      onClick={closeSearch}
-                    >
-                      <img
-                        src={getAssetUrl(game.cover_image)}
-                        className={styles.search_img}
-                        alt={game.title}
-                        loading="lazy"
-                      />
-                      <span className={styles.search_item_title}>{game.title}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
+              <AnimatePresence>
+                {searchOpen && searchResults.length > 0 && (
+                  <motion.div
+                    className={styles.search_popup}
+                    initial={{ opacity: 0, y: -14, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -14, scale: 0.95 }}
+                    transition={{ duration: 0.32, ease: 'easeOut' }}
+                  >
+                    {searchResults.map(game => (
+                      <Link
+                        key={game.id}
+                        to={`/gamebase/${game.id!}`}
+                        className={styles.search_item}
+                        onClick={closeSearch}
+                      >
+                        <img
+                          src={getAssetUrl(game.cover_image)}
+                          className={styles.search_img}
+                          alt={game.title}
+                          loading="lazy"
+                        />
+                        <span className={styles.search_item_title}>{game.title}</span>
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             <div className={styles.header_right}>

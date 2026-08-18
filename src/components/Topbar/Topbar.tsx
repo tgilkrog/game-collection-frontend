@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import styles from './Topbar.module.css';
 import { Navbar } from '../Navbar/Navbar';
 import Login from '../Login/Login';
@@ -87,26 +88,34 @@ export default function Topbar() {
             onChange={(e) => setSearch(e.target.value)}
             onFocus={handleFocus}
           />
-          {isOpen && games.length > 0 && (
-            <div className={styles.search_popup}>
-              {games.map(game => (
-                <Link
-                  key={game.id}
-                  to={`/gamebase/${game.id!}`}
-                  className={styles.search_item}
-                  onClick={closeSearch}
-                >
-                  <img
-                    src={getAssetUrl(game.cover_image)}
-                    className={styles.search_img}
-                    alt={game.title}
-                    loading="lazy"
-                  />
-                  <span className={styles.search_item_title}>{game.title}</span>
-                </Link>
-              ))}
-            </div>
-          )}
+          <AnimatePresence>
+            {isOpen && games.length > 0 && (
+              <motion.div
+                className={styles.search_popup}
+                initial={{ opacity: 0, y: -14, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -14, scale: 0.95 }}
+                transition={{ duration: 0.32, ease: 'easeOut' }}
+              >
+                {games.map(game => (
+                  <Link
+                    key={game.id}
+                    to={`/gamebase/${game.id!}`}
+                    className={styles.search_item}
+                    onClick={closeSearch}
+                  >
+                    <img
+                      src={getAssetUrl(game.cover_image)}
+                      className={styles.search_img}
+                      alt={game.title}
+                      loading="lazy"
+                    />
+                    <span className={styles.search_item_title}>{game.title}</span>
+                  </Link>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
       
