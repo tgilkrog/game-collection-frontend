@@ -1,0 +1,138 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 96px 48px 48px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--color-text-dim);
+  margin-bottom: 6px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 3px;
+  color: var(--color-teal);
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(var(--color-teal-rgb), 0.3);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-dim);
+  margin-top: 6px;
+}
+
+.new_button {
+  padding: 10px 16px;
+  background: var(--color-purple);
+  border: none;
+  color: var(--color-bg-dark);
+  font-family: var(--font-mono);
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: 0.2s;
+  clip-path: var(--clip-sm);
+}
+
+.new_button:hover {
+  filter: brightness(1.15);
+}
+
+.status {
+  padding: 80px 60px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--color-text-dim);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.card {
+  position: relative;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-mid);
+  box-shadow:
+    0 0 10px rgba(var(--color-teal-rgb), 0.05),
+    inset 0 0 10px rgba(var(--color-purple-rgb), 0.05);
+  overflow: hidden;
+}
+
+.card_body {
+  padding: 14px 16px;
+}
+
+.card_title {
+  color: var(--color-purple);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card_subtitle {
+  color: var(--color-text-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card_actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.card_action {
+  flex: 1;
+  padding: 6px;
+  background: transparent;
+  border: 1px solid var(--color-border-mid);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.card_action:hover {
+  border-color: var(--color-teal);
+  color: var(--color-teal);
+}
+
+.card_action_danger:hover {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+@media (max-width: 480px) {
+  .page { padding: 80px 20px 40px; }
+  .header { flex-direction: column; align-items: flex-start; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+}

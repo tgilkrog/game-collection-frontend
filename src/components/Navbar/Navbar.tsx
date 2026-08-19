@@ -47,7 +47,7 @@ export function Navbar() {
         </Link>
 
         {user?.is_admin && (
-          <Link to="/admin/game-bases" className={styles.link} onClick={() => setOpen(false)}>
+          <Link to="/admin" className={styles.link} onClick={() => setOpen(false)}>
             ADMIN
           </Link>
         )}

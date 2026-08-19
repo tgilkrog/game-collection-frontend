@@ -1,5 +1,5 @@
 import api from './axios';
-import type { User, UserListItem, PlatformStat, GenreStat, DecadeStat } from '../types/user';
+import type { User, UserListItem, AdminUserListItem, PlatformStat, GenreStat, DecadeStat } from '../types/user';
 import type { GameCopy } from '../types/gamecopy';
 import type { Paginated } from '../types/pagination';
 
@@ -34,3 +34,11 @@ export const getUserWishlist = (username: string, page = 1) =>
 
 export const getUserStats = (username: string) =>
   api.get<{ byPlatform: PlatformStat[]; byGenre: GenreStat[]; byDecade: DecadeStat[] }>(`/users/${username}/stats`);
+
+export const getAdminUsers = (page = 1, search = '') =>
+  api.get<Paginated<AdminUserListItem>>(`/admin/users?page=${page}&search=${encodeURIComponent(search)}`);
+
+export const promoteUser = (username: string) => api.put(`/admin/users/${username}/promote`);
+export const demoteUser = (username: string) => api.put(`/admin/users/${username}/demote`);
+export const banUser = (username: string) => api.put(`/admin/users/${username}/ban`);
+export const unbanUser = (username: string) => api.put(`/admin/users/${username}/unban`);
