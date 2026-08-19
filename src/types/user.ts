@@ -7,6 +7,8 @@ export type User = {
     banner_position?: number;
     bio?: string;
     is_admin?: boolean;
+    is_banned?: boolean;
+    created_at?: string;
     copy_count?: number;
     wishlist_count?: number;
     total_value?: number;
@@ -23,6 +25,18 @@ export type UserListItem = {
     avatar?: string;
     copy_count: number;
     rank?: string;
+};
+
+export type AdminUserListItem = {
+    id: number;
+    name: string;
+    email: string;
+    avatar?: string;
+    is_admin: boolean;
+    is_banned: boolean;
+    copy_count: number;
+    rank?: string;
+    created_at?: string;
 };
 
 export type PlatformStat = { name: string; count: number; value: number };

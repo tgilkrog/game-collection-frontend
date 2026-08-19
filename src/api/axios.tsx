@@ -20,4 +20,15 @@ api.interceptors.request.use(config => {
   return config;
 });
 
+api.interceptors.response.use(
+  res => res,
+  err => {
+    if (err.response?.headers?.['x-account-banned'] === 'true') {
+      localStorage.removeItem('user');
+      window.location.href = '/';
+    }
+    return Promise.reject(err);
+  }
+);
+
 export default api;
