@@ -6,6 +6,7 @@ import { getConditions } from '../../api/conditions';
 import { getPlatforms } from '../../api/platforms';
 import { useAuth } from '../../Context/AuthContext';
 import { getAssetUrl } from '../../utils/assetUrl';
+import { PageTransition } from '../../components/PageTransition';
 import Popup from '../../components/Popup/Popup';
 import GameCopyEdit from './GameCopyEdit';
 import styles from '../GameBase/game.module.css';
@@ -64,6 +65,7 @@ export default function GameCopyDetailPage() {
     const isOwner = !!user && user.id === copy.user?.id;
 
     return (
+        <PageTransition>
         <div className={styles.page}>
             <div className={styles.game_wrapper}>
                 <div className={styles.game_image}>
@@ -196,5 +198,6 @@ export default function GameCopyDetailPage() {
                 </Popup>
             )}
         </div>
+        </PageTransition>
     );
 }

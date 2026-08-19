@@ -6,6 +6,8 @@ import { getGame, updateGame } from '../../api/games';
 import { getConditions } from '../../api/conditions';
 import { addToWishlist, removeFromWishlist } from '../../api/wishlist';
 import { useAuth } from '../../Context/AuthContext';
+import { PageTransition } from '../../components/PageTransition';
+import Popup from '../../components/Popup/Popup';
 import GameForm from './GameForm';
 import styles from './game.module.css';
 import type { Genre } from '../../types/genre';
@@ -61,6 +63,7 @@ const wishlistMutation = useMutation({
     if (!game)     return null;
 
     return (
+        <PageTransition>
         <div className={styles.page}>
 
             {/* ── Top: cover + info ── */}
@@ -189,29 +192,26 @@ const wishlistMutation = useMutation({
             )}
 
             {/* ── Edit modal ── */}
-            {isFormOpen && (
-                <div className="modal-overlay" onClick={() => setIsFormOpen(false)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <GameForm
-                            initialData={{
-                                id: game.id,
-                                title: game.title,
-                                developer: game.developer,
-                                publisher: game.publisher,
-                                description: game.description,
-                                release_year: game.release_year,
-                                cover_image: game.cover_image,
-                                genres: game.genres,
-                                themes: game.themes,
-                                game_modes: game.game_modes,
-                                player_perspectives: game.player_perspectives,
-                            }}
-                            onSubmit={updateMutation.mutateAsync}
-                            submitLabel="Update"
-                        />
-                    </div>
-                </div>
-            )}
+            <Popup open={isFormOpen} onClose={() => setIsFormOpen(false)}>
+                <GameForm
+                    initialData={{
+                        id: game.id,
+                        title: game.title,
+                        developer: game.developer,
+                        publisher: game.publisher,
+                        description: game.description,
+                        release_year: game.release_year,
+                        cover_image: game.cover_image,
+                        genres: game.genres,
+                        themes: game.themes,
+                        game_modes: game.game_modes,
+                        player_perspectives: game.player_perspectives,
+                    }}
+                    onSubmit={updateMutation.mutateAsync}
+                    submitLabel="Update"
+                />
+            </Popup>
         </div>
+        </PageTransition>
     );
 }
