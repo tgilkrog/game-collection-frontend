@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import styles from './FilterPanel.module.css';
+import { collapseVariants, collapseTransition } from '../../utils/motion';
 
 export interface FacetOption {
   id: number;
@@ -41,8 +43,16 @@ export function FilterPanel({ facets, activeFilters, onToggle, onClear }: Filter
         <span className={`${styles.chevron} ${isOpen ? styles.chevron_open : ''}`}>▾</span>
       </button>
 
-      {isOpen && (
-        <div className={styles.facets}>
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            className={styles.facets}
+            variants={collapseVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={collapseTransition}
+          >
           {visibleFacets.map(facet => {
             const selected = activeFilters[facet.key] ?? [];
             const expanded = expandedFacet === facet.key;
@@ -58,23 +68,32 @@ export function FilterPanel({ facets, activeFilters, onToggle, onClear }: Filter
                   {selected.length > 0 && <span className={styles.badge}>{selected.length}</span>}
                   <span className={`${styles.chevron} ${expanded ? styles.chevron_open : ''}`}>▾</span>
                 </button>
-                {expanded && (
-                  <div className={styles.chip_row}>
-                    {facet.options.map(option => {
-                      const active = selected.includes(option.id);
-                      return (
-                        <button
-                          key={option.id}
-                          type="button"
-                          className={`${styles.chip} ${active ? styles.chip_active : ''}`}
-                          onClick={() => onToggle(facet.key, option.id)}
-                        >
-                          {option.name}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
+                <AnimatePresence initial={false}>
+                  {expanded && (
+                    <motion.div
+                      className={styles.chip_row}
+                      variants={collapseVariants}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      transition={collapseTransition}
+                    >
+                      {facet.options.map(option => {
+                        const active = selected.includes(option.id);
+                        return (
+                          <button
+                            key={option.id}
+                            type="button"
+                            className={`${styles.chip} ${active ? styles.chip_active : ''}`}
+                            onClick={() => onToggle(facet.key, option.id)}
+                          >
+                            {option.name}
+                          </button>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
@@ -83,8 +102,9 @@ export function FilterPanel({ facets, activeFilters, onToggle, onClear }: Filter
               CLEAR ALL FILTERS
             </button>
           )}
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
