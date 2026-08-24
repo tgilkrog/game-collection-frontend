@@ -83,7 +83,7 @@ export function Home() {
         <div className={styles.scanlines} />
 
         {/* ── Stats panel — bottom-right of viewport ── */}
-        <Statistics />
+        {/*<Statistics />*/}
 
         {/* ── Main ── */}
         <main className={styles.main}>
