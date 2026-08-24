@@ -1,29 +1,37 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { getAssetUrl } from '../../utils/assetUrl';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getGame, updateGame } from '../../api/games';
-import { getConditions } from '../../api/conditions';
+import { getGameCopies } from '../../api/gameCopy';
 import { addToWishlist, removeFromWishlist } from '../../api/wishlist';
 import { useAuth } from '../../Context/AuthContext';
 import { PageTransition } from '../../components/PageTransition';
 import Popup from '../../components/Popup/Popup';
+import { Pagination } from '../../components/Pagination/Pagination';
 import GameForm from './GameForm';
 import styles from './game.module.css';
 import type { Genre } from '../../types/genre';
-import type { Condition } from '../../types/condition';
-import type { GameCopy } from '../../types/gamecopy';
-import type { CopyPart } from '../../types/copypart';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
 export default function GamePage() {
     const { id } = useParams();
     const queryClient = useQueryClient();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [mutationError, setMutationError] = useState('');
 
     const { user } = useAuth();
+
+    const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
+    const changePage = (p: number) => {
+        setSearchParams(prev => {
+            const next = new URLSearchParams(prev);
+            next.set('page', String(p));
+            return next;
+        });
+    };
 
     const { data: game, isLoading, isError } = useQuery({
         queryKey: ['game', id],
@@ -31,11 +39,16 @@ export default function GamePage() {
         enabled: !!id,
     });
 
-    const { data: conditions = [] } = useQuery({
-        queryKey: ['conditions'],
-        queryFn: () => getConditions().then(r => r.data),
+    const { data: copiesData, isLoading: copiesLoading } = useQuery({
+        queryKey: ['gameCopies', 'game', id, page],
+        queryFn: () => getGameCopies(page, { game_base_id: [Number(id)] }).then(r => r.data),
+        enabled: !!id,
         staleTime: FIVE_MINUTES,
     });
+
+    const gameCopies = copiesData?.data ?? [];
+    const copiesTotal = copiesData?.meta.total ?? 0;
+    const copiesLastPage = copiesData?.meta.last_page ?? 1;
 
     const updateMutation = useMutation({
         mutationFn: (data: FormData) => updateGame(game!.id, data),
@@ -131,63 +144,58 @@ const wishlistMutation = useMutation({
             </div>
 
             {/* ── Game copies ── */}
-            {(game.game_copies?.length ?? 0) > 0 && (
+            {!copiesLoading && copiesTotal > 0 && (
                 <>
                     <h2 className={styles.copies_heading}>
                         COPIES
-                        <span>{String(game.game_copies?.length ?? 0).padStart(2, '0')} ENTRIES</span>
+                        <span>{String(copiesTotal).padStart(2, '0')} ENTRIES</span>
                     </h2>
 
-                    {game.game_copies?.map((g: GameCopy) => (
-                        <div className={styles.game_copy_wrapper} key={g.id}>
-                            <div className={styles.copy_title}>{g.platform?.name ?? '—'}</div>
+                    {gameCopies.map(copy => (
+                        <div className={`${styles.game_copy_wrapper} ${styles.clickable}`} key={copy.id}>
+                            <Link
+                                to={`/gamecopy/${copy.id}`}
+                                className={styles.copy_link_overlay}
+                                aria-label={`View copy on ${copy.platform?.name ?? 'this platform'}`}
+                            />
+                            {copy.user && (
+                                <Link to={`/profile/${copy.user.name}`} className={styles.copy_owner_panel}>
+                                    <span className={styles.copy_owner_avatar}>
+                                        {copy.user.avatar
+                                            ? <img src={getAssetUrl(copy.user.avatar)} alt={copy.user.name} />
+                                            : <span className={styles.copy_owner_avatar_initial}>{copy.user.name[0].toUpperCase()}</span>}
+                                    </span>
+                                    <span className={styles.copy_owner_info}>
+                                        <span className={styles.copy_owner_name}>{copy.user.name}</span>
+                                        {(copy.user.rank || copy.user.copy_count != null) && (
+                                            <span className={styles.copy_owner_stats}>
+                                                {copy.user.rank}
+                                                {copy.user.rank && copy.user.copy_count != null ? ' · ' : ''}
+                                                {copy.user.copy_count != null ? `${copy.user.copy_count} COPIES` : ''}
+                                            </span>
+                                        )}
+                                    </span>
+                                </Link>
+                            )}
 
-                            <div className={styles.copy_meta}>
-                                {g.region && (
-                                    <div className={styles.copy_meta_row}>
-                                        <span className={styles.copy_meta_label}>REGION</span>
-                                        <span className={styles.copy_meta_value}>{g.region}</span>
-                                    </div>
-                                )}
-                                {g.purchase_date && (
-                                    <div className={styles.copy_meta_row}>
-                                        <span className={styles.copy_meta_label}>PURCHASED</span>
-                                        <span className={styles.copy_meta_value}>
-                                            {new Date(g.purchase_date).toLocaleDateString('da-DK')}
-                                        </span>
-                                    </div>
-                                )}
-                                {g.purchase_price != null && (
-                                    <div className={styles.copy_meta_row}>
-                                        <span className={styles.copy_meta_label}>PRICE</span>
-                                        <span className={styles.copy_meta_value}>{g.purchase_price}</span>
-                                    </div>
-                                )}
-                                {g.notes && (
-                                    <div className={styles.copy_meta_row}>
-                                        <span className={styles.copy_meta_label}>NOTES</span>
-                                        <span className={styles.copy_meta_value}>{g.notes}</span>
+                            <div className={styles.copy_content}>
+                                <div className={styles.copy_title}>{copy.platform?.name ?? '—'}</div>
+
+                                {copy.parts?.length > 0 && (
+                                    <div className={styles.parts_list}>
+                                        {copy.parts.map(p => (
+                                            <div className={styles.part_pill} key={p.id ?? p.type}>
+                                                <span className={styles.part_type}>{p.type}</span>
+                                                <span className={styles.part_condition}>{p.condition.name}</span>
+                                            </div>
+                                        ))}
                                     </div>
                                 )}
                             </div>
-
-                            {g.parts?.map((p: CopyPart) => (
-                                <div className={styles.conditions_row} key={p.id ?? p.type}>
-                                    <p className={styles.condition_type}>{p.type}</p>
-                                    <div className={styles.conditions_items}>
-                                        {(conditions as Condition[]).map(c => (
-                                            <p
-                                                key={c.id}
-                                                className={`${styles.conditions}${c.name === p.condition.name ? ` ${styles.highlight}` : ''}`}
-                                            >
-                                                {c.name}
-                                            </p>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
                         </div>
                     ))}
+
+                    <Pagination currentPage={page} lastPage={copiesLastPage} onPageChange={changePage} />
                 </>
             )}
 

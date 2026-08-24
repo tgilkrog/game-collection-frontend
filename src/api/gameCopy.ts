@@ -12,12 +12,15 @@ export interface GameCopyFilters {
   theme_id?: number[];
   game_mode_id?: number[];
   player_perspective_id?: number[];
+  game_base_id?: number[];
+  exclude_ids?: number[];
   [key: string]: number[] | undefined;
 }
 
-export const getFeed = (following = false, page = 1) => {
+export const getFeed = (following = false, page = 1, perPage?: number) => {
   const params = new URLSearchParams({ page: String(page) });
   if (following) params.set('following', '1');
+  if (perPage) params.set('per_page', String(perPage));
   return api.get<Paginated<GameCopy>>(`/feed?${params}`);
 };
 

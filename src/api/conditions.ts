@@ -3,8 +3,8 @@ import type { Condition } from '../types/condition';
 
 const BASE_URL = '/conditions';
 
-export const getConditions = () =>
-  api.get(BASE_URL);
+export const getConditions = (params?: { in_use?: boolean }) =>
+  api.get(BASE_URL, { params });
 
 export const createCondition = (data: Omit<Condition, 'id'>) =>
   api.post(BASE_URL, data);

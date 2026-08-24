@@ -1,5 +1,4 @@
 import type { Genre } from './genre';
-import type { GameCopy } from './gamecopy';
 
 export interface GameListItem {
   id: number;
@@ -15,7 +14,6 @@ export interface Game {
   developer?: string;
   description?: string;
   cover_image?: string;
-  game_copies?: GameCopy[];
   genres?: Genre[];
   themes?: Genre[];
   game_modes?: Genre[];
