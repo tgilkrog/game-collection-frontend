@@ -28,7 +28,12 @@ export default function GameCopyList({ gameCopies }: { gameCopies: GameCopy[] })
             />
             {copy.user && (
               <Link to={`/profile/${copy.user.name}`} className={styles.copy_user_tag}>
-                // {copy.user.name}
+                <span className={styles.copy_user_avatar}>
+                  {copy.user.avatar
+                    ? <img src={getAssetUrl(copy.user.avatar)} alt={copy.user.name} />
+                    : <span className={styles.copy_user_avatar_initial}>{copy.user.name[0].toUpperCase()}</span>}
+                </span>
+                {copy.user.name}
               </Link>
             )}
           </motion.div>

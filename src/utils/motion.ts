@@ -18,9 +18,9 @@ export const pageTransition: Transition = { duration: 0.2, ease: "linear" };
 
 // GameCard hover/tap lift
 export const cardHover = {
-    whileHover: { y: -4, scale: 1.03 },
+    whileHover: { y: -6, scale: 1.04 },
     whileTap: { scale: 0.98 },
-    transition: { duration: 0.18, ease: "easeOut" } satisfies Transition,
+    transition: { type: "spring", stiffness: 300, damping: 20 } satisfies Transition,
 };
 
 // FilterPanel collapse/expand sections
