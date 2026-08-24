@@ -1,6 +1,6 @@
 import type { Condition } from './condition';
 
-export const BASE_PART_TYPES = ['Disc', 'Case', 'Manual'] as const;
+export const BASE_PART_TYPES = ['Case', 'Disc', 'Manual'] as const;
 
 export const isBasePartType = (type: string, baseType: string) =>
   type.trim().toLowerCase() === baseType.toLowerCase();

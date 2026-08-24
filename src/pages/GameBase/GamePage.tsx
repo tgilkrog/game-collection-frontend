@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { getAssetUrl } from '../../utils/assetUrl';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCompactDisc, faBox, faBook, faPuzzlePiece, type IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { getGame, updateGame } from '../../api/games';
 import { getGameCopies } from '../../api/gameCopy';
 import { addToWishlist, removeFromWishlist } from '../../api/wishlist';
@@ -12,8 +14,16 @@ import { Pagination } from '../../components/Pagination/Pagination';
 import GameForm from './GameForm';
 import styles from './game.module.css';
 import type { Genre } from '../../types/genre';
+import { isBasePartType } from '../../types/copypart';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
+
+const partTypeIcon = (type: string): IconDefinition => {
+    if (isBasePartType(type, 'Disc')) return faCompactDisc;
+    if (isBasePartType(type, 'Case')) return faBox;
+    if (isBasePartType(type, 'Manual')) return faBook;
+    return faPuzzlePiece;
+};
 
 export default function GamePage() {
     const { id } = useParams();
@@ -181,10 +191,38 @@ const wishlistMutation = useMutation({
                             <div className={styles.copy_content}>
                                 <div className={styles.copy_title}>{copy.platform?.name ?? '—'}</div>
 
+                                {(copy.purchase_price != null || copy.purchase_date || copy.region) && (
+                                    <div className={styles.copy_meta}>
+                                        {copy.purchase_price != null && (
+                                            <div className={styles.copy_meta_row}>
+                                                <span className={styles.copy_meta_label}>PURCHASE PRICE</span>
+                                                <span className={styles.copy_meta_value}>
+                                                    {Number(copy.purchase_price).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} DKK
+                                                </span>
+                                            </div>
+                                        )}
+                                        {copy.purchase_date && (
+                                            <div className={styles.copy_meta_row}>
+                                                <span className={styles.copy_meta_label}>PURCHASE DATE</span>
+                                                <span className={styles.copy_meta_value}>
+                                                    {new Date(copy.purchase_date).toLocaleDateString('da-DK')}
+                                                </span>
+                                            </div>
+                                        )}
+                                        {copy.region && (
+                                            <div className={styles.copy_meta_row}>
+                                                <span className={styles.copy_meta_label}>REGION</span>
+                                                <span className={styles.copy_meta_value}>{copy.region}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
                                 {copy.parts?.length > 0 && (
                                     <div className={styles.parts_list}>
                                         {copy.parts.map(p => (
                                             <div className={styles.part_pill} key={p.id ?? p.type}>
+                                                <FontAwesomeIcon icon={partTypeIcon(p.type)} className={styles.part_icon} />
                                                 <span className={styles.part_type}>{p.type}</span>
                                                 <span className={styles.part_condition}>{p.condition.name}</span>
                                             </div>

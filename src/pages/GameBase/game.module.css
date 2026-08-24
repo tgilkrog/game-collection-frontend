@@ -448,6 +448,11 @@
   clip-path: var(--clip-xs);
 }
 
+.part_icon {
+  color: var(--color-text-muted);
+  font-size: 18px;
+}
+
 .part_type {
   color: var(--color-text-muted);
   text-transform: uppercase;
