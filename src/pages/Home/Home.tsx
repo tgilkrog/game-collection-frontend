@@ -12,7 +12,6 @@ import ProfileMenu from '../../components/ProfileMenu/ProfileMenu';
 import { useAuth } from '../../Context/AuthContext';
 import { getAssetUrl } from '../../utils/assetUrl';
 import styles from './Home.module.css';
-import { Statistics } from './statistics';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
 import type { GameSearchResult } from '../../types/game';
 
