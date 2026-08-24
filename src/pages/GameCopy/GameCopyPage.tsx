@@ -11,6 +11,8 @@ import { getGameModes } from "../../api/gameModes";
 import { getPlayerPerspectives } from "../../api/playerPerspectives";
 import { createGameCopy, getFeed, getGameCopies, type GameCopyFilters } from "../../api/gameCopy";
 import { useAuth } from "../../Context/AuthContext";
+import { useToast } from '../../components/Toast/ToastProvider';
+import { extractErrorMessage } from '../../utils/errors';
 import { PageTransition } from '../../components/PageTransition';
 import Popup from '../../components/Popup/Popup';
 import { Pagination } from '../../components/Pagination/Pagination';
@@ -33,6 +35,7 @@ export default function GameCopyPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [mutationError, setMutationError] = useState('');
     const { user } = useAuth();
+    const { showToast } = useToast();
     const queryClient = useQueryClient();
 
     const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
@@ -149,11 +152,12 @@ export default function GameCopyPage() {
             queryClient.invalidateQueries({ queryKey: ['gameCopies'] });
             setIsFormOpen(false);
             setMutationError('');
+            showToast({ message: 'Copy added', variant: 'success' });
         },
         onError: (err: unknown) => {
-            const msg = (err as { response?: { data?: { message?: string } } })
-                ?.response?.data?.message ?? 'Failed to create copy.';
+            const msg = extractErrorMessage(err, 'Failed to create copy.');
             setMutationError(msg);
+            showToast({ message: msg, variant: 'error' });
         },
     });
 

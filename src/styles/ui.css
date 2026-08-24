@@ -73,12 +73,43 @@
 }
 
 .modal-content {
+  position: relative;
   transform: scale(0.95);
   animation: popIn 0.25s ease-out forwards;
   max-width: min(90vw, 500px);
   max-height: 90vh;
   overflow-y: auto;
   box-sizing: border-box;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  border: 1px solid var(--color-border-mid);
+  color: var(--color-text-dim);
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.modal-close-btn:hover,
+.modal-close-btn:focus-visible {
+  color: var(--color-purple);
+  border-color: var(--color-purple);
+  background: rgba(var(--color-purple-rgb), 0.12);
+}
+
+.modal-close-btn:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
 }
 
 @keyframes popIn {

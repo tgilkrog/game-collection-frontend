@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { PageTransition } from '../../components/PageTransition';
 import AdminTaxonomyForm from './AdminTaxonomyForm';
 import type { Taxonomy } from '../../types/taxonomy';
@@ -139,6 +141,9 @@ export default function AdminTaxonomyPage({ queryKey, label, getAll, create, upd
         {isFormOpen && (
           <div className="modal-overlay" onClick={closeForm}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button type="button" className="modal-close-btn" onClick={closeForm} aria-label="Close">
+                <FontAwesomeIcon icon={faXmark} />
+              </button>
               {mutationError && <div className="ui-error">{mutationError}</div>}
               <AdminTaxonomyForm
                 initialData={editingTerm ?? undefined}

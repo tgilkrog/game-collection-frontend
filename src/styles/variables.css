@@ -25,6 +25,7 @@
 
   /* Semantic */
   --color-error: #c0392b;
+  --color-error-rgb: 192, 57, 43;
 
   /* Typography */
   --font-mono:    'JetBrains Mono', monospace;

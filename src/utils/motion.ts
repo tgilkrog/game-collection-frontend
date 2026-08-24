@@ -31,6 +31,14 @@ export const collapseVariants: Variants = {
 };
 export const collapseTransition: Transition = { duration: 0.22, ease: "easeOut" };
 
+// Toast stack entrance/exit
+export const toastVariants: Variants = {
+    initial: { opacity: 0, x: 40, scale: 0.95 },
+    animate: { opacity: 1, x: 0, scale: 1 },
+    exit: { opacity: 0, x: 40, scale: 0.9 },
+};
+export const toastTransition: Transition = { duration: 0.25, ease: "easeOut" };
+
 // Grid entrance stagger + crossfade for card grids (GameList / GameCopyList)
 export const gridContainer: Variants = {
     animate: { transition: { staggerChildren: 0.035, delayChildren: 0.05 } },

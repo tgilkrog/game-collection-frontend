@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { PageTransition } from '../../components/PageTransition';
 import { getConditions, createCondition, updateCondition, deleteCondition } from '../../api/conditions';
 import AdminConditionForm from './AdminConditionForm';
@@ -121,6 +123,9 @@ export default function AdminConditionsPage() {
         {isFormOpen && (
           <div className="modal-overlay" onClick={closeForm}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button type="button" className="modal-close-btn" onClick={closeForm} aria-label="Close">
+                <FontAwesomeIcon icon={faXmark} />
+              </button>
               {mutationError && <div className="ui-error">{mutationError}</div>}
               <AdminConditionForm
                 initialData={editingCondition ?? undefined}
