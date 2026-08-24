@@ -82,9 +82,6 @@ export function Home() {
         <div className={styles.bg_grid} />
         <div className={styles.scanlines} />
 
-        {/* ── Stats panel — bottom-right of viewport ── */}
-        {/*<Statistics />*/}
-
         {/* ── Main ── */}
         <main className={styles.main}>
 

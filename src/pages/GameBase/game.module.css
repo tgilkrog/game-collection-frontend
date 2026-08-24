@@ -59,6 +59,37 @@
   .game_info_content {
     padding: 18px 16px;
   }
+
+  .game_copy_wrapper.clickable {
+    flex-direction: column;
+  }
+
+  .copy_owner_panel {
+    width: auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+    padding: 14px 20px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-dark);
+  }
+
+  .copy_owner_info {
+    align-items: flex-start;
+  }
+
+  .copy_owner_avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .copy_owner_avatar_initial {
+    font-size: 16px;
+  }
+
+  .copy_owner_name {
+    white-space: normal;
+  }
 }
 
 @media (max-width: 480px) {
@@ -277,6 +308,17 @@
   margin-bottom: 16px;
 }
 
+.game_copy_wrapper.clickable {
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+  transition: border-color .15s;
+}
+
+.game_copy_wrapper.clickable:hover {
+  border-color: var(--color-purple);
+}
+
 .copy_title {
   font-family: var(--font-display);
   font-weight: 600;
@@ -285,6 +327,134 @@
   color: var(--color-text-primary);
   text-transform: uppercase;
   margin: 0 0 16px;
+}
+
+/* ── COPIES-BY-GAME LIST (GameBase page) ── */
+.copy_link_overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.copy_content {
+  flex: 1;
+  min-width: 0;
+  padding: 24px 32px;
+}
+
+.copy_content .copy_title {
+  margin: 0 0 16px;
+}
+
+.copy_owner_panel {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 16px;
+  text-align: center;
+  border-right: 1px solid var(--color-border-dark);
+  background: rgba(10,14,19,.35);
+  text-decoration: none;
+  transition: background-color .15s;
+}
+
+.copy_owner_panel:hover {
+  background: rgba(var(--color-purple-rgb),.06);
+}
+
+.copy_owner_avatar {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  background: var(--color-bg-dark);
+  clip-path: var(--clip-xs);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy_owner_avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.copy_owner_avatar_initial {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--color-purple);
+  line-height: 1;
+}
+
+.copy_owner_info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.copy_owner_name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color .15s;
+}
+
+.copy_owner_panel:hover .copy_owner_name {
+  color: var(--color-purple);
+}
+
+.copy_owner_stats {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.parts_list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.part_pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  border: 1px solid var(--color-border-mid);
+  padding: 6px 12px;
+  background: rgba(10,14,19,.5);
+  clip-path: var(--clip-xs);
+}
+
+.part_type {
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.part_condition {
+  color: var(--color-purple);
 }
 
 /* â”€â”€ COPY META â”€â”€ */

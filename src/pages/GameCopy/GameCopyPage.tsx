@@ -9,7 +9,7 @@ import { getGenres } from "../../api/genres";
 import { getThemes } from "../../api/themes";
 import { getGameModes } from "../../api/gameModes";
 import { getPlayerPerspectives } from "../../api/playerPerspectives";
-import { createGameCopy, getGameCopies, type GameCopyFilters } from "../../api/gameCopy";
+import { createGameCopy, getFeed, getGameCopies, type GameCopyFilters } from "../../api/gameCopy";
 import { useAuth } from "../../Context/AuthContext";
 import { PageTransition } from '../../components/PageTransition';
 import Popup from '../../components/Popup/Popup';
@@ -78,6 +78,12 @@ export default function GameCopyPage() {
         staleTime: FIVE_MINUTES,
     });
 
+    const { data: inUseConditions = [] } = useQuery({
+        queryKey: ['conditions', 'in_use'],
+        queryFn: () => getConditions({ in_use: true }).then(r => r.data),
+        staleTime: FIVE_MINUTES,
+    });
+
     const { data: platforms = [] } = useQuery({
         queryKey: ['platforms'],
         queryFn: () => getPlatforms().then(r => r.data),
@@ -114,15 +120,26 @@ export default function GameCopyPage() {
         { key: 'game_mode_id', label: 'GAME MODE', options: gameModes },
         { key: 'player_perspective_id', label: 'PERSPECTIVE', options: playerPerspectives },
         { key: 'platform_id', label: 'PLATFORM', options: platforms },
-        { key: 'condition_id', label: 'CONDITION', options: conditions },
+        { key: 'condition_id', label: 'CONDITION', options: inUseConditions },
     ];
 
-    const filters: GameCopyFilters = activeFilters;
-    const filterKey = FACET_KEYS.map(key => activeFilters[key].join(',')).join('|');
+    const { data: followingData } = useQuery({
+        queryKey: ['feed', 'following', 'preview'],
+        queryFn: () => getFeed(true, 1, 8).then(r => r.data),
+        enabled: !!user,
+        staleTime: FIVE_MINUTES,
+    });
+
+    const followingCopies = followingData?.data ?? [];
+    const followingIds = followingCopies.map(c => c.id!);
+
+    const filters: GameCopyFilters = { ...activeFilters, exclude_ids: followingIds };
+    const filterKey = FACET_KEYS.map(key => activeFilters[key].join(',')).join('|') + '|' + followingIds.join(',');
 
     const { data: copiesData, isLoading, isError } = useQuery({
         queryKey: ['gameCopies', page, filterKey],
         queryFn: () => getGameCopies(page, filters).then(r => r.data),
+        enabled: !user || followingData !== undefined,
         staleTime: FIVE_MINUTES,
     });
 
@@ -167,7 +184,14 @@ export default function GameCopyPage() {
                     onClear={clearFilters}
                 />
 
-                {isLoading ? (
+                {followingCopies.length > 0 && (
+                    <div className={styles.following_section}>
+                        <h2 className={styles.copies_heading}>FROM PEOPLE YOU FOLLOW</h2>
+                        <GameCopyList gameCopies={followingCopies} />
+                    </div>
+                )}
+
+                {isLoading || (!!user && followingData === undefined) ? (
                     <div className={styles.status}>LOADING...</div>
                 ) : isError ? (
                     <div className={styles.status}>FAILED TO LOAD.</div>

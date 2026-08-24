@@ -13,5 +13,5 @@ export interface GameCopy {
   purchase_date?: string;
   notes?: string;
   parts: CopyPart[];
-  user?: { id: number; name: string };
+  user?: { id: number; name: string; avatar?: string; rank?: string; copy_count?: number };
 }
