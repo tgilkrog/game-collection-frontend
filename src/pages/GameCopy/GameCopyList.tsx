@@ -21,6 +21,7 @@ export default function GameCopyList({ gameCopies }: { gameCopies: GameCopy[] })
           >
             <GameCard
               href={`/gamecopy/${copy.id}`}
+              gameBaseHref={`/gamebase/${copy.game.id}`}
               image={getAssetUrl(copy.game.cover_image)}
               title={copy.game.title}
               badge={copy.platform?.name}

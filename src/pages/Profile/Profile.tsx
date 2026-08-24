@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { PageTransition } from '../../components/PageTransition';
 import { useAuth } from '../../Context/AuthContext';
+import { useToast } from '../../components/Toast/ToastProvider';
+import { extractErrorMessage } from '../../utils/errors';
 import {
   getUser, getUserCopies, updateUser, changePassword,
   followUser, unfollowUser, getUserWishlist, getUserStats,
@@ -32,6 +34,7 @@ type Tab = 'collection' | 'wishlist' | 'stats';
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
   const { user, loginUser } = useAuth();
+  const { showToast } = useToast();
   const isOwner = user?.name === username;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -101,11 +104,12 @@ export default function Profile() {
       queryClient.invalidateQueries({ queryKey: ['user', username] });
       setFormOpen(false);
       setCopyError('');
+      showToast({ message: 'Copy added', variant: 'success' });
     },
     onError: (err: unknown) => {
-      const msg = (err as { response?: { data?: { message?: string } } })
-        ?.response?.data?.message ?? 'Failed to create copy.';
+      const msg = extractErrorMessage(err, 'Failed to create copy.');
       setCopyError(msg);
+      showToast({ message: msg, variant: 'error' });
     },
   });
 
@@ -117,16 +121,18 @@ export default function Profile() {
       if (updated.name !== username) navigate(`/profile/${updated.name}`);
     },
     onError: (err: unknown) => {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Update failed.';
+      const msg = extractErrorMessage(err, 'Update failed.');
       setEditError(msg);
+      showToast({ message: msg, variant: 'error' });
     },
   });
 
   const passwordMutation = useMutation({
     mutationFn: (data: PasswordPayload) => changePassword(username!, data),
     onError: (err: unknown) => {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Password change failed.';
+      const msg = extractErrorMessage(err, 'Password change failed.');
       setPwError(msg);
+      showToast({ message: msg, variant: 'error' });
     },
   });
 
@@ -138,6 +144,7 @@ export default function Profile() {
       await passwordMutation.mutateAsync(passwordData);
     }
     setEditOpen(false);
+    showToast({ message: 'Profile updated', variant: 'success' });
   }
 
   const exportMutation = useMutation({
@@ -166,7 +173,16 @@ export default function Profile() {
 
   const followMutation = useMutation({
     mutationFn: () => profileUser?.is_following ? unfollowUser(username!) : followUser(username!),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['user', username] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user', username] });
+      showToast({
+        message: profileUser?.is_following ? `Unfollowed ${username}` : `Followed ${username}`,
+        variant: 'success',
+      });
+    },
+    onError: (err: unknown) => {
+      showToast({ message: extractErrorMessage(err, 'Follow action failed.'), variant: 'error' });
+    },
   });
 
   const copies = copiesData?.data ?? [];
@@ -302,6 +318,7 @@ export default function Profile() {
                   <GameCard
                     key={copy.id}
                     href={`/gamecopy/${copy.id}`}
+                    gameBaseHref={`/gamebase/${copy.game.id}`}
                     image={getAssetUrl(copy.game.cover_image)}
                     title={copy.game.title}
                     badge={copy.platform?.name}

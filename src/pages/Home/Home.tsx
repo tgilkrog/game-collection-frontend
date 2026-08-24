@@ -177,6 +177,7 @@ export function Home() {
                   <div key={copy.id} className={styles.copy_card_wrapper}>
                     <GameCard
                       href={`/gamecopy/${copy.id}`}
+                      gameBaseHref={`/gamebase/${copy.game.id}`}
                       image={getAssetUrl(copy.game.cover_image)}
                       title={copy.game.title}
                       badge={copy.platform.name}

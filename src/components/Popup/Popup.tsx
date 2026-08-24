@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Popup.module.css";
 
 type PopupProps = {
@@ -29,6 +31,14 @@ export default function Popup({ open, onClose, children }: PopupProps) {
             exit={{ scale: 0.95, opacity: 0, y: 10 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
           >
+            <button
+              type="button"
+              className={styles.close_btn}
+              onClick={onClose}
+              aria-label="Close"
+            >
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
             {children}
           </motion.div>
         </motion.div>

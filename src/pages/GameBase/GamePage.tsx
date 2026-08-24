@@ -8,6 +8,8 @@ import { getGame, updateGame } from '../../api/games';
 import { getGameCopies } from '../../api/gameCopy';
 import { addToWishlist, removeFromWishlist } from '../../api/wishlist';
 import { useAuth } from '../../Context/AuthContext';
+import { useToast } from '../../components/Toast/ToastProvider';
+import { extractErrorMessage } from '../../utils/errors';
 import { PageTransition } from '../../components/PageTransition';
 import Popup from '../../components/Popup/Popup';
 import { Pagination } from '../../components/Pagination/Pagination';
@@ -33,6 +35,7 @@ export default function GamePage() {
     const [mutationError, setMutationError] = useState('');
 
     const { user } = useAuth();
+    const { showToast } = useToast();
 
     const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
     const changePage = (p: number) => {
@@ -78,7 +81,16 @@ const wishlistMutation = useMutation({
         mutationFn: () => game?.is_wishlisted
             ? removeFromWishlist(game!.id)
             : addToWishlist(game!.id),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['game', id] }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['game', id] });
+            showToast({
+                message: game?.is_wishlisted ? 'Removed from wishlist' : 'Added to wishlist',
+                variant: 'success',
+            });
+        },
+        onError: (err: unknown) => {
+            showToast({ message: extractErrorMessage(err, 'Wishlist update failed.'), variant: 'error' });
+        },
     });
 
     if (isLoading) return <div className={styles.status}>LOADING...</div>;

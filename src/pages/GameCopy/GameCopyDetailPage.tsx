@@ -5,6 +5,8 @@ import { getGameCopy, updateGameCopy, deleteGameCopy } from '../../api/gameCopy'
 import { getConditions } from '../../api/conditions';
 import { getPlatforms } from '../../api/platforms';
 import { useAuth } from '../../Context/AuthContext';
+import { useToast } from '../../components/Toast/ToastProvider';
+import { extractErrorMessage } from '../../utils/errors';
 import { getAssetUrl } from '../../utils/assetUrl';
 import { PageTransition } from '../../components/PageTransition';
 import Popup from '../../components/Popup/Popup';
@@ -20,6 +22,7 @@ export default function GameCopyDetailPage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { showToast } = useToast();
     const queryClient = useQueryClient();
     const [editOpen, setEditOpen] = useState(false);
 
@@ -47,6 +50,10 @@ export default function GameCopyDetailPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['gameCopy', id] });
             setEditOpen(false);
+            showToast({ message: 'Copy updated', variant: 'success' });
+        },
+        onError: (err: unknown) => {
+            showToast({ message: extractErrorMessage(err, 'Failed to update copy.'), variant: 'error' });
         },
     });
 
@@ -54,7 +61,11 @@ export default function GameCopyDetailPage() {
         mutationFn: () => deleteGameCopy(Number(id)),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['gameCopies'] });
+            showToast({ message: 'Copy deleted', variant: 'success' });
             navigate('/gamecopy');
+        },
+        onError: (err: unknown) => {
+            showToast({ message: extractErrorMessage(err, 'Failed to delete copy.'), variant: 'error' });
         },
     });
 
