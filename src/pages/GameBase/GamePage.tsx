@@ -3,7 +3,11 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { getAssetUrl } from '../../utils/assetUrl';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCompactDisc, faBox, faBook, faPuzzlePiece, type IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCompactDisc, faBox, faBook, faPuzzlePiece,
+    faCalendarDays, faCode, faBuilding, faTags, faTheaterMasks, faGamepad, faEye,
+    type IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 import { getGame, updateGame } from '../../api/games';
 import { getGameCopies } from '../../api/gameCopy';
 import { addToWishlist, removeFromWishlist } from '../../api/wishlist';
@@ -16,7 +20,7 @@ import { Pagination } from '../../components/Pagination/Pagination';
 import GameForm from './GameForm';
 import styles from './game.module.css';
 import type { Genre } from '../../types/genre';
-import { isBasePartType } from '../../types/copypart';
+import { BASE_PART_TYPES, isBasePartType } from '../../types/copypart';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
@@ -25,6 +29,13 @@ const partTypeIcon = (type: string): IconDefinition => {
     if (isBasePartType(type, 'Case')) return faBox;
     if (isBasePartType(type, 'Manual')) return faBook;
     return faPuzzlePiece;
+};
+
+const tagGroupIcon: Record<string, IconDefinition> = {
+    'GENRES': faTags,
+    'THEMES': faTheaterMasks,
+    'GAME MODES': faGamepad,
+    'PERSPECTIVES': faEye,
 };
 
 export default function GamePage() {
@@ -115,17 +126,28 @@ const wishlistMutation = useMutation({
                     <h1 className={styles.title}>{game.title}</h1>
 
                     <div className={styles.game_info_content}>
-                        <div className={styles.meta_row}>
-                            <span className={styles.meta_label}>RELEASE YEAR</span>
-                            <span className={styles.meta_value}>{game.release_year}</span>
-                        </div>
-                        <div className={styles.meta_row}>
-                            <span className={styles.meta_label}>DEVELOPER</span>
-                            <span className={styles.meta_value}>{game.developer}</span>
-                        </div>
-                        <div className={styles.meta_row}>
-                            <span className={styles.meta_label}>PUBLISHER</span>
-                            <span className={styles.meta_value}>{game.publisher}</span>
+                        <div className={styles.meta_group}>
+                            <div className={styles.meta_row}>
+                                <span className={styles.meta_label}>
+                                    <FontAwesomeIcon icon={faCalendarDays} className={styles.meta_icon} />
+                                    RELEASE YEAR
+                                </span>
+                                <span className={styles.meta_value}>{game.release_year}</span>
+                            </div>
+                            <div className={styles.meta_row}>
+                                <span className={styles.meta_label}>
+                                    <FontAwesomeIcon icon={faCode} className={styles.meta_icon} />
+                                    DEVELOPER
+                                </span>
+                                <span className={styles.meta_value}>{game.developer}</span>
+                            </div>
+                            <div className={styles.meta_row}>
+                                <span className={styles.meta_label}>
+                                    <FontAwesomeIcon icon={faBuilding} className={styles.meta_icon} />
+                                    PUBLISHER
+                                </span>
+                                <span className={styles.meta_value}>{game.publisher}</span>
+                            </div>
                         </div>
 
                         <p className={styles.description}>{game.description}</p>
@@ -138,7 +160,10 @@ const wishlistMutation = useMutation({
                                 { label: 'PERSPECTIVES', items: game.player_perspectives },
                             ].filter(g => g.items && g.items.length > 0).map(group => (
                                 <div key={group.label} className={styles.tag_group}>
-                                    <span className={styles.tag_group_label}>{group.label}</span>
+                                    <span className={styles.tag_group_label}>
+                                        <FontAwesomeIcon icon={tagGroupIcon[group.label]} className={styles.tag_group_icon} />
+                                        {group.label}
+                                    </span>
                                     <div className={styles.tag_row}>
                                         {group.items!.map((item: Genre) => (
                                             <span key={item.id} className={styles.tag}>{item.name}</span>
@@ -230,17 +255,25 @@ const wishlistMutation = useMutation({
                                     </div>
                                 )}
 
-                                {copy.parts?.length > 0 && (
-                                    <div className={styles.parts_list}>
-                                        {copy.parts.map(p => (
-                                            <div className={styles.part_pill} key={p.id ?? p.type}>
-                                                <FontAwesomeIcon icon={partTypeIcon(p.type)} className={styles.part_icon} />
-                                                <span className={styles.part_type}>{p.type}</span>
-                                                <span className={styles.part_condition}>{p.condition.name}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+                                {(() => {
+                                    // Overview only shows the 3 base parts — extras (custom parts beyond
+                                    // Case/Disc/Manual) are only shown on the individual copy page.
+                                    const baseParts = copy.parts?.filter(p =>
+                                        BASE_PART_TYPES.some(bt => isBasePartType(p.type, bt))
+                                    ) ?? [];
+
+                                    return baseParts.length > 0 && (
+                                        <div className={styles.parts_list}>
+                                            {baseParts.map(p => (
+                                                <div className={styles.part_pill} key={p.id ?? p.type}>
+                                                    <FontAwesomeIcon icon={partTypeIcon(p.type)} className={styles.part_icon} />
+                                                    <span className={styles.part_type}>{p.type}:</span>
+                                                    <span className={styles.part_condition}>{p.condition.name}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    );
+                                })()}
                             </div>
                         </div>
                     ))}

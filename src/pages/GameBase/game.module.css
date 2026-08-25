@@ -19,10 +19,23 @@
 
 /* â”€â”€ TOP SECTION â”€â”€ */
 .game_wrapper {
+  position: relative;
   display: flex;
   gap: 48px;
   align-items: flex-start;
   margin-bottom: 40px;
+}
+
+.game_wrapper::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  left: -80px;
+  right: -80px;
+  height: 420px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(680px 340px at 18% 20%, rgba(var(--color-purple-rgb),.10), transparent 65%);
 }
 
 /* â”€â”€ COVER IMAGE â”€â”€ */
@@ -131,6 +144,7 @@
   clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
   border: 1px solid var(--color-border-accent);
   filter: contrast(1.05) saturate(1.1);
+  box-shadow: 0 20px 44px rgba(0,0,0,.55), 0 0 26px rgba(var(--color-purple-rgb),.18);
 }
 
 /* â”€â”€ INFO PANEL â”€â”€ */
@@ -148,14 +162,40 @@
   text-transform: uppercase;
   line-height: 1;
   margin: 0 0 20px;
+  text-shadow: 0 0 24px rgba(var(--color-purple-rgb),.35), 0 2px 8px rgba(0,0,0,.6);
 }
 
 .game_info_content {
-  background: var(--color-bg-card);
+  position: relative;
+  background: linear-gradient(165deg, var(--color-bg-card), rgba(10,14,19,.92));
   backdrop-filter: blur(10px);
   border: 1px solid var(--color-border-dark);
-  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  border-top: 2px solid var(--color-purple);
   padding: 28px 32px;
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.45),
+    0 0 0 1px rgba(var(--color-purple-rgb),.06),
+    0 0 24px rgba(var(--color-teal-rgb),.06),
+    inset 0 1px 0 rgba(255,255,255,.05),
+    inset 0 0 30px rgba(var(--color-purple-rgb),.05);
+  overflow: hidden;
+}
+
+.game_info_content::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(125deg, rgba(255,255,255,.02) 0 2px, transparent 2px 11px);
+}
+
+/* â”€â”€ META GROUP (recessed block within the info panel) â”€â”€ */
+.meta_group {
+  background: rgba(0,0,0,.28);
+  border: 1px solid rgba(255,255,255,.04);
+  box-shadow: inset 0 2px 10px rgba(0,0,0,.5);
+  padding: 4px 16px;
+  margin-bottom: 4px;
 }
 
 /* â”€â”€ META ROWS â”€â”€ */
@@ -175,8 +215,17 @@
 }
 
 .meta_label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: var(--color-text-muted);
   min-width: 110px;
+  flex: none;
+}
+
+.meta_icon {
+  color: var(--color-purple);
+  font-size: 11px;
   flex: none;
 }
 
@@ -210,6 +259,9 @@
 }
 
 .tag_group_label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 2px;
@@ -218,6 +270,12 @@
   min-width: 100px;
   flex: none;
   padding-top: 5px;
+}
+
+.tag_group_icon {
+  color: var(--color-teal);
+  font-size: 12px;
+  flex: none;
 }
 
 .tag_row {
@@ -235,7 +293,15 @@
   border: 1px solid var(--color-border-mid);
   padding: 4px 10px;
   background: rgba(10,14,19,.5);
+  box-shadow: 0 4px 10px rgba(0,0,0,.35);
   clip-path: var(--clip-xs);
+  transition: border-color .15s, color .15s, box-shadow .15s;
+}
+
+.tag:hover {
+  border-color: var(--color-purple);
+  color: var(--color-purple);
+  box-shadow: 0 4px 10px rgba(0,0,0,.35), 0 0 10px rgba(var(--color-purple-rgb),.25);
 }
 
 /* â”€â”€ ACTION BUTTONS â”€â”€ */
@@ -259,12 +325,13 @@
   padding: 10px 22px;
   cursor: pointer;
   clip-path: var(--clip-sm);
-  transition: border-color .15s, color .15s;
+  transition: border-color .15s, color .15s, box-shadow .15s;
 }
 
 .btn:hover {
   border-color: var(--color-purple);
   color: var(--color-purple);
+  box-shadow: 0 0 12px rgba(var(--color-purple-rgb),.3);
 }
 
 .btn_delete {
@@ -327,6 +394,7 @@
   color: var(--color-text-primary);
   text-transform: uppercase;
   margin: 0 0 16px;
+  padding: 24px 32px 0px 32px;
 }
 
 /* ── COPIES-BY-GAME LIST (GameBase page) ── */
@@ -339,7 +407,6 @@
 .copy_content {
   flex: 1;
   min-width: 0;
-  padding: 24px 32px;
 }
 
 .copy_content .copy_title {
@@ -431,8 +498,7 @@
 
 .parts_list {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  width: 100%;
 }
 
 .part_pill {
@@ -440,21 +506,21 @@
   align-items: center;
   gap: 8px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 1px;
   border: 1px solid var(--color-border-mid);
   padding: 6px 12px;
   background: rgba(10,14,19,.5);
-  clip-path: var(--clip-xs);
+  width: 100%;
 }
 
 .part_icon {
-  color: var(--color-text-muted);
+  color: var(--color-teal);
   font-size: 18px;
 }
 
 .part_type {
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   text-transform: uppercase;
 }
 
@@ -474,6 +540,7 @@
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 8px 24px;
   margin-bottom: 24px;
+  padding: 0px 32px;
 }
 
 .copy_meta_row {
@@ -483,7 +550,7 @@
 }
 
 .copy_meta_label {
-  color: var(--color-text-muted);
+  color: var(--color-teal);
   display: block;
   margin-bottom: 2px;
 }

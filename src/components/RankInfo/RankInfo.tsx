@@ -8,7 +8,10 @@ const RANK_TIERS = [
   { name: 'ARCHIVIST', min: 5 },
   { name: 'CURATOR', min: 20 },
   { name: 'COLLECTOR', min: 50 },
-  { name: 'VAULT MASTER', min: 100 },
+  { name: 'VAULT KEEPER', min: 100 },
+  { name: 'VAULT MASTER', min: 250 },
+  { name: 'VAULT SOVEREIGN', min: 500 },
+  { name: 'VAULT LEGEND', min: 1000 },
 ];
 
 type RankInfoProps = {
