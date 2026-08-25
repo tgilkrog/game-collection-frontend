@@ -166,9 +166,6 @@ export default function GameCopyDetailPage() {
                 </div>
             </div>
 
-            <div className={styles.section_divider} />
-            <h2 className={styles.copies_heading}>COPY DETAILS</h2>
-
             <div className={`${styles.game_copy_wrapper} ${styles.detail_panel}`}>
                 {isOwner && (
                     <div className={styles.actions}>
@@ -180,6 +177,7 @@ export default function GameCopyDetailPage() {
                         </button>
                     </div>
                 )}
+                <h2 className={styles.copies_heading}>DETAILS</h2>
                 <div className={styles.copy_title}>{copy.platform?.name ?? '—'}</div>
                 <div className={styles.copy_detail_meta_group}>
                     <div className={styles.copy_detail_meta}>
@@ -229,15 +227,14 @@ export default function GameCopyDetailPage() {
 
             {copy.parts?.length > 0 && (
                 <>
-                    <h2 className={styles.copies_heading}>
-                        PARTS
-                        <span>{String(copy.parts.length).padStart(2, '0')} ENTRIES</span>
-                    </h2>
-
-                    <div
+                   <div
                         className={`${styles.game_copy_wrapper} ${styles.detail_panel}`}
                         style={{ '--tier-count': tierCount } as CSSProperties}
                     >
+                        <h2 className={styles.copies_heading}>
+                            PARTS
+                            <span>{String(copy.parts.length).padStart(2, '0')} ENTRIES</span>
+                        </h2>
                         <div className={styles.condition_scale_row}>
                             <p className={styles.condition_type}>
                                 <FontAwesomeIcon icon={faGaugeHigh} className={styles.condition_type_icon} />

@@ -226,7 +226,7 @@ const wishlistMutation = useMutation({
                             )}
 
                             <div className={styles.copy_content}>
-                                <div className={styles.copy_title}>{copy.platform?.name ?? '—'}</div>
+                                <div className={styles.copies_title}>{copy.platform?.name ?? '—'}</div>
 
                                 {(copy.purchase_price != null || copy.purchase_date || copy.region) && (
                                     <div className={styles.copy_meta}>

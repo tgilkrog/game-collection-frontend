@@ -320,7 +320,7 @@
 /* â”€â”€ ACTION BUTTONS â”€â”€ */
 .actions {
   position: absolute;
-  top: 10px;
+  top: 5px;
   right: 15px;
   display: flex;
   gap: 12px;
@@ -375,6 +375,8 @@
   color: var(--color-text-bright);
   margin: 0 0 20px;
   text-transform: uppercase;
+  border-bottom: 1px solid var(--color-border-dark);
+  padding-bottom: 10px;
 }
 
 .copies_heading span {
@@ -390,7 +392,7 @@
   position: relative;
   background: var(--color-bg-card);
   backdrop-filter: blur(10px);
-  border: 1px solid var(--color-border-dark);
+  border: 1px solid var(--color-border-mid);
   padding: 24px 32px;
   margin-bottom: 16px;
 }
@@ -417,15 +419,19 @@
     0 0 20px rgba(var(--color-teal-rgb),.05);
 }
 
-.copy_title {
+.copy_title, .copies_title {
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 20px;
   letter-spacing: 2px;
-  color: var(--color-text-primary);
+  color: var(--color-purple);
   text-transform: uppercase;
   margin: 0 0 16px;
   padding: 24px 32px 0px 32px;
+}
+
+.copy_title {
+  padding-top: 0px;
 }
 
 /* ── COPIES-BY-GAME LIST (GameBase page) ── */
@@ -540,7 +546,7 @@
   font-family: var(--font-mono);
   font-size: 14px;
   letter-spacing: 1px;
-  border: 1px solid var(--color-border-mid);
+  border: 1px solid var(--color-border-accent);
   padding: 6px 12px;
   background: rgba(10,14,19,.5);
   width: 100%;
@@ -560,7 +566,6 @@
   color: var(--color-purple);
 }
 
-/* â”€â”€ COPY META â”€â”€ */
 .section_divider {
   height: 1px;
   background: linear-gradient(to right, var(--color-border-accent), var(--color-border-mid) 50%, transparent);
