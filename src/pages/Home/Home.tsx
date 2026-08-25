@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PageTransition } from "../../components/PageTransition";
 import { getHome } from '../../api/home';
@@ -10,6 +10,7 @@ import { Navbar } from '../../components/Navbar/Navbar';
 import Login from '../../components/Login/Login';
 import ProfileMenu from '../../components/ProfileMenu/ProfileMenu';
 import { useAuth } from '../../Context/AuthContext';
+import { useToast } from '../../components/Toast/ToastProvider';
 import { getAssetUrl } from '../../utils/assetUrl';
 import styles from './Home.module.css';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
@@ -17,11 +18,25 @@ import type { GameSearchResult } from '../../types/game';
 
 export function Home() {
   const { user } = useAuth();
+  const { showToast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState<GameSearchResult[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [feedMode, setFeedMode] = useState<'global' | 'following'>('global');
   const searchRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (searchParams.get('verified') === '1') {
+      showToast({ message: 'Email verified!', variant: 'success' });
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.delete('verified');
+        return next;
+      }, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useQuery({
     queryKey: ['home'],

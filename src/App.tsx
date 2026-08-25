@@ -12,6 +12,7 @@ import GameCopyDetailPage from "./pages/GameCopy/GameCopyDetailPage";
 import Profile from "./pages/Profile/Profile";
 import UsersPage from "./pages/Users/UsersPage";
 import PlatformsPage from "./pages/Platforms/PlatformsPage";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import AdminLayout from "./components/AdminLayout/AdminLayout";
 import AdminGameBasesPage from "./pages/Admin/AdminGameBasesPage";
 import AdminUsersPage from "./pages/Admin/AdminUsersPage";
@@ -46,6 +47,7 @@ function App() {
           <Route path="/profile/:username" element={<Profile />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/platforms" element={<PlatformsPage />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin" element={<RequireAdmin><AdminLayout /></RequireAdmin>}>
             <Route index element={<Navigate to="game-bases" replace />} />
             <Route path="game-bases" element={<AdminGameBasesPage />} />
