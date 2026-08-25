@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCalendarDays, faCode, faBuilding, faTags, faTheaterMasks, faGamepad, faEye,
+    faCoins, faCalendarCheck, faGlobe, faNoteSticky,
+    faCompactDisc, faBox, faBook, faPuzzlePiece, faGaugeHigh,
     type IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { getGameCopy, updateGameCopy, deleteGameCopy } from '../../api/gameCopy';
@@ -19,6 +21,7 @@ import GameCopyEdit from './GameCopyEdit';
 import styles from '../GameBase/game.module.css';
 import type { Condition } from '../../types/condition';
 import type { CopyPart } from '../../types/copypart';
+import { isBasePartType } from '../../types/copypart';
 import type { Genre } from '../../types/genre';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
@@ -28,6 +31,13 @@ const tagGroupIcon: Record<string, IconDefinition> = {
     'THEMES': faTheaterMasks,
     'GAME MODES': faGamepad,
     'PERSPECTIVES': faEye,
+};
+
+const partTypeIcon = (type: string): IconDefinition => {
+    if (isBasePartType(type, 'Disc')) return faCompactDisc;
+    if (isBasePartType(type, 'Case')) return faBox;
+    if (isBasePartType(type, 'Manual')) return faBook;
+    return faPuzzlePiece;
 };
 
 export default function GameCopyDetailPage() {
@@ -86,6 +96,12 @@ export default function GameCopyDetailPage() {
 
     const game = copy.game;
     const isOwner = !!user && user.id === copy.user?.id;
+
+    // Conditions come back best-first (Mint...Missing) — reversed here so the grading
+    // scale reads worst-to-best left-to-right, matching the bar fill direction below
+    // (empty = missing/worst, full = mint/best).
+    const worstToBest = [...(conditions as Condition[])].reverse();
+    const tierCount = worstToBest.length;
 
     return (
         <PageTransition>
@@ -165,35 +181,49 @@ export default function GameCopyDetailPage() {
                     </div>
                 )}
                 <div className={styles.copy_title}>{copy.platform?.name ?? '—'}</div>
-                <div className={styles.copy_meta}>
-                    {copy.purchase_price != null && (
-                        <div className={styles.copy_meta_row}>
-                            <span className={styles.copy_meta_label}>PURCHASE PRICE</span>
-                            <span className={styles.copy_meta_value}>
-                                {Number(copy.purchase_price).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} DKK
-                            </span>
-                        </div>
-                    )}
-                    {copy.purchase_date && (
-                        <div className={styles.copy_meta_row}>
-                            <span className={styles.copy_meta_label}>PURCHASE DATE</span>
-                            <span className={styles.copy_meta_value}>
-                                {new Date(copy.purchase_date).toLocaleDateString('da-DK')}
-                            </span>
-                        </div>
-                    )}
-                    {copy.region && (
-                        <div className={styles.copy_meta_row}>
-                            <span className={styles.copy_meta_label}>REGION</span>
-                            <span className={styles.copy_meta_value}>{copy.region}</span>
-                        </div>
-                    )}
-                    {copy.notes && (
-                        <div className={styles.copy_meta_row}>
-                            <span className={styles.copy_meta_label}>NOTES</span>
-                            <span className={styles.copy_meta_value}>{copy.notes}</span>
-                        </div>
-                    )}
+                <div className={styles.copy_detail_meta_group}>
+                    <div className={styles.copy_detail_meta}>
+                        {copy.purchase_price != null && (
+                            <div className={styles.copy_detail_meta_row}>
+                                <span className={styles.copy_detail_meta_label}>
+                                    <FontAwesomeIcon icon={faCoins} className={styles.copy_detail_meta_icon} />
+                                    PURCHASE PRICE
+                                </span>
+                                <span className={styles.copy_detail_meta_value}>
+                                    {Number(copy.purchase_price).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} DKK
+                                </span>
+                            </div>
+                        )}
+                        {copy.purchase_date && (
+                            <div className={styles.copy_detail_meta_row}>
+                                <span className={styles.copy_detail_meta_label}>
+                                    <FontAwesomeIcon icon={faCalendarCheck} className={styles.copy_detail_meta_icon} />
+                                    PURCHASE DATE
+                                </span>
+                                <span className={styles.copy_detail_meta_value}>
+                                    {new Date(copy.purchase_date).toLocaleDateString('da-DK')}
+                                </span>
+                            </div>
+                        )}
+                        {copy.region && (
+                            <div className={styles.copy_detail_meta_row}>
+                                <span className={styles.copy_detail_meta_label}>
+                                    <FontAwesomeIcon icon={faGlobe} className={styles.copy_detail_meta_icon} />
+                                    REGION
+                                </span>
+                                <span className={styles.copy_detail_meta_value}>{copy.region}</span>
+                            </div>
+                        )}
+                        {copy.notes && (
+                            <div className={styles.copy_detail_meta_row}>
+                                <span className={styles.copy_detail_meta_label}>
+                                    <FontAwesomeIcon icon={faNoteSticky} className={styles.copy_detail_meta_icon} />
+                                    NOTES
+                                </span>
+                                <span className={styles.copy_detail_meta_value}>{copy.notes}</span>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -204,24 +234,44 @@ export default function GameCopyDetailPage() {
                         <span>{String(copy.parts.length).padStart(2, '0')} ENTRIES</span>
                     </h2>
 
-                    <div className={`${styles.game_copy_wrapper} ${styles.detail_panel}`}>
-                        {copy.parts.map((p: CopyPart) => (
-                            <div className={styles.conditions_row} key={p.id ?? p.type}>
-                                <p className={styles.condition_type}>{p.type}</p>
-                                <div className={styles.conditions_items}>
-                                    {(conditions as Condition[]).map(c => (
-                                        <p
-                                            key={c.id}
-                                            className={`${styles.conditions}${c.name === p.condition.name ? ` ${styles.highlight}` : ''}`}
-                                        >
-                                            {c.name}
-                                        </p>
-                                    ))}
-                                </div>
+                    <div
+                        className={`${styles.game_copy_wrapper} ${styles.detail_panel}`}
+                        style={{ '--tier-count': tierCount } as CSSProperties}
+                    >
+                        <div className={styles.condition_scale_row}>
+                            <p className={styles.condition_type}>
+                                <FontAwesomeIcon icon={faGaugeHigh} className={styles.condition_type_icon} />
+                                GRADING SCALE
+                            </p>
+                            <div className={styles.condition_scale_track}>
+                                {worstToBest.map(c => (
+                                    <span key={c.id} className={styles.conditions}>{c.name}</span>
+                                ))}
                             </div>
-                        ))}
+                            <span className={styles.condition_scale_end_spacer} />
+                        </div>
+
+                        {copy.parts.map((p: CopyPart) => {
+                            const tierIndex = worstToBest.findIndex(c => c.name === p.condition.name);
+                            const fillPercent = tierCount > 0 && tierIndex >= 0
+                                ? ((tierIndex + 1) / tierCount) * 100
+                                : 0;
+
+                            return (
+                                <div className={styles.conditions_row} key={p.id ?? p.type}>
+                                    <p className={styles.condition_type}>
+                                        <FontAwesomeIcon icon={partTypeIcon(p.type)} className={styles.condition_type_icon} />
+                                        {p.type}
+                                    </p>
+                                    <div className={styles.condition_bar_track}>
+                                        <div className={styles.condition_bar_mask} style={{ left: `${fillPercent}%` }} />
+                                    </div>
+                                    <span className={styles.condition_bar_label}>{p.condition.name}</span>
+                                </div>
+                            );
+                        })}
                     </div>
-                </>
+                    </>
             )}
 
             {isOwner && (
