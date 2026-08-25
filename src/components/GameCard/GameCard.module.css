@@ -35,13 +35,14 @@
   width: 26px;
   height: 26px;
   background: var(--color-bg-dark);
-  border: 1px solid var(--color-teal);
-  color: var(--color-teal);
-  font-size: 11px;
+  border: 1px solid var(--color-purple);
+  color: var(--color-purple);
+  font-size: 12px;
   text-decoration: none;
   opacity: 0;
   transform: translateY(-2px);
   transition: opacity .2s ease, transform .2s ease, background-color .2s ease, border-color .2s ease, color .2s ease;
+  padding-bottom: 5px;
 }
 
 .card_wrapper:hover .gamebase_overlay {

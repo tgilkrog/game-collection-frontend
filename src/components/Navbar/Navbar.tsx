@@ -51,10 +51,6 @@ export function Navbar() {
             ADMIN
           </Link>
         )}
-
-        <button className={styles.close} onClick={() => setOpen(false)}>
-          TERMINATE
-        </button>
       </Popup>
     </>
   );

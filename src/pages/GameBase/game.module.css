@@ -308,7 +308,16 @@
 .actions {
   position: absolute;
   top: 10px;
-  right: 25px;
+  right: 15px;
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.wishlist_actions {
+  position: absolute;
+  top: 0px;
+  left: 0px;
   display: flex;
   gap: 12px;
   margin-top: 8px;
@@ -324,7 +333,6 @@
   color: var(--color-text-dim);
   padding: 10px 22px;
   cursor: pointer;
-  clip-path: var(--clip-sm);
   transition: border-color .15s, color .15s, box-shadow .15s;
 }
 
@@ -370,7 +378,6 @@
   background: var(--color-bg-card);
   backdrop-filter: blur(10px);
   border: 1px solid var(--color-border-dark);
-  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
   padding: 24px 32px;
   margin-bottom: 16px;
 }
@@ -384,6 +391,17 @@
 
 .game_copy_wrapper.clickable:hover {
   border-color: var(--color-purple);
+}
+
+/* â”€â”€ DETAIL PANELS (GameCopyDetailPage's own COPY DETAILS / PARTS blocks only â”€â”€
+   not the GameBase per-copy list, which stays on the plain .game_copy_wrapper above) â”€â”€ */
+.detail_panel {
+  border-top: 2px solid var(--color-purple);
+  background: linear-gradient(165deg, var(--color-bg-card), rgba(10,14,19,.92));
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.4),
+    0 0 0 1px rgba(var(--color-purple-rgb),.06),
+    0 0 20px rgba(var(--color-teal-rgb),.05);
 }
 
 .copy_title {
@@ -429,6 +447,7 @@
   background: rgba(10,14,19,.35);
   text-decoration: none;
   transition: background-color .15s;
+  background: rgba(var(--color-teal-rgb),.06);
 }
 
 .copy_owner_panel:hover {
@@ -593,6 +612,8 @@
   border: 1px solid var(--color-border-mid);
   padding: 8px 16px;
   margin: 0;
+  background: rgba(10,14,19,.5);
+  box-shadow: 0 4px 10px rgba(0,0,0,.3);
   clip-path: var(--clip-xs);
 }
 
@@ -600,6 +621,7 @@
   color: var(--color-purple);
   border-color: var(--color-purple);
   background: rgba(var(--color-purple-rgb),.06);
+  box-shadow: 0 4px 10px rgba(0,0,0,.3), 0 0 14px rgba(var(--color-purple-rgb),.25);
 }
 
 /* â”€â”€ LOADING / ERROR â”€â”€ */

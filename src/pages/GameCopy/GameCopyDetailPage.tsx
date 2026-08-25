@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faCalendarDays, faCode, faBuilding, faTags, faTheaterMasks, faGamepad, faEye,
+    type IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 import { getGameCopy, updateGameCopy, deleteGameCopy } from '../../api/gameCopy';
 import { getConditions } from '../../api/conditions';
 import { getPlatforms } from '../../api/platforms';
@@ -17,6 +22,13 @@ import type { CopyPart } from '../../types/copypart';
 import type { Genre } from '../../types/genre';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
+
+const tagGroupIcon: Record<string, IconDefinition> = {
+    'GENRES': faTags,
+    'THEMES': faTheaterMasks,
+    'GAME MODES': faGamepad,
+    'PERSPECTIVES': faEye,
+};
 
 export default function GameCopyDetailPage() {
     const { id } = useParams();
@@ -87,17 +99,28 @@ export default function GameCopyDetailPage() {
                     <h1 className={styles.title}>{game?.title}</h1>
 
                     <div className={styles.game_info_content}>
-                        <div className={styles.meta_row}>
-                            <span className={styles.meta_label}>RELEASE YEAR</span>
-                            <span className={styles.meta_value}>{game?.release_year}</span>
-                        </div>
-                        <div className={styles.meta_row}>
-                            <span className={styles.meta_label}>DEVELOPER</span>
-                            <span className={styles.meta_value}>{game?.developer}</span>
-                        </div>
-                        <div className={styles.meta_row}>
-                            <span className={styles.meta_label}>PUBLISHER</span>
-                            <span className={styles.meta_value}>{game?.publisher}</span>
+                        <div className={styles.meta_group}>
+                            <div className={styles.meta_row}>
+                                <span className={styles.meta_label}>
+                                    <FontAwesomeIcon icon={faCalendarDays} className={styles.meta_icon} />
+                                    RELEASE YEAR
+                                </span>
+                                <span className={styles.meta_value}>{game?.release_year}</span>
+                            </div>
+                            <div className={styles.meta_row}>
+                                <span className={styles.meta_label}>
+                                    <FontAwesomeIcon icon={faCode} className={styles.meta_icon} />
+                                    DEVELOPER
+                                </span>
+                                <span className={styles.meta_value}>{game?.developer}</span>
+                            </div>
+                            <div className={styles.meta_row}>
+                                <span className={styles.meta_label}>
+                                    <FontAwesomeIcon icon={faBuilding} className={styles.meta_icon} />
+                                    PUBLISHER
+                                </span>
+                                <span className={styles.meta_value}>{game?.publisher}</span>
+                            </div>
                         </div>
 
                         <p className={styles.description}>{game?.description}</p>
@@ -110,7 +133,10 @@ export default function GameCopyDetailPage() {
                                 { label: 'PERSPECTIVES', items: game?.player_perspectives },
                             ].filter(g => g.items && g.items.length > 0).map(group => (
                                 <div key={group.label} className={styles.tag_group}>
-                                    <span className={styles.tag_group_label}>{group.label}</span>
+                                    <span className={styles.tag_group_label}>
+                                        <FontAwesomeIcon icon={tagGroupIcon[group.label]} className={styles.tag_group_icon} />
+                                        {group.label}
+                                    </span>
                                     <div className={styles.tag_row}>
                                         {group.items!.map((item: Genre) => (
                                             <span key={item.id} className={styles.tag}>{item.name}</span>
@@ -125,9 +151,9 @@ export default function GameCopyDetailPage() {
             </div>
 
             <div className={styles.section_divider} />
-            <h2>COPY DETAILS</h2>
+            <h2 className={styles.copies_heading}>COPY DETAILS</h2>
 
-            <div className={styles.game_copy_wrapper}>
+            <div className={`${styles.game_copy_wrapper} ${styles.detail_panel}`}>
                 {isOwner && (
                     <div className={styles.actions}>
                         <button className={styles.btn} onClick={() => setEditOpen(true)}>
@@ -178,7 +204,7 @@ export default function GameCopyDetailPage() {
                         <span>{String(copy.parts.length).padStart(2, '0')} ENTRIES</span>
                     </h2>
 
-                    <div className={styles.game_copy_wrapper}>
+                    <div className={`${styles.game_copy_wrapper} ${styles.detail_panel}`}>
                         {copy.parts.map((p: CopyPart) => (
                             <div className={styles.conditions_row} key={p.id ?? p.type}>
                                 <p className={styles.condition_type}>{p.type}</p>

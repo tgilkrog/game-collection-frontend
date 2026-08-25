@@ -125,6 +125,20 @@ const wishlistMutation = useMutation({
                 <div className={styles.game_info}>
                     <h1 className={styles.title}>{game.title}</h1>
 
+                    {mutationError && <div className="ui-error">{mutationError}</div>}
+
+                    <div className={styles.wishlist_actions}>
+                        {user && (
+                            <button
+                                className={styles.btn}
+                                onClick={() => wishlistMutation.mutate()}
+                                disabled={wishlistMutation.isPending}
+                            >
+                                {game.is_wishlisted ? '✓ WISHLISTED' : '+ WISHLIST'}
+                            </button>
+                        )}
+                    </div>
+
                     <div className={styles.game_info_content}>
                         <div className={styles.meta_group}>
                             <div className={styles.meta_row}>
@@ -171,20 +185,6 @@ const wishlistMutation = useMutation({
                                     </div>
                                 </div>
                             ))}
-                        </div>
-
-                        {mutationError && <div className="ui-error">{mutationError}</div>}
-
-                        <div className={styles.actions}>
-                            {user && (
-                                <button
-                                    className={styles.btn}
-                                    onClick={() => wishlistMutation.mutate()}
-                                    disabled={wishlistMutation.isPending}
-                                >
-                                    {game.is_wishlisted ? '✓ WISHLISTED' : '+ WISHLIST'}
-                                </button>
-                            )}
                         </div>
                     </div>
                 </div>
