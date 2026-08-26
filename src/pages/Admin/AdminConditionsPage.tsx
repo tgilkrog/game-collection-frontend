@@ -4,13 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { PageTransition } from '../../components/PageTransition';
 import { getConditions, createCondition, updateCondition, deleteCondition } from '../../api/conditions';
+import { extractErrorMessage } from '../../utils/errors';
 import AdminConditionForm from './AdminConditionForm';
 import type { Condition } from '../../types/condition';
 import styles from './AdminList.module.css';
-
-function extractErrorMessage(err: unknown, fallback: string): string {
-  return (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? fallback;
-}
 
 export default function AdminConditionsPage() {
   const queryClient = useQueryClient();

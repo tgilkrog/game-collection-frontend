@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { searchGame } from '../../api/games';
 import { lookupBarcode } from '../../api/barcode';
+import { useDebounce } from '../../hooks/useDebounce';
 import BarcodeScanner from './BarcodeScanner';
 import PartsInput from './PartsInput';
 import type { GameSearchResult } from '../../types/game';
@@ -45,24 +46,27 @@ export default function GameCopyCreate({ conditions, platforms, onSubmit }: Prop
   const [searchError, setSearchError] = useState('');
   const [scanMode, setScanMode] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+  const debouncedGameQuery = useDebounce(gameQuery, 300);
 
   useEffect(() => {
-    if (gameQuery.length < 2) { setGameResults([]); setSearchError(''); return; }
-    const t = setTimeout(async () => {
+    if (debouncedGameQuery.length < 2) { setGameResults([]); setSearchError(''); return; }
+    const controller = new AbortController();
+    (async () => {
       setSearching(true);
       try {
-        const res = await searchGame(gameQuery);
+        const res = await searchGame(debouncedGameQuery, undefined, controller.signal);
         setGameResults(res.data);
         setSearchError('');
       } catch {
+        if (controller.signal.aborted) return;
         setGameResults([]);
         setSearchError('SEARCH FAILED. CHECK CONNECTION AND RETRY.');
       } finally {
-        setSearching(false);
+        if (!controller.signal.aborted) setSearching(false);
       }
-    }, 300);
-    return () => clearTimeout(t);
-  }, [gameQuery]);
+    })();
+    return () => controller.abort();
+  }, [debouncedGameQuery]);
 
   function selectGame(g: GameSearchResult) {
     setSelectedGame(g);

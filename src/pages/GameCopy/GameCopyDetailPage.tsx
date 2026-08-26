@@ -71,6 +71,9 @@ export default function GameCopyDetailPage() {
         mutationFn: (data: object) => updateGameCopy(Number(id), data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['gameCopy', id] });
+            queryClient.invalidateQueries({ queryKey: ['gameCopies'] });
+            queryClient.invalidateQueries({ queryKey: ['home'] });
+            queryClient.invalidateQueries({ queryKey: ['feed'] });
             setEditOpen(false);
             showToast({ message: 'Copy updated', variant: 'success' });
         },
@@ -83,6 +86,8 @@ export default function GameCopyDetailPage() {
         mutationFn: () => deleteGameCopy(Number(id)),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['gameCopies'] });
+            queryClient.invalidateQueries({ queryKey: ['home'] });
+            queryClient.invalidateQueries({ queryKey: ['feed'] });
             showToast({ message: 'Copy deleted', variant: 'success' });
             navigate('/gamecopy');
         },

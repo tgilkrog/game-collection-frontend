@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,7 +16,7 @@ type Props = {
   gameBaseHref?: string;
 };
 
-export function GameCard({ href, image, title, gameBaseHref }: Props) {
+export const GameCard = memo(function GameCard({ href, image, title, gameBaseHref }: Props) {
   return (
     <motion.div
       className={styles.card_wrapper}
@@ -44,7 +45,7 @@ export function GameCard({ href, image, title, gameBaseHref }: Props) {
       )}
     </motion.div>
   );
-}
+});
 
 export function GameCardGrid({ children }: { children: React.ReactNode }) {
   return (

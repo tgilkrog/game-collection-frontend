@@ -5,22 +5,11 @@ import { PageTransition } from '../../components/PageTransition';
 import { Pagination } from '../../components/Pagination/Pagination';
 import { getAdminUsers, promoteUser, demoteUser, banUser, unbanUser } from '../../api/users';
 import { useAuth } from '../../Context/AuthContext';
+import { useDebounce } from '../../hooks/useDebounce';
+import { extractErrorMessage } from '../../utils/errors';
 import type { AdminUserListItem } from '../../types/user';
 import listStyles from './AdminList.module.css';
 import styles from './AdminUsersPage.module.css';
-
-function extractErrorMessage(err: unknown, fallback: string): string {
-  return (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? fallback;
-}
-
-function useDebounce(value: string, delay: number) {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(t);
-  }, [value, delay]);
-  return debounced;
-}
 
 export default function AdminUsersPage() {
   const queryClient = useQueryClient();

@@ -10,6 +10,7 @@ import { Navbar } from '../../components/Navbar/Navbar';
 import Login from '../../components/Login/Login';
 import ProfileMenu from '../../components/ProfileMenu/ProfileMenu';
 import { useAuth } from '../../Context/AuthContext';
+import { useDebounce } from '../../hooks/useDebounce';
 import { getAssetUrl } from '../../utils/assetUrl';
 import styles from './Home.module.css';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
@@ -22,6 +23,7 @@ export function Home() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [feedMode, setFeedMode] = useState<'global' | 'following'>('global');
   const searchRef = useRef<HTMLDivElement>(null);
+  const debouncedSearch = useDebounce(search, 300);
 
   useQuery({
     queryKey: ['home'],
@@ -38,22 +40,24 @@ export function Home() {
   const totalCopies: number = feedData?.meta?.total ?? 0;
 
   useEffect(() => {
-    if (search.length < 3) {
+    if (debouncedSearch.length < 3) {
       setSearchResults([]);
       setSearchOpen(false);
       return;
     }
-    const timeout = setTimeout(async () => {
+    const controller = new AbortController();
+    (async () => {
       try {
-        const res = await searchGame(search, 'local');
+        const res = await searchGame(debouncedSearch, 'local', controller.signal);
         setSearchResults(res.data);
         setSearchOpen(true);
       } catch {
+        if (controller.signal.aborted) return;
         setSearchOpen(false);
       }
-    }, 300);
-    return () => clearTimeout(timeout);
-  }, [search]);
+    })();
+    return () => controller.abort();
+  }, [debouncedSearch]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

@@ -30,7 +30,8 @@ export const updateGame = (id: number, data: FormData) =>
 export const deleteGame = (id: number) =>
   api.delete(`/game-base/${id}`);
 
-export const searchGame = (q: string, source?: 'local' | 'igdb') =>
+export const searchGame = (q: string, source?: 'local' | 'igdb', signal?: AbortSignal) =>
   api.get<GameSearchResult[]>(
-    `/game-base/search?q=${encodeURIComponent(q)}${source ? `&source=${source}` : ''}`
+    `/game-base/search?q=${encodeURIComponent(q)}${source ? `&source=${source}` : ''}`,
+    { signal }
   );

@@ -150,6 +150,8 @@ export default function GameCopyPage() {
         mutationFn: createGameCopy,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['gameCopies'] });
+            queryClient.invalidateQueries({ queryKey: ['home'] });
+            queryClient.invalidateQueries({ queryKey: ['feed'] });
             setIsFormOpen(false);
             setMutationError('');
             showToast({ message: 'Copy added', variant: 'success' });

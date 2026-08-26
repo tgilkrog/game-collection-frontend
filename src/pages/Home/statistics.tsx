@@ -21,7 +21,8 @@ export function Statistics() {
     const stats: PlatformStat[] = data?.platform_totals ?? [];
     const total: number = data?.total_copies ?? 0;
 
-    if (isLoading || isError) return null;
+    if (isLoading) return <div className={styles.stats_panel}>LOADING...</div>;
+    if (isError) return <div className={styles.stats_panel}>FAILED TO LOAD STATS.</div>;
 
     return (
         <div className={styles.stats_panel}>

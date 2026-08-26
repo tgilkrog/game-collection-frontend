@@ -58,6 +58,9 @@ export function AuthProvider({
     }
 
     async function logoutUser() {
+        // Always clear local state even if the server call fails (offline, session
+        // already expired) — a stuck "logged in" UI is worse than a local logout
+        // racing an unreachable server.
         try { await logoutApi(); } catch { /* session may already be gone */ }
         localStorage.removeItem("user");
         setUser(null);

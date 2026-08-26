@@ -4,13 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { PageTransition } from '../../components/PageTransition';
 import { getPlatforms, createPlatform, updatePlatform, deletePlatform } from '../../api/platforms';
+import { extractErrorMessage } from '../../utils/errors';
 import AdminPlatformForm from './AdminPlatformForm';
 import type { Platform } from '../../types/platform';
 import styles from './AdminList.module.css';
-
-function extractErrorMessage(err: unknown, fallback: string): string {
-  return (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? fallback;
-}
 
 export default function AdminPlatformsPage() {
   const queryClient = useQueryClient();

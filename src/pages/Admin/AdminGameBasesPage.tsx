@@ -7,13 +7,10 @@ import { PageTransition } from '../../components/PageTransition';
 import { Pagination } from '../../components/Pagination/Pagination';
 import { getGames, getGame, createGame, updateGame, deleteGame } from '../../api/games';
 import { getAssetUrl } from '../../utils/assetUrl';
+import { extractErrorMessage } from '../../utils/errors';
 import GameForm from '../GameBase/GameForm';
 import type { Game, GameListItem } from '../../types/game';
 import styles from './AdminGameBasesPage.module.css';
-
-function extractErrorMessage(err: unknown, fallback: string): string {
-  return (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? fallback;
-}
 
 export default function AdminGameBasesPage() {
   const queryClient = useQueryClient();

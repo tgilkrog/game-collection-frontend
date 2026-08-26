@@ -3,13 +3,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { PageTransition } from '../../components/PageTransition';
+import { extractErrorMessage } from '../../utils/errors';
 import AdminTaxonomyForm from './AdminTaxonomyForm';
 import type { Taxonomy } from '../../types/taxonomy';
 import styles from './AdminList.module.css';
-
-function extractErrorMessage(err: unknown, fallback: string): string {
-  return (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? fallback;
-}
 
 type AdminTaxonomyPageProps = {
   queryKey: string;

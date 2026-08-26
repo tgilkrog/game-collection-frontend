@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Home } from "./pages/Home/Home";
 import CyberBackground from "./components/CyberBackground/CyberBackground";
@@ -12,16 +13,17 @@ import GameCopyDetailPage from "./pages/GameCopy/GameCopyDetailPage";
 import Profile from "./pages/Profile/Profile";
 import UsersPage from "./pages/Users/UsersPage";
 import PlatformsPage from "./pages/Platforms/PlatformsPage";
-import AdminLayout from "./components/AdminLayout/AdminLayout";
-import AdminGameBasesPage from "./pages/Admin/AdminGameBasesPage";
-import AdminUsersPage from "./pages/Admin/AdminUsersPage";
-import AdminGenresPage from "./pages/Admin/AdminGenresPage";
-import AdminThemesPage from "./pages/Admin/AdminThemesPage";
-import AdminGameModesPage from "./pages/Admin/AdminGameModesPage";
-import AdminPlayerPerspectivesPage from "./pages/Admin/AdminPlayerPerspectivesPage";
-import AdminPlatformsPage from "./pages/Admin/AdminPlatformsPage";
-import AdminConditionsPage from "./pages/Admin/AdminConditionsPage";
 import RequireAdmin from "./components/RequireAdmin/RequireAdmin";
+
+const AdminLayout = lazy(() => import("./components/AdminLayout/AdminLayout"));
+const AdminGameBasesPage = lazy(() => import("./pages/Admin/AdminGameBasesPage"));
+const AdminUsersPage = lazy(() => import("./pages/Admin/AdminUsersPage"));
+const AdminGenresPage = lazy(() => import("./pages/Admin/AdminGenresPage"));
+const AdminThemesPage = lazy(() => import("./pages/Admin/AdminThemesPage"));
+const AdminGameModesPage = lazy(() => import("./pages/Admin/AdminGameModesPage"));
+const AdminPlayerPerspectivesPage = lazy(() => import("./pages/Admin/AdminPlayerPerspectivesPage"));
+const AdminPlatformsPage = lazy(() => import("./pages/Admin/AdminPlatformsPage"));
+const AdminConditionsPage = lazy(() => import("./pages/Admin/AdminConditionsPage"));
 
 function App() {
   const location = useLocation();
@@ -46,7 +48,16 @@ function App() {
           <Route path="/profile/:username" element={<Profile />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/platforms" element={<PlatformsPage />} />
-          <Route path="/admin" element={<RequireAdmin><AdminLayout /></RequireAdmin>}>
+          <Route
+            path="/admin"
+            element={
+              <RequireAdmin>
+                <Suspense fallback={<div>LOADING...</div>}>
+                  <AdminLayout />
+                </Suspense>
+              </RequireAdmin>
+            }
+          >
             <Route index element={<Navigate to="game-bases" replace />} />
             <Route path="game-bases" element={<AdminGameBasesPage />} />
             <Route path="users" element={<AdminUsersPage />} />

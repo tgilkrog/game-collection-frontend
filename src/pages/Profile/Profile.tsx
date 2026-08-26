@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, Suspense, lazy } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { PageTransition } from '../../components/PageTransition';
@@ -21,11 +21,14 @@ import EditProfileForm from './EditProfileForm';
 import ExportCollectionForm from './ExportCollectionForm';
 import { getAssetUrl } from '../../utils/assetUrl';
 import { downloadBlob } from '../../utils/download';
-import { PieChartCard } from '../../components/PieChartCard/PieChartCard';
 import RankInfo from '../../components/RankInfo/RankInfo';
 import styles from './Profile.module.css';
 import type { GameListItem } from '../../types/game';
 import type { PlatformStat, GenreStat, DecadeStat } from '../../types/user';
+
+const PieChartCard = lazy(() =>
+  import('../../components/PieChartCard/PieChartCard').then(m => ({ default: m.PieChartCard }))
+);
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
@@ -102,6 +105,8 @@ export default function Profile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userCopies', username] });
       queryClient.invalidateQueries({ queryKey: ['user', username] });
+      queryClient.invalidateQueries({ queryKey: ['home'] });
+      queryClient.invalidateQueries({ queryKey: ['feed'] });
       setFormOpen(false);
       setCopyError('');
       showToast({ message: 'Copy added', variant: 'success' });
@@ -190,6 +195,28 @@ export default function Profile() {
   const copiesTotal = copiesData?.meta.total ?? 0;
   const wishlistItems = wishlistData?.data ?? [];
   const wishlistLastPage = wishlistData?.meta.last_page ?? 1;
+  const platformChartData = useMemo(
+    () => (statsData?.byPlatform as PlatformStat[] | undefined ?? []).map(p => ({
+      label: p.name,
+      count: p.count,
+      meta: `${p.value.toFixed(2)} DKK`,
+    })),
+    [statsData]
+  );
+  const genreChartData = useMemo(
+    () => (statsData?.byGenre as GenreStat[] | undefined ?? []).map(g => ({
+      label: g.name,
+      count: g.count,
+    })),
+    [statsData]
+  );
+  const decadeChartData = useMemo(
+    () => (statsData?.byDecade as DecadeStat[] | undefined ?? []).map(d => ({
+      label: d.decade,
+      count: d.count,
+    })),
+    [statsData]
+  );
   const stats = profileUser ? [
     { label: 'COPIES',      value: String(profileUser.copy_count ?? 0).padStart(2, '0') },
     { label: 'TOTAL VALUE', value: Number(profileUser.total_value ?? 0).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' DKK.' },
@@ -360,30 +387,11 @@ export default function Profile() {
             {!statsData ? (
               <div className={styles.status}>LOADING...</div>
             ) : (
-              <>
-                <PieChartCard
-                  title="PLATFORMS"
-                  data={(statsData.byPlatform as PlatformStat[]).map(p => ({
-                    label: p.name,
-                    count: p.count,
-                    meta: `${p.value.toFixed(2)} DKK`,
-                  }))}
-                />
-                <PieChartCard
-                  title="GENRES"
-                  data={(statsData.byGenre as GenreStat[]).map(g => ({
-                    label: g.name,
-                    count: g.count,
-                  }))}
-                />
-                <PieChartCard
-                  title="DECADES"
-                  data={(statsData.byDecade as DecadeStat[]).map(d => ({
-                    label: d.decade,
-                    count: d.count,
-                  }))}
-                />
-              </>
+              <Suspense fallback={<div className={styles.status}>LOADING CHARTS...</div>}>
+                <PieChartCard title="PLATFORMS" data={platformChartData} />
+                <PieChartCard title="GENRES" data={genreChartData} />
+                <PieChartCard title="DECADES" data={decadeChartData} />
+              </Suspense>
             )}
           </div>
         )}
