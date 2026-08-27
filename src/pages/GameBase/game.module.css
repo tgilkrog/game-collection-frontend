@@ -69,6 +69,12 @@
     letter-spacing: 2px;
   }
 
+  .wishlist_actions {
+    position: static;
+    justify-content: center;
+    margin: 0 0 16px;
+  }
+
   .game_info_content {
     padding: 18px 16px;
   }
@@ -147,6 +153,30 @@
 
   .list_title {
     font-size: 24px;
+  }
+
+  .game_copy_wrapper {
+    padding: 16px;
+  }
+
+  .copy_title,
+  .copies_title {
+    padding: 16px 16px 0 16px;
+  }
+
+  .copy_detail_meta_group {
+    margin: 0;
+    padding: 10px 14px;
+  }
+
+  .copy_meta {
+    padding: 0 16px;
+  }
+
+  .actions {
+    position: static;
+    justify-content: flex-end;
+    margin-bottom: 12px;
   }
 }
 
@@ -838,9 +868,26 @@
 }
 
 @media (max-width: 768px) { 
+  .copy_owner_panel {
+    width: auto;
+    flex-direction: row;
+  }
+
+  .copy_owner_avatar {
+    margin-right: 20px;
+  }
+
+  .parts_list {
+    display: block;
+  }
+
+  .copy_meta {
+    display: flex;
+  }
 
   .conditions_row {
     align-items: normal;
+    display: block;
   }
 
   .condition_type {
@@ -851,5 +898,9 @@
     font-size: 12px;
     letter-spacing: 1px;
     padding: 4px 8px;
+  }
+
+  .condition_scale_row {
+    display: none;
   }
 }

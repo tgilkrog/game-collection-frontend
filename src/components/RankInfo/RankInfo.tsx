@@ -28,7 +28,10 @@ export default function RankInfo({ rank, copyCount }: RankInfoProps) {
   useLayoutEffect(() => {
     if (!open || !wrapperRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
-    setCoords({ top: rect.bottom + 10, left: rect.left });
+    const margin = 12;
+    const popoverWidth = popoverRef.current?.getBoundingClientRect().width ?? 255;
+    const left = Math.min(rect.left, window.innerWidth - popoverWidth - margin);
+    setCoords({ top: rect.bottom + 10, left: Math.max(margin, left) });
   }, [open]);
 
   useEffect(() => {

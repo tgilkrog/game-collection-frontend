@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { PageTransition } from '../../components/PageTransition';
+import Popup from '../../components/Popup/Popup';
 import { Pagination } from '../../components/Pagination/Pagination';
 import { getGames, getGame, createGame, updateGame, deleteGame } from '../../api/games';
 import { getAssetUrl } from '../../utils/assetUrl';
@@ -153,21 +152,14 @@ export default function AdminGameBasesPage() {
 
         <Pagination currentPage={page} lastPage={lastPage} onPageChange={changePage} />
 
-        {isFormOpen && (
-          <div className="modal-overlay" onClick={closeForm}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button type="button" className="modal-close-btn" onClick={closeForm} aria-label="Close">
-                <FontAwesomeIcon icon={faXmark} />
-              </button>
-              {mutationError && <div className="ui-error">{mutationError}</div>}
-              <GameForm
-                initialData={editingGame ?? undefined}
-                onSubmit={editingGame ? updateMutation.mutateAsync : createMutation.mutateAsync}
-                submitLabel={editingGame ? 'Update' : 'Create'}
-              />
-            </div>
-          </div>
-        )}
+        <Popup open={isFormOpen} onClose={closeForm}>
+          {mutationError && <div className="ui-error">{mutationError}</div>}
+          <GameForm
+            initialData={editingGame ?? undefined}
+            onSubmit={editingGame ? updateMutation.mutateAsync : createMutation.mutateAsync}
+            submitLabel={editingGame ? 'Update' : 'Create'}
+          />
+        </Popup>
 
       </div>
     </PageTransition>

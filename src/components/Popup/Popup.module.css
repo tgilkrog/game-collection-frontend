@@ -36,6 +36,12 @@
   box-sizing: border-box;
 }
 
+@media (max-width: 768px) {
+  .panel {
+    padding: 40px 40px;
+  }
+}
+
 @media (max-width: 480px) {
   .panel {
     min-width: 0;

@@ -78,7 +78,7 @@ export default function Topbar() {
           onClick={() => setMobileSearchOpen(o => !o)}
           aria-label="Toggle search"
         >
-          ⌕
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
         </button>
 
         <div className={`${styles.search_wrap} ${mobileSearchOpen ? styles.search_wrap_open : ''}`}>

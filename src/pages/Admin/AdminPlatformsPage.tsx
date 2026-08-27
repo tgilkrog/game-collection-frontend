@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { PageTransition } from '../../components/PageTransition';
+import Popup from '../../components/Popup/Popup';
 import { getPlatforms, createPlatform, updatePlatform, deletePlatform } from '../../api/platforms';
 import { extractErrorMessage } from '../../utils/errors';
 import AdminPlatformForm from './AdminPlatformForm';
@@ -120,21 +119,14 @@ export default function AdminPlatformsPage() {
           </div>
         )}
 
-        {isFormOpen && (
-          <div className="modal-overlay" onClick={closeForm}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button type="button" className="modal-close-btn" onClick={closeForm} aria-label="Close">
-                <FontAwesomeIcon icon={faXmark} />
-              </button>
-              {mutationError && <div className="ui-error">{mutationError}</div>}
-              <AdminPlatformForm
-                initialData={editingPlatform ?? undefined}
-                onSubmit={editingPlatform ? updateMutation.mutateAsync : createMutation.mutateAsync}
-                submitLabel={editingPlatform ? 'Update' : 'Create'}
-              />
-            </div>
-          </div>
-        )}
+        <Popup open={isFormOpen} onClose={closeForm}>
+          {mutationError && <div className="ui-error">{mutationError}</div>}
+          <AdminPlatformForm
+            initialData={editingPlatform ?? undefined}
+            onSubmit={editingPlatform ? updateMutation.mutateAsync : createMutation.mutateAsync}
+            submitLabel={editingPlatform ? 'Update' : 'Create'}
+          />
+        </Popup>
 
       </div>
     </PageTransition>

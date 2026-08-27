@@ -452,6 +452,15 @@
     margin: 0;
   }
 
+  .search_popup {
+    max-height: min(360px, 60vh);
+  }
+
+  .search_img {
+    width: 56px;
+    height: 80px;
+  }
+
   .header_right {
     margin-left: auto;
   }

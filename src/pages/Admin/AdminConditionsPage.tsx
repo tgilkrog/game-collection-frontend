@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { PageTransition } from '../../components/PageTransition';
+import Popup from '../../components/Popup/Popup';
 import { getConditions, createCondition, updateCondition, deleteCondition } from '../../api/conditions';
 import { extractErrorMessage } from '../../utils/errors';
 import AdminConditionForm from './AdminConditionForm';
@@ -117,21 +116,14 @@ export default function AdminConditionsPage() {
           </div>
         )}
 
-        {isFormOpen && (
-          <div className="modal-overlay" onClick={closeForm}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button type="button" className="modal-close-btn" onClick={closeForm} aria-label="Close">
-                <FontAwesomeIcon icon={faXmark} />
-              </button>
-              {mutationError && <div className="ui-error">{mutationError}</div>}
-              <AdminConditionForm
-                initialData={editingCondition ?? undefined}
-                onSubmit={editingCondition ? updateMutation.mutateAsync : createMutation.mutateAsync}
-                submitLabel={editingCondition ? 'Update' : 'Create'}
-              />
-            </div>
-          </div>
-        )}
+        <Popup open={isFormOpen} onClose={closeForm}>
+          {mutationError && <div className="ui-error">{mutationError}</div>}
+          <AdminConditionForm
+            initialData={editingCondition ?? undefined}
+            onSubmit={editingCondition ? updateMutation.mutateAsync : createMutation.mutateAsync}
+            submitLabel={editingCondition ? 'Update' : 'Create'}
+          />
+        </Popup>
 
       </div>
     </PageTransition>
