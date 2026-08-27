@@ -74,7 +74,6 @@
   letter-spacing: 1.5px;
   outline: none;
   width: 260px;
-  clip-path: var(--clip-sm);
   transition: border-color .15s;
   flex: none;
 }
@@ -90,6 +89,7 @@
 }
 
 .card {
+  word-break: break-all;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -97,7 +97,6 @@
   padding: 24px 16px;
   background: var(--color-bg-card);
   border: 1px solid var(--color-border-dark);
-  clip-path: var(--clip-md);
   text-decoration: none;
   transition: border-color .15s;
 }
@@ -105,11 +104,11 @@
 .card:hover { border-color: var(--color-purple); }
 
 .card_avatar {
+  clip-path: var(--clip-md);
   width: 72px;
   height: 72px;
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border-accent);
-  border-radius: 50%;
   overflow: hidden;
   display: flex;
   align-items: center;

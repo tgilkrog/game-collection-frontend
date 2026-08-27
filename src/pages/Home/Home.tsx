@@ -12,6 +12,7 @@ import ProfileMenu from '../../components/ProfileMenu/ProfileMenu';
 import { useAuth } from '../../Context/AuthContext';
 import { useDebounce } from '../../hooks/useDebounce';
 import { getAssetUrl } from '../../utils/assetUrl';
+import { gridItem, popupVariants, popupTransition } from '../../utils/motion';
 import styles from './Home.module.css';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
 import type { GameSearchResult } from '../../types/game';
@@ -91,7 +92,12 @@ export function Home() {
         <main className={styles.main}>
 
           {/* Hero strip */}
-          <div className={styles.hero_strip}>
+          <motion.div
+            className={styles.hero_strip}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={popupTransition}
+          >
             <div className={styles.hero_strip_overlay} />
             <div className={styles.hero_strip_content}>
               <img src="/rt_icon.png" alt="" className={styles.hero_icon} />
@@ -103,7 +109,7 @@ export function Home() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Content header — now also the nav bar */}
           <header className={styles.content_header}>
@@ -113,14 +119,20 @@ export function Home() {
                 {String(feed.length).padStart(2, '0')} ENTRIES
                 {user && (
                   <span className={styles.feed_toggle}>
-                    <button
+                    <motion.button
                       className={`${styles.feed_btn} ${feedMode === 'global' ? styles.feed_btn_active : ''}`}
                       onClick={() => setFeedMode('global')}
-                    >ALL</button>
-                    <button
+                      whileHover={{ scale: 1.06 }}
+                      whileTap={{ scale: 0.94 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 22 }}
+                    >ALL</motion.button>
+                    <motion.button
                       className={`${styles.feed_btn} ${feedMode === 'following' ? styles.feed_btn_active : ''}`}
                       onClick={() => setFeedMode('following')}
-                    >FOLLOWING</button>
+                      whileHover={{ scale: 1.06 }}
+                      whileTap={{ scale: 0.94 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 22 }}
+                    >FOLLOWING</motion.button>
                   </span>
                 )}
               </div>
@@ -140,10 +152,11 @@ export function Home() {
                 {searchOpen && searchResults.length > 0 && (
                   <motion.div
                     className={styles.search_popup}
-                    initial={{ opacity: 0, y: -14, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -14, scale: 0.95 }}
-                    transition={{ duration: 0.32, ease: 'easeOut' }}
+                    variants={popupVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={popupTransition}
                   >
                     {searchResults.map(game => (
                       <Link
@@ -179,29 +192,38 @@ export function Home() {
           ) : (
             <div className={styles.grid}>
               <GameCardGrid>
-                {feed.map(copy => (
-                  <div key={copy.id} className={styles.copy_card_wrapper}>
-                    <GameCard
-                      href={`/gamecopy/${copy.id}`}
-                      gameBaseHref={`/gamebase/${copy.game.id}`}
-                      image={getAssetUrl(copy.game.cover_image)}
-                      title={copy.game.title}
-                      badge={copy.platform.name}
-                      subtext={copy.platform.name.toUpperCase()}
-                      price={copy.purchase_price}
-                    />
-                    {copy.user && (
-                      <Link to={`/profile/${copy.user.name}`} className={styles.copy_user_tag}>
-                        <span className={styles.copy_user_avatar}>
-                          {copy.user.avatar
-                            ? <img src={getAssetUrl(copy.user.avatar)} alt={copy.user.name} />
-                            : <span className={styles.copy_user_avatar_initial}>{copy.user.name[0].toUpperCase()}</span>}
-                        </span>
-                        {copy.user.name}
-                      </Link>
-                    )}
-                  </div>
-                ))}
+                <AnimatePresence mode="popLayout">
+                  {feed.map(copy => (
+                    <motion.div
+                      key={copy.id}
+                      className={styles.copy_card_wrapper}
+                      variants={gridItem}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                    >
+                      <GameCard
+                        href={`/gamecopy/${copy.id}`}
+                        gameBaseHref={`/gamebase/${copy.game.id}`}
+                        image={getAssetUrl(copy.game.cover_image)}
+                        title={copy.game.title}
+                        badge={copy.platform.name}
+                        subtext={copy.platform.name.toUpperCase()}
+                        price={copy.purchase_price}
+                      />
+                      {copy.user && (
+                        <Link to={`/profile/${copy.user.name}`} className={styles.copy_user_tag}>
+                          <span className={styles.copy_user_avatar}>
+                            {copy.user.avatar
+                              ? <img src={getAssetUrl(copy.user.avatar)} alt={copy.user.name} />
+                              : <span className={styles.copy_user_avatar_initial}>{copy.user.name[0].toUpperCase()}</span>}
+                          </span>
+                          {copy.user.name}
+                        </Link>
+                      )}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </GameCardGrid>
             </div>
           )}
