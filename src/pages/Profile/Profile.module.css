@@ -21,9 +21,7 @@
   position: relative;
   height: 240px;
   border: 1px solid var(--color-border-dark);
-  clip-path: var(--clip-lg);
   overflow: hidden;
-  margin-bottom: 40px;
   background-color: var(--color-bg-surface);
   background-image:
     radial-gradient(ellipse at 30% 60%, rgba(var(--color-purple-rgb),.05), transparent 55%),
@@ -130,6 +128,8 @@
   display: flex;
   gap: 10px;
   flex: none;
+  background: rgba(0,0,0,0.6);
+  padding: 10px;
 }
 
 /* â”€â”€ EDIT BUTTON â”€â”€ */
@@ -143,7 +143,6 @@
   color: var(--color-text-muted);
   padding: 10px 22px;
   cursor: pointer;
-  clip-path: var(--clip-sm);
   transition: border-color .15s, color .15s;
 }
 
@@ -206,7 +205,7 @@
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 0px;
   margin-bottom: 36px;
 }
 
@@ -215,11 +214,14 @@
   backdrop-filter: blur(10px);
   border: 1px solid var(--color-border-dark);
   border-left: 2px solid var(--color-purple);
-  clip-path: var(--clip-md);
   padding: 20px 24px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.stat_block:first-child {
+  border-left: 1px solid var(--color-border-dark);
 }
 
 .stat_value {
@@ -242,6 +244,8 @@
 /* â”€â”€ GRID WRAPPER â”€â”€ */
 .grid {
   width: 100%;
+  padding: 40px 20px;
+  background: rgba(var(--color-purple-rgb), 0.04);
 }
 
 /* â”€â”€ FOLLOW BUTTON â”€â”€ */
@@ -255,7 +259,6 @@
   color: var(--color-teal);
   padding: 10px 22px;
   cursor: pointer;
-  clip-path: var(--clip-sm);
   transition: background .15s, border-color .15s, color .15s;
   flex: none;
 }
@@ -304,8 +307,6 @@
 .tabs {
   display: flex;
   gap: 0;
-  margin-bottom: 28px;
-  border-bottom: 1px solid var(--color-border-dark);
 }
 
 .tab_btn {
@@ -314,13 +315,14 @@
   justify-content: space-between;
   gap: 16px;
   padding: 14px 24px;
-  background: transparent;
   border: none;
   border-top: 2px solid transparent;
   color: var(--color-text-muted);
   cursor: pointer;
   transition: color .15s, border-color .15s, background .15s;
   flex: 1;
+  background: rgba(var(--color-teal-rgb), 0.04);
+  margin: 0px 2px;
 }
 
 .tab_btn:hover {
@@ -363,7 +365,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  padding: 8px 0 48px;
+  padding: 40px 20px;
+  background: rgba(var(--color-purple-rgb), 0.04);
 }
 
 @media (max-width: 640px) {

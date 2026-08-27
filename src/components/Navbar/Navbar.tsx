@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import styles from "./Navbar.module.css";
 import Popup from "../Popup/Popup";
 import { useAuth } from "../../Context/AuthContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -15,9 +17,7 @@ export function Navbar() {
           className={styles.menuButton} 
           onClick={() => setOpen(true)}
         >
-          <span />
-          <span />
-          <span />
+          <FontAwesomeIcon icon={faBarsStaggered} className={styles.meta_icon} />
         </button>
       </div>
 

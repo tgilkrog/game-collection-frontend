@@ -8,6 +8,8 @@ import ProfileMenu from '../ProfileMenu/ProfileMenu';
 import { searchGame } from '../../api/games';
 import type { GameSearchResult } from '../../types/game';
 import { getAssetUrl } from '../../utils/assetUrl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 export default function Topbar() {
   const [search, setSearch] = useState('');
@@ -80,7 +82,7 @@ export default function Topbar() {
         </button>
 
         <div className={`${styles.search_wrap} ${mobileSearchOpen ? styles.search_wrap_open : ''}`}>
-          <span className={styles.search_icon}>⌕</span>
+          <span className={styles.search_icon}><FontAwesomeIcon icon={faMagnifyingGlass} className={styles.meta_icon} /></span>
           <input
             className={styles.search}
             placeholder="SEARCH ARCHIVE…"

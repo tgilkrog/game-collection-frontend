@@ -15,6 +15,8 @@ import { getAssetUrl } from '../../utils/assetUrl';
 import styles from './Home.module.css';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
 import type { GameSearchResult } from '../../types/game';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 export function Home() {
   const { user } = useAuth();
@@ -126,7 +128,7 @@ export function Home() {
 
             {/* Search */}
             <div className={styles.search_wrap} ref={searchRef}>
-              <span className={styles.search_icon}>⌕</span>
+              <span className={styles.search_icon}><FontAwesomeIcon icon={faMagnifyingGlass} className={styles.meta_icon} /></span>
               <input
                 className={styles.search}
                 placeholder="SEARCH ARCHIVE…"
