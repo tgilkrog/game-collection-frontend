@@ -218,8 +218,8 @@ export default function Profile() {
     [statsData]
   );
   const stats = profileUser ? [
-    { label: 'COPIES',      value: String(profileUser.copy_count ?? 0).padStart(2, '0') },
     { label: 'TOTAL VALUE', value: Number(profileUser.total_value ?? 0).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' DKK.' },
+    { label: 'COPIES',      value: String(profileUser.copy_count ?? 0).padStart(2, '0') },
     { label: 'PLATFORMS',   value: String(profileUser.platform_count ?? 0).padStart(2, '0') },
   ] : [];
 
