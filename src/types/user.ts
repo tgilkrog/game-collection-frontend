@@ -17,6 +17,7 @@ export type User = {
     following_count?: number;
     is_following?: boolean;
     rank?: string;
+    avg_rating?: number | null;
 };
 
 export type UserListItem = {
@@ -42,3 +43,4 @@ export type AdminUserListItem = {
 export type PlatformStat = { name: string; count: number; value: number };
 export type GenreStat    = { name: string; count: number };
 export type DecadeStat   = { decade: string; count: number };
+export type GenreRatingStat = { name: string; avg_rating: number; count: number };
