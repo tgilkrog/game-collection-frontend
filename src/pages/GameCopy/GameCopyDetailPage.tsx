@@ -4,11 +4,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCalendarDays, faCode, faBuilding, faTags, faTheaterMasks, faGamepad, faEye,
-    faCoins, faCalendarCheck, faGlobe, faNoteSticky,
-    faCompactDisc, faBox, faBook, faPuzzlePiece, faGaugeHigh,
+    faCoins, faCalendarCheck, faGlobe, faNoteSticky, faClock, faStar,
+    faCompactDisc, faBox, faBook, faPuzzlePiece, faGaugeHigh, faRotate, faThumbsUp,
     type IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { getGameCopy, updateGameCopy, deleteGameCopy } from '../../api/gameCopy';
+import { deleteGameCopyReview } from '../../api/gameCopyReview';
 import { getConditions } from '../../api/conditions';
 import { getPlatforms } from '../../api/platforms';
 import { useAuth } from '../../Context/AuthContext';
@@ -18,6 +19,9 @@ import { getAssetUrl } from '../../utils/assetUrl';
 import { PageTransition } from '../../components/PageTransition';
 import Popup from '../../components/Popup/Popup';
 import GameCopyEdit from './GameCopyEdit';
+import GameCopyReviewForm from './GameCopyReviewForm';
+import StarRating from '../../components/StarRating/StarRating';
+import { playStatusLabel, PLAY_STATUSES } from '../../types/gamecopy';
 import styles from '../GameBase/game.module.css';
 import type { Condition } from '../../types/condition';
 import type { CopyPart } from '../../types/copypart';
@@ -47,6 +51,7 @@ export default function GameCopyDetailPage() {
     const { showToast } = useToast();
     const queryClient = useQueryClient();
     const [editOpen, setEditOpen] = useState(false);
+    const [reviewOpen, setReviewOpen] = useState(false);
 
     const { data: copy, isLoading, isError } = useQuery({
         queryKey: ['gameCopy', id],
@@ -75,6 +80,7 @@ export default function GameCopyDetailPage() {
             queryClient.invalidateQueries({ queryKey: ['home'] });
             queryClient.invalidateQueries({ queryKey: ['feed'] });
             setEditOpen(false);
+            setReviewOpen(false);
             showToast({ message: 'Copy updated', variant: 'success' });
         },
         onError: (err: unknown) => {
@@ -96,11 +102,26 @@ export default function GameCopyDetailPage() {
         },
     });
 
+    const clearReviewMutation = useMutation({
+        mutationFn: (reviewId: number) => deleteGameCopyReview(reviewId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['gameCopy', id] });
+            queryClient.invalidateQueries({ queryKey: ['gameCopies'] });
+            showToast({ message: 'Review cleared', variant: 'success' });
+        },
+        onError: (err: unknown) => {
+            showToast({ message: extractErrorMessage(err, 'Failed to clear review.'), variant: 'error' });
+        },
+    });
+
     if (isLoading) return <div className={styles.status}>LOADING...</div>;
     if (isError || !copy) return <div className={styles.status}>FAILED TO LOAD COPY.</div>;
 
     const game = copy.game;
     const isOwner = !!user && user.id === copy.user?.id;
+    const hasReviewContent = copy.rating != null || copy.hours_played != null || !!copy.notes
+        || copy.playthrough_count != null || copy.would_replay != null || copy.would_recommend != null
+        || PLAY_STATUSES.some(s => s.value === copy.play_status);
 
     // Conditions come back best-first (Mint...Missing) — reversed here so the grading
     // scale reads worst-to-best left-to-right, matching the bar fill direction below
@@ -175,15 +196,28 @@ export default function GameCopyDetailPage() {
                 {isOwner && (
                     <div className={styles.actions}>
                         <button className={styles.btn} onClick={() => setEditOpen(true)}>
-                            EDIT
+                            EDIT COPY
                         </button>
+                        <button className={styles.btn} onClick={() => setReviewOpen(true)}>
+                            REVIEW
+                        </button>
+                        {hasReviewContent && copy.review_id != null && (
+                            <button
+                                className={styles.btn_delete}
+                                onClick={() => clearReviewMutation.mutate(copy.review_id!)}
+                                disabled={clearReviewMutation.isPending}
+                            >
+                                CLEAR REVIEW
+                            </button>
+                        )}
                         <button className={styles.btn_delete} onClick={() => deleteMutation.mutate()}>
-                            DELETE
+                            DELETE COPY
                         </button>
                     </div>
                 )}
                 <h2 className={styles.copies_heading}>DETAILS</h2>
                 <div className={styles.copy_title}>{copy.platform?.name ?? '—'}</div>
+
                 <div className={styles.copy_detail_meta_group}>
                     <div className={styles.copy_detail_meta}>
                         {copy.purchase_price != null && (
@@ -217,17 +251,90 @@ export default function GameCopyDetailPage() {
                                 <span className={styles.copy_detail_meta_value}>{copy.region}</span>
                             </div>
                         )}
-                        {copy.notes && (
-                            <div className={styles.copy_detail_meta_row}>
-                                <span className={styles.copy_detail_meta_label}>
-                                    <FontAwesomeIcon icon={faNoteSticky} className={styles.copy_detail_meta_icon} />
-                                    NOTES
-                                </span>
-                                <span className={styles.copy_detail_meta_value}>{copy.notes}</span>
-                            </div>
-                        )}
                     </div>
                 </div>
+
+                {hasReviewContent && (
+                    <div className={styles.review_section}>
+                        <div className={styles.review_section_heading}>
+                            <FontAwesomeIcon icon={faStar} />
+                            REVIEW
+                        </div>
+                        <div className={styles.copy_detail_meta}>
+                            <div className={styles.copy_detail_meta_row}>
+                                <span className={styles.copy_detail_meta_label}>
+                                    <FontAwesomeIcon icon={faGamepad} className={styles.copy_detail_meta_icon} />
+                                    STATUS
+                                </span>
+                                <span className={styles.copy_detail_meta_value}>
+                                    <span className={styles.status_pill}>
+                                        {playStatusLabel(copy.play_status)}
+                                    </span>
+                                </span>
+                            </div>
+                            {copy.rating != null && (
+                                <div className={styles.copy_detail_meta_row}>
+                                    <span className={styles.copy_detail_meta_label}>
+                                        <FontAwesomeIcon icon={faStar} className={styles.copy_detail_meta_icon} />
+                                        RATING
+                                    </span>
+                                    <span className={styles.copy_detail_meta_value}>
+                                        <StarRating value={copy.rating} />
+                                    </span>
+                                </div>
+                            )}
+                            {copy.hours_played != null && (
+                                <div className={styles.copy_detail_meta_row}>
+                                    <span className={styles.copy_detail_meta_label}>
+                                        <FontAwesomeIcon icon={faClock} className={styles.copy_detail_meta_icon} />
+                                        HOURS PLAYED
+                                    </span>
+                                    <span className={styles.copy_detail_meta_value}>{copy.hours_played} HOURS</span>
+                                </div>
+                            )}
+                            {copy.playthrough_count != null && (
+                                <div className={styles.copy_detail_meta_row}>
+                                    <span className={styles.copy_detail_meta_label}>
+                                        <FontAwesomeIcon icon={faRotate} className={styles.copy_detail_meta_icon} />
+                                        PLAYTHROUGH COUNT
+                                    </span>
+                                    <span className={styles.copy_detail_meta_value}>{copy.playthrough_count}</span>
+                                </div>
+                            )}
+                            {copy.would_replay != null && (
+                                <div className={styles.copy_detail_meta_row}>
+                                    <span className={styles.copy_detail_meta_label}>
+                                        <FontAwesomeIcon icon={faRotate} className={styles.copy_detail_meta_icon} />
+                                        WOULD REPLAY
+                                    </span>
+                                    <span className={styles.copy_detail_meta_value}>
+                                        <span className={styles.status_pill}>{copy.would_replay ? 'Yes' : 'No'}</span>
+                                    </span>
+                                </div>
+                            )}
+                            {copy.would_recommend != null && (
+                                <div className={styles.copy_detail_meta_row}>
+                                    <span className={styles.copy_detail_meta_label}>
+                                        <FontAwesomeIcon icon={faThumbsUp} className={styles.copy_detail_meta_icon} />
+                                        WOULD RECOMMEND
+                                    </span>
+                                    <span className={styles.copy_detail_meta_value}>
+                                        <span className={styles.status_pill}>{copy.would_recommend ? 'Yes' : 'No'}</span>
+                                    </span>
+                                </div>
+                            )}
+                            {copy.notes && (
+                                <div className={styles.copy_detail_meta_row}>
+                                    <span className={styles.copy_detail_meta_label}>
+                                        <FontAwesomeIcon icon={faNoteSticky} className={styles.copy_detail_meta_icon} />
+                                        NOTES
+                                    </span>
+                                    <span className={styles.copy_detail_meta_value}>{copy.notes}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
 
             {copy.parts?.length > 0 && (
@@ -282,6 +389,15 @@ export default function GameCopyDetailPage() {
                         copy={copy}
                         conditions={conditions}
                         platforms={platforms}
+                        onSubmit={updateMutation.mutateAsync}
+                    />
+                </Popup>
+            )}
+
+            {isOwner && (
+                <Popup open={reviewOpen} onClose={() => setReviewOpen(false)}>
+                    <GameCopyReviewForm
+                        copy={copy}
                         onSubmit={updateMutation.mutateAsync}
                     />
                 </Popup>

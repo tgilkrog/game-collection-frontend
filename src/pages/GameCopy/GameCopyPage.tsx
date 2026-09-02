@@ -10,6 +10,7 @@ import { getThemes } from "../../api/themes";
 import { getGameModes } from "../../api/gameModes";
 import { getPlayerPerspectives } from "../../api/playerPerspectives";
 import { createGameCopy, getFeed, getGameCopies, type GameCopyFilters } from "../../api/gameCopy";
+import { PLAY_STATUSES } from "../../types/gamecopy";
 import { useAuth } from "../../Context/AuthContext";
 import { useToast } from '../../components/Toast/ToastProvider';
 import { extractErrorMessage } from '../../utils/errors';
@@ -17,6 +18,7 @@ import { PageTransition } from '../../components/PageTransition';
 import Popup from '../../components/Popup/Popup';
 import { Pagination } from '../../components/Pagination/Pagination';
 import { FilterPanel, type FacetConfig } from '../../components/FilterPanel/FilterPanel';
+import filterPanelStyles from '../../components/FilterPanel/FilterPanel.module.css';
 import styles from './GameCopy.module.css';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
@@ -29,6 +31,8 @@ const FACET_KEYS = [
     'platform_id',
     'condition_id',
 ] as const;
+
+const PLAY_STATUS_OPTIONS = PLAY_STATUSES.map(s => ({ value: s.value, label: s.label.toUpperCase() }));
 
 export default function GameCopyPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -58,10 +62,27 @@ export default function GameCopyPage() {
         });
     };
 
+    const playStatusFilter = searchParams.getAll('play_status');
+
+    const togglePlayStatus = (status: string) => {
+        setSearchParams(prev => {
+            const next = new URLSearchParams(prev);
+            const current = next.getAll('play_status');
+            next.delete('play_status');
+            const updated = current.includes(status)
+                ? current.filter(s => s !== status)
+                : [...current, status];
+            updated.forEach(s => next.append('play_status', s));
+            next.delete('page');
+            return next;
+        });
+    };
+
     const clearFilters = () => {
         setSearchParams(prev => {
             const next = new URLSearchParams(prev);
             FACET_KEYS.forEach(key => next.delete(key));
+            next.delete('play_status');
             next.delete('page');
             return next;
         });
@@ -136,8 +157,8 @@ export default function GameCopyPage() {
     const followingCopies = followingData?.data ?? [];
     const followingIds = followingCopies.map(c => c.id!);
 
-    const filters: GameCopyFilters = { ...activeFilters, exclude_ids: followingIds };
-    const filterKey = FACET_KEYS.map(key => activeFilters[key].join(',')).join('|') + '|' + followingIds.join(',');
+    const filters: GameCopyFilters = { ...activeFilters, exclude_ids: followingIds, play_status: playStatusFilter };
+    const filterKey = FACET_KEYS.map(key => activeFilters[key].join(',')).join('|') + '|' + followingIds.join(',') + '|' + playStatusFilter.join(',');
 
     const { data: copiesData, isLoading, isError } = useQuery({
         queryKey: ['gameCopies', page, filterKey],
@@ -189,6 +210,19 @@ export default function GameCopyPage() {
                     onToggle={toggleFilter}
                     onClear={clearFilters}
                 />
+
+                <div className={filterPanelStyles.chip_row}>
+                    {PLAY_STATUS_OPTIONS.map(opt => (
+                        <button
+                            key={opt.value}
+                            type="button"
+                            className={`${filterPanelStyles.chip} ${playStatusFilter.includes(opt.value) ? filterPanelStyles.chip_active : ''}`}
+                            onClick={() => togglePlayStatus(opt.value)}
+                        >
+                            {opt.label}
+                        </button>
+                    ))}
+                </div>
 
                 {followingCopies.length > 0 && (
                     <div className={styles.following_section}>

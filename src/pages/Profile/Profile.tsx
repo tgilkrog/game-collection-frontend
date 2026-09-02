@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo, Suspense, lazy } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDice } from '@fortawesome/free-solid-svg-icons';
 import { PageTransition } from '../../components/PageTransition';
 import { useAuth } from '../../Context/AuthContext';
 import { useToast } from '../../components/Toast/ToastProvider';
@@ -10,7 +12,8 @@ import {
   followUser, unfollowUser, getUserWishlist, getUserStats,
 } from '../../api/users';
 import type { PasswordPayload } from '../../api/users';
-import { createGameCopy, exportGameCopies } from '../../api/gameCopy';
+import { createGameCopy, exportGameCopies, getRandomBacklogCopy } from '../../api/gameCopy';
+import { deleteGameCopyReview, getReviewHistory } from '../../api/gameCopyReview';
 import { getConditions } from '../../api/conditions';
 import { getPlatforms } from '../../api/platforms';
 import { GameCard, GameCardGrid } from '../../components/GameCard/GameCard';
@@ -19,12 +22,15 @@ import { Pagination } from '../../components/Pagination/Pagination';
 import GameCopyCreate from '../GameCopy/GameCopyCreate';
 import EditProfileForm from './EditProfileForm';
 import ExportCollectionForm from './ExportCollectionForm';
+import StarRating from '../../components/StarRating/StarRating';
 import { getAssetUrl } from '../../utils/assetUrl';
 import { downloadBlob } from '../../utils/download';
 import RankInfo from '../../components/RankInfo/RankInfo';
 import styles from './Profile.module.css';
 import type { GameListItem } from '../../types/game';
-import type { PlatformStat, GenreStat, DecadeStat } from '../../types/user';
+import type { GameCopy } from '../../types/gamecopy';
+import { playStatusLabel } from '../../types/gamecopy';
+import type { PlatformStat, GenreStat, DecadeStat, GenreRatingStat } from '../../types/user';
 
 const PieChartCard = lazy(() =>
   import('../../components/PieChartCard/PieChartCard').then(m => ({ default: m.PieChartCard }))
@@ -32,7 +38,7 @@ const PieChartCard = lazy(() =>
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
-type Tab = 'collection' | 'wishlist' | 'stats';
+type Tab = 'collection' | 'wishlist' | 'stats' | 'history';
 
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
@@ -51,11 +57,13 @@ export default function Profile() {
   const [exportError, setExportError] = useState('');
   const [copiesPage, setCopiesPage] = useState(1);
   const [wishlistPage, setWishlistPage] = useState(1);
+  const [historyPage, setHistoryPage] = useState(1);
   const [pwError, setPwError] = useState('');
 
   useEffect(() => {
     setCopiesPage(1);
     setWishlistPage(1);
+    setHistoryPage(1);
     setTab('collection');
   }, [username]);
 
@@ -83,6 +91,20 @@ export default function Profile() {
     queryKey: ['userStats', username],
     queryFn: () => getUserStats(username!).then(r => r.data),
     enabled: !!username && tab === 'stats',
+    staleTime: FIVE_MINUTES,
+  });
+
+  const { data: currentlyPlayingData } = useQuery({
+    queryKey: ['userCopies', username, 'playing'],
+    queryFn: () => getUserCopies(username!, 1, { play_status: ['playing'] }).then(r => r.data),
+    enabled: !!username,
+    staleTime: FIVE_MINUTES,
+  });
+
+  const { data: historyData, isLoading: historyLoading } = useQuery({
+    queryKey: ['reviewHistory', historyPage],
+    queryFn: () => getReviewHistory(historyPage).then(r => r.data),
+    enabled: isOwner && tab === 'history',
     staleTime: FIVE_MINUTES,
   });
 
@@ -190,6 +212,31 @@ export default function Profile() {
     },
   });
 
+  const deleteReviewMutation = useMutation({
+    mutationFn: (reviewId: number) => deleteGameCopyReview(reviewId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reviewHistory'] });
+      showToast({ message: 'Review deleted', variant: 'success' });
+    },
+    onError: (err: unknown) => {
+      showToast({ message: extractErrorMessage(err, 'Failed to delete review.'), variant: 'error' });
+    },
+  });
+
+  const [tonightPick, setTonightPick] = useState<GameCopy | null>(null);
+  const [tonightError, setTonightError] = useState('');
+  const tonightMutation = useMutation({
+    mutationFn: getRandomBacklogCopy,
+    onSuccess: (res) => {
+      setTonightPick(res.data);
+      setTonightError('');
+    },
+    onError: () => {
+      setTonightPick(null);
+      setTonightError('NO BACKLOG COPIES FOUND — GO ADD SOME.');
+    },
+  });
+
   const copies = copiesData?.data ?? [];
   const copiesLastPage = copiesData?.meta.last_page ?? 1;
   const copiesTotal = copiesData?.meta.total ?? 0;
@@ -217,11 +264,16 @@ export default function Profile() {
     })),
     [statsData]
   );
+  const genreRatingData = (statsData?.byGenreRating as GenreRatingStat[] | undefined) ?? [];
   const stats = profileUser ? [
     { label: 'TOTAL VALUE', value: Number(profileUser.total_value ?? 0).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' DKK.' },
     { label: 'COPIES',      value: String(profileUser.copy_count ?? 0).padStart(2, '0') },
     { label: 'PLATFORMS',   value: String(profileUser.platform_count ?? 0).padStart(2, '0') },
+    { label: 'AVG RATING',  value: profileUser.avg_rating != null ? `${profileUser.avg_rating.toFixed(1)} / 5` : '—' },
   ] : [];
+  const currentlyPlaying = currentlyPlayingData?.data ?? [];
+  const historyItems = historyData?.data ?? [];
+  const historyLastPage = historyData?.meta.last_page ?? 1;
 
   if (userLoading) return <div className={styles.status}>LOADING...</div>;
   if (userError || !profileUser) return <div className={styles.status}>USER NOT FOUND.</div>;
@@ -287,6 +339,27 @@ export default function Profile() {
           </div>
         </div>
 
+        {/* ── What should I play tonight ── */}
+        {isOwner && (
+          <div className={styles.tonight_widget}>
+            <button
+              className={styles.tonight_btn}
+              onClick={() => tonightMutation.mutate()}
+              disabled={tonightMutation.isPending}
+            >
+              <FontAwesomeIcon icon={faDice} /> {tonightMutation.isPending ? 'PICKING...' : 'WHAT SHOULD I PLAY TONIGHT?'}
+            </button>
+            {tonightPick && (
+              <Link to={`/gamecopy/${tonightPick.id}`} className={styles.tonight_result}>
+                <img src={getAssetUrl(tonightPick.game.cover_image)} className={styles.tonight_cover} alt="" />
+                <span className={styles.tonight_title}>{tonightPick.game.title}</span>
+                <span className={styles.tonight_platform}>{tonightPick.platform.name}</span>
+              </Link>
+            )}
+            {tonightError && <div className={styles.tonight_error}>{tonightError}</div>}
+          </div>
+        )}
+
         {/* ── Stats ── */}
         <div className={styles.stats}>
           {stats.map(s => (
@@ -334,11 +407,38 @@ export default function Profile() {
           >
             <span className={styles.tab_label}>Stats</span>
           </button>
+          {isOwner && (
+            <button
+              className={`${styles.tab_btn} ${tab === 'history' ? styles.tab_btn_active : ''}`}
+              onClick={() => setTab('history')}
+            >
+              <span className={styles.tab_label}>History</span>
+            </button>
+          )}
         </div>
 
         {/* ── Collection tab ── */}
         {tab === 'collection' && (
           <>
+            {currentlyPlaying.length > 0 && (
+              <>
+                <h2 className={styles.section_heading}>CURRENTLY PLAYING</h2>
+                <div className={styles.grid}>
+                  <GameCardGrid>
+                    {currentlyPlaying.filter(c => c.game).map(copy => (
+                      <GameCard
+                        key={copy.id}
+                        href={`/gamecopy/${copy.id}`}
+                        gameBaseHref={`/gamebase/${copy.game.id}`}
+                        image={getAssetUrl(copy.game.cover_image)}
+                        title={copy.game.title}
+                        badge={copy.platform?.name}
+                      />
+                    ))}
+                  </GameCardGrid>
+                </div>
+              </>
+            )}
             <div className={styles.grid}>
               <GameCardGrid>
                 {copies.filter(c => c.game).map(copy => (
@@ -391,9 +491,60 @@ export default function Profile() {
                 <PieChartCard title="PLATFORMS" data={platformChartData} />
                 <PieChartCard title="GENRES" data={genreChartData} />
                 <PieChartCard title="DECADES" data={decadeChartData} />
+                {genreRatingData.length > 0 && (
+                  <div className={styles.rating_bars_card}>
+                    <div className={styles.rating_bars_heading}>AVG RATING BY GENRE</div>
+                    {genreRatingData.map(g => (
+                      <div key={g.name} className={styles.rating_bar_row}>
+                        <span className={styles.rating_bar_label}>{g.name}</span>
+                        <StarRating value={Math.round(g.avg_rating)} size="sm" />
+                        <span className={styles.rating_bar_value}>{g.avg_rating.toFixed(1)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </Suspense>
             )}
           </div>
+        )}
+
+        {/* ── History tab (owner only) ── */}
+        {tab === 'history' && isOwner && (
+          <>
+            {historyLoading ? (
+              <div className={styles.status}>LOADING...</div>
+            ) : historyItems.length === 0 ? (
+              <div className={styles.status}>No history yet — reviews for copies you've removed will show up here.</div>
+            ) : (
+              <div className={styles.history_list}>
+                {historyItems.map(review => (
+                  <div key={review.id} className={styles.history_item}>
+                    {review.game?.cover_image && (
+                      <img src={getAssetUrl(review.game.cover_image)} className={styles.history_cover} alt="" />
+                    )}
+                    <div className={styles.history_info}>
+                      <span className={styles.history_title}>{review.game?.title}</span>
+                      <span className={styles.history_meta}>
+                        <span className={styles.status_pill}>
+                          {playStatusLabel(review.play_status)}
+                        </span>
+                        {review.rating != null && <StarRating value={review.rating} size="sm" />}
+                        {review.hours_played != null && <span>{review.hours_played} HOURS</span>}
+                      </span>
+                    </div>
+                    <button
+                      className={styles.history_delete_btn}
+                      onClick={() => deleteReviewMutation.mutate(review.id)}
+                      disabled={deleteReviewMutation.isPending}
+                    >
+                      DELETE
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <Pagination currentPage={historyPage} lastPage={historyLastPage} onPageChange={setHistoryPage} />
+          </>
         )}
 
         {/* ── Add copy modal ── */}

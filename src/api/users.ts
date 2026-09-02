@@ -1,15 +1,19 @@
 import api from './axios';
-import type { User, UserListItem, AdminUserListItem, PlatformStat, GenreStat, DecadeStat } from '../types/user';
+import type { User, UserListItem, AdminUserListItem, PlatformStat, GenreStat, DecadeStat, GenreRatingStat } from '../types/user';
 import type { GameCopy } from '../types/gamecopy';
 import type { Paginated } from '../types/pagination';
+import { appendArrayParams } from '../utils/queryParams';
 
 export const getUsers = (search = '', page = 1) =>
   api.get<Paginated<UserListItem>>(`/users?search=${encodeURIComponent(search)}&page=${page}`);
 
 export const getUser = (username: string) => api.get<User>(`/users/${username}`);
 
-export const getUserCopies = (username: string, page = 1) =>
-  api.get<Paginated<GameCopy>>(`/users/${username}/game-copies?page=${page}`);
+export const getUserCopies = (username: string, page = 1, filters: { play_status?: string[] } = {}) => {
+  const params = new URLSearchParams({ page: String(page) });
+  appendArrayParams(params, filters);
+  return api.get<Paginated<GameCopy>>(`/users/${username}/game-copies?${params}`);
+};
 
 export const updateUser = (username: string, data: FormData) =>
   api.post<User>(`/users/${username}`, data);
@@ -33,7 +37,7 @@ export const getUserWishlist = (username: string, page = 1) =>
   api.get(`/users/${username}/wishlist?page=${page}`);
 
 export const getUserStats = (username: string) =>
-  api.get<{ byPlatform: PlatformStat[]; byGenre: GenreStat[]; byDecade: DecadeStat[] }>(`/users/${username}/stats`);
+  api.get<{ byPlatform: PlatformStat[]; byGenre: GenreStat[]; byDecade: DecadeStat[]; byGenreRating: GenreRatingStat[] }>(`/users/${username}/stats`);
 
 export const getAdminUsers = (page = 1, search = '') =>
   api.get<Paginated<AdminUserListItem>>(`/admin/users?page=${page}&search=${encodeURIComponent(search)}`);

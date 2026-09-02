@@ -40,7 +40,8 @@ export const GameCard = memo(function GameCard({ href, image, title, gameBaseHre
           aria-label="View game details"
           title="View game details"
         >
-          <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+          <FontAwesomeIcon icon={faArrowUpRightFromSquare} /> 
+          <span>Game Base</span>
         </Link>
       )}
     </motion.div>

@@ -17,7 +17,6 @@ type FormState = {
   region: string;
   purchase_price: number;
   purchase_date: string;
-  notes: string;
 };
 
 type Props = {
@@ -33,7 +32,6 @@ export default function GameCopyCreate({ conditions, platforms, onSubmit }: Prop
     region: '',
     purchase_price: 0,
     purchase_date: '',
-    notes: '',
   });
   const [parts, setParts] = useState<CopyPart[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -235,12 +233,6 @@ export default function GameCopyCreate({ conditions, platforms, onSubmit }: Prop
           <label className={styles.label}>Purchase Date</label>
           <input className={styles.input} name="purchase_date" type="date" value={form.purchase_date} onChange={handleChange} />
         </div>
-      </div>
-
-      {/* Notes */}
-      <div className={styles.field}>
-        <label className={styles.label}>Notes</label>
-        <input className={styles.input} name="notes" placeholder="Optional notes" value={form.notes} onChange={handleChange} />
       </div>
 
       <PartsInput parts={parts} conditions={conditions} onChange={setParts} />

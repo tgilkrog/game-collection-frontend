@@ -9,6 +9,12 @@ export const EXPORT_COLUMNS: { key: string; label: string }[] = [
   { key: 'purchase_price', label: 'Purchase Price' },
   { key: 'purchase_date', label: 'Purchase Date' },
   { key: 'notes', label: 'Notes' },
+  { key: 'play_status', label: 'Play Status' },
+  { key: 'rating', label: 'Rating' },
+  { key: 'hours_played', label: 'Hours Played' },
+  { key: 'playthrough_count', label: 'Playthrough Count' },
+  { key: 'would_replay', label: 'Would Replay' },
+  { key: 'would_recommend', label: 'Would Recommend' },
   { key: 'parts', label: 'Parts & Condition' },
 ];
 

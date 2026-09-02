@@ -14,7 +14,8 @@ export interface GameCopyFilters {
   player_perspective_id?: number[];
   game_base_id?: number[];
   exclude_ids?: number[];
-  [key: string]: number[] | undefined;
+  play_status?: string[];
+  [key: string]: (number | string)[] | undefined;
 }
 
 export const getFeed = (following = false, page = 1, perPage?: number) => {
@@ -32,6 +33,9 @@ export const getGameCopies = (page = 1, filters: GameCopyFilters = {}) => {
 
 export const getGameCopy = (id: number) =>
   api.get<GameCopy>(`${BASE_URL}/${id}`);
+
+export const getRandomBacklogCopy = () =>
+  api.get<GameCopy>(`${BASE_URL}/random-backlog`);
 
 export const createGameCopy = (data: FormData) =>
   api.post(BASE_URL, data);
